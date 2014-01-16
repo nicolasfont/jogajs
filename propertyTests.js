@@ -38,3 +38,22 @@ test("can be reassigned with null", function() {
 
     equal(property(), null);
 });
+
+test("notifies observers when property is set", function() {
+    var property = just.property(),
+        notified1 = false,
+        notified2 = false;
+
+    property.notify(function(value) {
+        notified1 = value;
+    });
+
+    property.notify(function(value) {
+        notified2 = value;
+    });
+
+    property('value');
+
+    equal(notified1, 'value');
+    equal(notified2, 'value');
+});
