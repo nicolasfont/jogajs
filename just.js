@@ -19,6 +19,13 @@
             observers.push(observer);
             return this;
         };
+        f.unsubscribe = function(observer) {
+            var index = observers.indexOf(observer);
+            if (index != -1) {
+                observers.splice(index, 1);
+            }
+            return this;
+        };
         return f;
     };
 

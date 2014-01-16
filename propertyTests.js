@@ -65,3 +65,34 @@ test("notifies observers when property is set", function() {
     equal(notified1, 'value');
     equal(notified2, 'value');
 });
+
+test("can unsubscribe observers", function() {
+    var property = just.property(),
+        notified1 = false,
+        notified2 = false,
+        f = function(value) {
+            notified1 = value;
+        };
+
+    property.subscribe(f).subscribe(function(value) {
+        notified2 = value;
+    }).unsubscribe(f);
+
+    property('value');
+
+    equal(notified1, false);
+    equal(notified2, 'value');
+});
+
+test("unsubscribe a non subscribed observer does nothing", function() {
+    var property = just.property(),
+    notified = false;
+
+    property.subscribe(function(value) {
+        notified = value;
+    }).unsubscribe(function() {});
+
+    property('value');
+
+    equal(notified, 'value');
+});
