@@ -15,8 +15,9 @@
             }
             return value;
         };
-        f.notify = function(observer) {
+        f.subscribe = function(observer) {
             observers.push(observer);
+            return this;
         };
         return f;
     };

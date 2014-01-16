@@ -54,11 +54,9 @@ test("notifies observers when property is set", function() {
         notified1 = false,
         notified2 = false;
 
-    property.notify(function(value) {
+    property.subscribe(function(value) {
         notified1 = value;
-    });
-
-    property.notify(function(value) {
+    }).subscribe(function(value) {
         notified2 = value;
     });
 
