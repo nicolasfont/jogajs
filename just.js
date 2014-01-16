@@ -11,6 +11,7 @@
                 for (i = 0; i < observers.length; i++) {
                     observers[i](value);
                 }
+                return this;
             }
             return value;
         };

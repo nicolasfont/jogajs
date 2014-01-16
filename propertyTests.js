@@ -30,6 +30,16 @@ test("can hold a value when assigned to an object", function() {
     equal(obj.property(), 'value');
 });
 
+test("can be chained when setting", function() {
+    var obj = {
+        property: just.property()
+    };
+
+    var o = obj.property('value');
+
+    equal(o, obj);
+});
+
 test("can be reassigned with null", function() {
     var property = just.property();
 
