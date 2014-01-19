@@ -1,4 +1,3 @@
-
 module('property');
 
 test("is a function", function() {
@@ -16,6 +15,12 @@ test("can hold a value", function() {
     var property = just.property();
 
     property('value');
+
+    equal(property(), 'value');
+});
+
+test("can be initialized with a value", function() {
+    var property = just.property('value');
 
     equal(property(), 'value');
 });
