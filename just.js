@@ -55,6 +55,9 @@
         this.class = function(className) {
         	element.className = className;
         };
+        this.title = function(title) {
+        	element.title = title;
+        }
     }
 
     window.just = just;
