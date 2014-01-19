@@ -16,4 +16,8 @@ test("can bind data-class attribute to object property", function() {
 	binding = just.binding(element, obj);
 	
 	equal(element.className, "test");
+	
+	obj.clazz("test2");
+
+	equal(element.className, "test2");
 });

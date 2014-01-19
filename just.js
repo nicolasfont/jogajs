@@ -37,17 +37,17 @@
     just.Binding = function(element, obj) {
         this.bind = function() {
         	var dataKey,
-        	dataValue,
-        	property,
-        	bindingFunction,
-        	value;
+        	self = this;
         	
         	for(dataKey in element.dataset) {
-        		bindingFunction = this[dataKey];
-        		dataValue = element.dataset[dataKey];
-        		property = obj[dataValue];
-        		value = property();
-        		bindingFunction(value);
+        		(function(dataKey){
+        			var bindingFunction = self[dataKey],
+            		dataValue = element.dataset[dataKey],
+            		property = obj[dataValue];
+        			
+            		bindingFunction(property());
+            		property.subscribe(bindingFunction);
+        		})(dataKey);
         	}
         	
         	return this;
