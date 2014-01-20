@@ -56,8 +56,8 @@ test("can be reassigned with null", function() {
 
 test("notifies observers when property is set", function() {
     var property = just.property(),
-        notified1 = false,
-        notified2 = false;
+        notified1,
+        notified2;
 
     property.subscribe(function(value) {
         notified1 = value;
@@ -71,10 +71,23 @@ test("notifies observers when property is set", function() {
     equal(notified2, 'value');
 });
 
+test("notifies previous value to observers when property is set", function() {
+    var property = just.property("value1"),
+        previousValue;
+
+    property.subscribe(function(value, lastValue) {
+        previousValue = lastValue;
+    });
+
+    property('value2');
+
+    equal(previousValue, 'value1');
+});
+
 test("can unsubscribe observers", function() {
     var property = just.property(),
         notified1 = false,
-        notified2 = false,
+        notified2,
         f = function(value) {
             notified1 = value;
         };
@@ -91,7 +104,7 @@ test("can unsubscribe observers", function() {
 
 test("unsubscribe a non subscribed observer does nothing", function() {
     var property = just.property(),
-    notified = false;
+    notified;
 
     property.subscribe(function(value) {
         notified = value;

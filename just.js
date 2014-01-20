@@ -5,11 +5,12 @@
         var value = null,
         observers = [],
         f = function(newValue) {
-            var i;
+            var i, previousValue;
             if (typeof(newValue) != 'undefined') {
+                previousValue = value;
                 value = newValue;
                 for (i = 0; i < observers.length; i++) {
-                    observers[i](value);
+                    observers[i](value, previousValue);
                 }
                 return this;
             }
@@ -52,8 +53,11 @@
         	
         	return this;
         };
-        this.class = function(className) {
-        	element.className = className;
+        this.class = function(className, lastClassName) {
+            if (lastClassName) {
+                element.classList.remove(lastClassName);
+            }
+            element.classList.add(className);
         };
         this.title = function(title) {
         	element.title = title;
