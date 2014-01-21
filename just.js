@@ -72,7 +72,7 @@
             for(i = 0; i < childNodes.length; i++) {
                 element.removeChild(childNodes[i]);
             }
-            element.appendChild(new Text(text));
+            element.appendChild(document.createTextNode(text));
         }
     }
 
