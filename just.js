@@ -38,27 +38,27 @@
     just.property = property;
     
     function binding(element, obj) {
-        return new ElementBinding(element, obj).bind();
+        var binding = new ElementBinding(element, obj),
+        dataKey;
+    	
+    	for(dataKey in element.dataset) {
+    		(function(dataKey){
+    			var bindingFunction = binding[dataKey],
+        		dataValue = element.dataset[dataKey],
+        		property = obj[dataValue];
+    			
+        		bindingFunction(property());
+        		property.subscribe(bindingFunction);
+    		})(dataKey);
+    	}
+    	
+    	return binding;
     };
     just.binding = binding;
     
-    function ElementBinding(element, obj) {
-        this.bind = function() {
-        	var dataKey,
-        	self = this;
-        	
-        	for(dataKey in element.dataset) {
-        		(function(dataKey){
-        			var bindingFunction = self[dataKey],
-            		dataValue = element.dataset[dataKey],
-            		property = obj[dataValue];
-        			
-            		bindingFunction(property());
-            		property.subscribe(bindingFunction);
-        		})(dataKey);
-        	}
-        	
-        	return this;
+    function ElementBinding(element, obj) { 
+        this.id = function(id) {
+        	element.id = id;
         };
         
         this.class = function(className, lastClassName) {
@@ -85,10 +85,6 @@
             }
             
             element.appendChild(document.createTextNode(text));
-        };
-        
-        this.id = function(id) {
-        	element.id = id;
         };
     }
     just.ElementBinding = ElementBinding;
