@@ -83,7 +83,11 @@
             }
             
             element.appendChild(document.createTextNode(text));
-        }
+        };
+        
+        this.id = function(id) {
+        	element.id = id;
+        };
     }
 
     window.just = just;

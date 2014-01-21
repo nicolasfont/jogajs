@@ -111,3 +111,13 @@ test("data-text binding updates Text node overwriting existing text and elements
     equal(element.childNodes.length, 1);
     equal(element.childNodes[0].textContent, "Raj");
 });
+
+test("data-id binding updates element id", function() {
+	var element = $('<span data-id="id"/>')[0],
+    obj = {
+        id: just.property("123")
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.id, "123");
+});
