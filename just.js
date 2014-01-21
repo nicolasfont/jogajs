@@ -7,10 +7,10 @@
         
         function property(newValue) {
             var i, previousValue;
-            if (typeof newValue != 'undefined') {
+            if(typeof newValue != 'undefined') {
                 previousValue = value;
                 value = newValue;
-                for (i = 0; i < observers.length; i++) {
+                for(i = 0; i < observers.length; i++) {
                     observers[i](value, previousValue);
                 }
                 return this;
@@ -25,7 +25,7 @@
         
         property.unsubscribe = function(observer) {
             var index = observers.indexOf(observer);
-            if (index != -1) {
+            if(index != -1) {
                 observers.splice(index, 1);
             }
             return this;
@@ -66,7 +66,7 @@
         };
         
         this.class = function(className, lastClassName) {
-            if (lastClassName) {
+            if(lastClassName) {
                 element.classList.remove(lastClassName);
             }
             element.classList.add(className);
@@ -91,8 +91,11 @@
             element.appendChild(document.createTextNode(text));
         };
         
-        this.onclick = function(onclick) {
-            element.onclick = onclick;
+        this.onclick = function(onclick, lastOnclick) {
+        	if(lastOnclick) {
+        		element.removeEventListener("click", lastOnclick);
+        	}
+        	element.addEventListener("click", onclick);
         };
     }
     just.ElementBinding = ElementBinding;
