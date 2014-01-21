@@ -7,10 +7,10 @@
         
         function property(newValue) {
             var i, previousValue;
-            if(typeof newValue != 'undefined') {
+            if (typeof newValue != 'undefined') {
                 previousValue = value;
                 value = newValue;
-                for(i = 0; i < observers.length; i++) {
+                for (i = 0; i < observers.length; i++) {
                     observers[i](value, previousValue);
                 }
                 return this;
@@ -25,7 +25,7 @@
         
         property.unsubscribe = function(observer) {
             var index = observers.indexOf(observer);
-            if(index != -1) {
+            if (index != -1) {
                 observers.splice(index, 1);
             }
             return this;
@@ -41,13 +41,13 @@
         var binding = new ElementBinding(element, obj),
         dataKey;
     	
-    	for(dataKey in element.dataset) {
+    	for (dataKey in element.dataset) {
     		(function(dataKey){
     			var bindingFunction = binding[dataKey],
         		dataValue = element.dataset[dataKey],
         		property = obj[dataValue];
     			
-    			if(typeof property === "function" && property.subscribe) {    				
+    			if (typeof property === "function" && property.subscribe) {    				
     				bindingFunction(property());
     				property.subscribe(bindingFunction);
     			} else {
@@ -66,7 +66,7 @@
         };
         
         this.class = function(className, lastClassName) {
-            if(lastClassName) {
+            if (lastClassName) {
                 element.classList.remove(lastClassName);
             }
             element.classList.add(className);
@@ -80,11 +80,11 @@
             var i,
             childNodes = [];
 
-            for(i = 0; i < element.childNodes.length; i++) {
+            for (i = 0; i < element.childNodes.length; i++) {
                 childNodes.push(element.childNodes[i]);
             }
             
-            for(i = 0; i < childNodes.length; i++) {
+            for (i = 0; i < childNodes.length; i++) {
                 element.removeChild(childNodes[i]);
             }
             
@@ -92,7 +92,7 @@
         };
         
         this.onclick = function(onclick, lastOnclick) {
-        	if(lastOnclick) {
+        	if (lastOnclick) {
         		element.removeEventListener("click", lastOnclick);
         	}
         	element.addEventListener("click", onclick);
