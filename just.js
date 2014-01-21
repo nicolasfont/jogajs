@@ -3,10 +3,11 @@
 
     just.property = function(initialValue) {
         var value = null,
-        observers = [],
-        f = function(newValue) {
+        observers = [];
+        
+        function property(newValue) {
             var i, previousValue;
-            if (typeof(newValue) != 'undefined') {
+            if (typeof newValue != 'undefined') {
                 previousValue = value;
                 value = newValue;
                 for (i = 0; i < observers.length; i++) {
@@ -16,19 +17,23 @@
             }
             return value;
         };
-        f.subscribe = function(observer) {
+        
+        property.subscribe = function(observer) {
             observers.push(observer);
             return this;
         };
-        f.unsubscribe = function(observer) {
+        
+        property.unsubscribe = function(observer) {
             var index = observers.indexOf(observer);
             if (index != -1) {
                 observers.splice(index, 1);
             }
             return this;
         };
-        f(initialValue);
-        return f;
+        
+        property(initialValue);
+        
+        return property;
     };
     
     just.binding = function(element, obj) {
@@ -53,15 +58,18 @@
         	
         	return this;
         };
+        
         this.class = function(className, lastClassName) {
             if (lastClassName) {
                 element.classList.remove(lastClassName);
             }
             element.classList.add(className);
         };
+        
         this.title = function(title) {
         	element.title = title;
         };
+        
         this.text = function(text) {
             var i,
             childNodes = [];
@@ -69,9 +77,11 @@
             for(i = 0; i < element.childNodes.length; i++) {
                 childNodes.push(element.childNodes[i]);
             }
+            
             for(i = 0; i < childNodes.length; i++) {
                 element.removeChild(childNodes[i]);
             }
+            
             element.appendChild(document.createTextNode(text));
         }
     }
