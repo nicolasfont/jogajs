@@ -1,7 +1,7 @@
 (function() {
     var just = {};
 
-    just.property = function(initialValue) {
+    function property(initialValue) {
         var value = null,
         observers = [];
         
@@ -35,12 +35,14 @@
         
         return property;
     };
+    just.property = property;
     
-    just.binding = function(element, obj) {
-        return new just.Binding(element, obj).bind();
+    function binding(element, obj) {
+        return new ElementBinding(element, obj).bind();
     };
+    just.binding = binding;
     
-    just.Binding = function(element, obj) {
+    function ElementBinding(element, obj) {
         this.bind = function() {
         	var dataKey,
         	self = this;
@@ -89,6 +91,7 @@
         	element.id = id;
         };
     }
+    just.ElementBinding = ElementBinding;
 
     window.just = just;
 })();
