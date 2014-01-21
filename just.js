@@ -61,6 +61,18 @@
         };
         this.title = function(title) {
         	element.title = title;
+        };
+        this.text = function(text) {
+            var i,
+            childNodes = [];
+
+            for(i = 0; i < element.childNodes.length; i++) {
+                childNodes.push(element.childNodes[i]);
+            }
+            for(i = 0; i < childNodes.length; i++) {
+                element.removeChild(childNodes[i]);
+            }
+            element.appendChild(new Text(text));
         }
     }
 

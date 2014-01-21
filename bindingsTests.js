@@ -67,7 +67,7 @@ test("can bind two data attributes and update them", function() {
     equal(element.className, "class2");
 });
 
-test("data-class binding preservers existing classes", function() {
+test("data-class binding preserves existing classes", function() {
     var element = $('<span class="existing1 existing2" data-class="clazz"/>')[0],
     obj = {
         clazz: just.property("test")
@@ -77,4 +77,37 @@ test("data-class binding preservers existing classes", function() {
     obj.clazz("test2");
 
     equal(element.className, "existing1 existing2 test2");
+});
+
+test("data-text binding updates Text node", function() {
+    var element = $('<span data-text="name"></span>')[0],
+    obj = {
+        name: just.property("Raj")
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.childNodes.length, 1);
+    equal(element.childNodes[0].textContent, "Raj");
+});
+
+test("data-text binding updates Text node overwriting existing text", function() {
+    var element = $('<span data-text="name">Sheldon</span>')[0],
+    obj = {
+        name: just.property("Raj")
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.childNodes.length, 1);
+    equal(element.childNodes[0].textContent, "Raj");
+});
+
+test("data-text binding updates Text node overwriting existing text and elements", function() {
+    var element = $('<span data-text="name">Sheldon<div>Cooper</div></span>')[0],
+    obj = {
+        name: just.property("Raj")
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.childNodes.length, 1);
+    equal(element.childNodes[0].textContent, "Raj");
 });
