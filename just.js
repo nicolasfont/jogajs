@@ -47,8 +47,12 @@
         		dataValue = element.dataset[dataKey],
         		property = obj[dataValue];
     			
-        		bindingFunction(property());
-        		property.subscribe(bindingFunction);
+    			if(typeof property === "function" && property.subscribe) {    				
+    				bindingFunction(property());
+    				property.subscribe(bindingFunction);
+    			} else {
+    				bindingFunction(property);
+    			}
     		})(dataKey);
     	}
     	
@@ -85,6 +89,10 @@
             }
             
             element.appendChild(document.createTextNode(text));
+        };
+        
+        this.onclick = function(onclick) {
+            element.onclick = onclick;
         };
     }
     just.ElementBinding = ElementBinding;

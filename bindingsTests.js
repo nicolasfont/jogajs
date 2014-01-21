@@ -18,6 +18,16 @@ test("can bind data-class attribute to object property", function() {
     equal(element.className, "test");
 });
 
+test("can bind data-class attribute to object value", function() {
+	var element = $('<span data-class="clazz"/>')[0],
+    obj = {
+        clazz: "test"
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.className, "test");
+});
+
 test("updating object property updates binding", function() {
     var element = $('<span data-class="clazz"/>')[0],
     obj = {
@@ -120,4 +130,34 @@ test("data-id binding updates element id", function() {
     binding = just.binding(element, obj);
 
     equal(element.id, "123");
+});
+
+test("data-onclick binds to a function", function() {
+	var element = $('<span data-onclick="clickHandler"/>')[0],
+	called = false,
+    obj = {
+        clickHandler: function() {
+        	called = true
+        }
+    },
+    binding = just.binding(element, obj);
+
+	element.click();
+	
+    ok(called);
+});
+
+test("data-onclick binds to a function property", function() {
+	var element = $('<span data-onclick="clickHandler"/>')[0],
+	called = false,
+    obj = {
+        clickHandler: just.property(function() {
+        	called = true
+        })
+    },
+    binding = just.binding(element, obj);
+
+	element.click();
+	
+    ok(called);
 });
