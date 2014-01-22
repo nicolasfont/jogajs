@@ -97,6 +97,21 @@
         	}
         	element.addEventListener("click", onclick);
         };
+
+        this.element = function(childElement) {
+            var i,
+            childNodes = [];
+
+            for (i = 0; i < element.childNodes.length; i++) {
+                childNodes.push(element.childNodes[i]);
+            }
+
+            for (i = 0; i < childNodes.length; i++) {
+                element.removeChild(childNodes[i]);
+            }
+
+            element.appendChild(childElement);
+        }
     }
     just.ElementBinding = ElementBinding;
 

@@ -182,3 +182,15 @@ test("data-onclick binding can be changed to a different function", function() {
     ok(!called1);
     ok(called2);
 });
+
+test("data-element binds element", function() {
+	var element = $('<span data-element="el"/>')[0],
+	childElement = $('<div/>')[0],
+    obj = {
+        el: just.property(childElement)
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.childNodes.length, 1);
+	equal(element.childNodes[0], childElement);
+});
