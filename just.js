@@ -92,10 +92,9 @@
         };
         
         this.onclick = function(onclick, lastOnclick) {
-        	if (lastOnclick) {
-        		element.removeEventListener("click", lastOnclick);
-        	}
-        	element.addEventListener("click", onclick);
+        	element.onclick = function(e) {
+        		onclick.call(obj, e);
+        	};
         };
 
         this.element = function(childElement) {
