@@ -91,7 +91,7 @@
             element.appendChild(document.createTextNode(text));
         };
         
-        this.onclick = function(onclick, lastOnclick) {
+        this.onclick = function(onclick) {
         	element.onclick = function(e) {
         		onclick.call(obj, e);
         	};

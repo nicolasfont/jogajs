@@ -151,10 +151,12 @@ test("data-onclick binds to a function property", function() {
 	var element = $('<span data-onclick="clickHandler"/>')[0],
 	called = false,
 	calledWithThis,
+	calledWithEvent,
     obj = {
-        clickHandler: just.property(function() {
+        clickHandler: just.property(function(event) {
         	called = true;
         	calledWithThis = this;
+        	calledWithEvent = event;
         })
     },
     binding = just.binding(element, obj);
@@ -163,6 +165,7 @@ test("data-onclick binds to a function property", function() {
 	
     ok(called);
     equal(calledWithThis, obj);
+    ok(calledWithEvent instanceof MouseEvent);
 });
 
 test("data-onclick binding can be changed to a different function", function() {
