@@ -9,7 +9,7 @@ test("can create a binding", function () {
 });
 
 test("can bind data-class attribute to object property", function() {
-	var element = $('<span data-class="clazz"/>')[0],
+	var element = $('<span data-class="this.clazz"/>')[0],
     obj = {
         clazz: just.property("test")
     },
@@ -19,7 +19,7 @@ test("can bind data-class attribute to object property", function() {
 });
 
 test("can bind data-class attribute to object value", function() {
-	var element = $('<span data-class="clazz"/>')[0],
+	var element = $('<span data-class="this.clazz"/>')[0],
     obj = {
         clazz: "test"
     },
@@ -29,7 +29,7 @@ test("can bind data-class attribute to object value", function() {
 });
 
 test("updating object property updates binding", function() {
-    var element = $('<span data-class="clazz"/>')[0],
+    var element = $('<span data-class="this.clazz"/>')[0],
     obj = {
         clazz: just.property("test")
     },
@@ -41,7 +41,7 @@ test("updating object property updates binding", function() {
 });
 
 test("can bind data-title", function() {
-	var element = $('<span data-title="title"/>')[0],
+	var element = $('<span data-title="this.title"/>')[0],
     obj = {
         title: just.property("test")
     },
@@ -51,7 +51,7 @@ test("can bind data-title", function() {
 });
 
 test("can bind two data attributes", function() {
-	var element = $('<span data-title="title" data-class="clazz"/>')[0],
+	var element = $('<span data-title="this.title" data-class="this.clazz"/>')[0],
     obj = {
 	    title: just.property("title1"),
 	    clazz: just.property("class1")
@@ -63,7 +63,7 @@ test("can bind two data attributes", function() {
 });
 
 test("can bind two data attributes and update them", function() {
-	var element = $('<span data-title="title" data-class="clazz"/>')[0],
+	var element = $('<span data-title="this.title" data-class="this.clazz"/>')[0],
 	obj = {
 	    title: just.property("title1"),
 	    clazz: just.property("class1")
@@ -78,7 +78,7 @@ test("can bind two data attributes and update them", function() {
 });
 
 test("data-class binding preserves existing classes", function() {
-    var element = $('<span class="existing1 existing2" data-class="clazz"/>')[0],
+    var element = $('<span class="existing1 existing2" data-class="this.clazz"/>')[0],
     obj = {
         clazz: just.property("test")
     },
@@ -90,7 +90,7 @@ test("data-class binding preserves existing classes", function() {
 });
 
 test("data-text binding updates Text node", function() {
-    var element = $('<span data-text="name"></span>')[0],
+    var element = $('<span data-text="this.name"></span>')[0],
     obj = {
         name: just.property("Raj")
     },
@@ -101,7 +101,7 @@ test("data-text binding updates Text node", function() {
 });
 
 test("data-text binding updates Text node overwriting existing text", function() {
-    var element = $('<span data-text="name">Sheldon</span>')[0],
+    var element = $('<span data-text="this.name">Sheldon</span>')[0],
     obj = {
         name: just.property("Raj")
     },
@@ -112,7 +112,7 @@ test("data-text binding updates Text node overwriting existing text", function()
 });
 
 test("data-text binding updates Text node overwriting existing text and elements", function() {
-    var element = $('<span data-text="name">Sheldon<div>Cooper</div></span>')[0],
+    var element = $('<span data-text="this.name">Sheldon<div>Cooper</div></span>')[0],
     obj = {
         name: just.property("Raj")
     },
@@ -123,7 +123,7 @@ test("data-text binding updates Text node overwriting existing text and elements
 });
 
 test("data-id binding updates element id", function() {
-	var element = $('<span data-id="id"/>')[0],
+	var element = $('<span data-id="this.id"/>')[0],
     obj = {
         id: just.property("123")
     },
@@ -133,7 +133,7 @@ test("data-id binding updates element id", function() {
 });
 
 test("data-onclick binds to a function", function() {
-	var element = $('<span data-onclick="clickHandler"/>')[0],
+	var element = $('<span data-onclick="this.clickHandler"/>')[0],
 	called = false,
     obj = {
         clickHandler: function() {
@@ -148,7 +148,7 @@ test("data-onclick binds to a function", function() {
 });
 
 test("data-onclick binds to a function property", function() {
-	var element = $('<span data-onclick="clickHandler"/>')[0],
+	var element = $('<span data-onclick="this.clickHandler"/>')[0],
 	called = false,
 	calledWithThis,
 	calledWithEvent,
@@ -169,7 +169,7 @@ test("data-onclick binds to a function property", function() {
 });
 
 test("data-onclick binding can be changed to a different function", function() {
-	var element = $('<span data-onclick="clickHandler"/>')[0],
+	var element = $('<span data-onclick="this.clickHandler"/>')[0],
 	called1 = false,
 	called2 = false,
     obj = {
@@ -190,7 +190,7 @@ test("data-onclick binding can be changed to a different function", function() {
 });
 
 test("data-element binds element", function() {
-	var element = $('<span data-element="el"/>')[0],
+	var element = $('<span data-element="this.el"/>')[0],
 	childElement = $('<div/>')[0],
     obj = {
         el: just.property(childElement)

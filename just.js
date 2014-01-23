@@ -45,7 +45,8 @@
     		(function(dataKey){
     			var bindingFunction = binding[dataKey],
         		dataValue = element.dataset[dataKey],
-        		property = obj[dataValue];
+        		//property = obj[dataValue];
+        		property = new Function("return " + dataValue).apply(obj);
     			
     			if (typeof property === "function" && property.subscribe) {    				
     				bindingFunction(property());
