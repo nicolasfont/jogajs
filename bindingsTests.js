@@ -200,3 +200,16 @@ test("data-element binds element", function() {
     equal(element.childNodes.length, 1);
 	equal(element.childNodes[0], childElement);
 });
+
+
+test("data-text binding updates Text node", function() {
+    var element = $('<span data-text="this.person().name()"></span>')[0],
+    obj = {
+    	person: just.property({
+    		name: just.property("Raj")
+    	}) 
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.childNodes[0].textContent, "Raj");
+});
