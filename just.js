@@ -1,5 +1,7 @@
 (function() {
     var just = {};
+    
+    just.bindings = [];
 
     function property(initialValue) {
         var value = null,
@@ -37,9 +39,19 @@
     };
     just.property = property;
     
-    function binding(element, obj) {
-        var binding = new ElementBinding(element, obj),
-        dataKey;
+    function element(el, obj) {
+    	var element = el,
+    	binding,
+    	div,
+    	dataKey;
+    	
+    	if(!(el instanceof HTMLElement)) {
+    		div = document.createElement("div");
+    		div.innerHTML = el;
+    		element = div.firstChild;
+    	}
+    	
+        binding = new ElementBinding(element, obj);
     	
     	for (dataKey in element.dataset) {
     		(function(dataKey){
@@ -56,9 +68,11 @@
     		})(dataKey);
     	}
     	
-    	return binding;
+    	just.bindings.push(binding);
+    	
+    	return element;
     };
-    just.binding = binding;
+    just.element = element
     
     function ElementBinding(element, obj) { 
         this.id = function(id) {
