@@ -67,8 +67,8 @@ test("notifies observers when property is set", function() {
 
     property('value');
 
-    equal(notified1, 'value');
-    equal(notified2, 'value');
+    equal(notified1, property);
+    equal(notified2, property);
 });
 
 test("notifies previous value to observers when property is set", function() {
@@ -99,7 +99,7 @@ test("can unsubscribe observers", function() {
     property('value');
 
     equal(notified1, false);
-    equal(notified2, 'value');
+    equal(notified2, property);
 });
 
 test("unsubscribe a non subscribed observer does nothing", function() {
@@ -112,5 +112,5 @@ test("unsubscribe a non subscribed observer does nothing", function() {
 
     property('value');
 
-    equal(notified, 'value');
+    equal(notified, property);
 });

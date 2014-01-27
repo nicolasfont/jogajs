@@ -201,7 +201,6 @@ test("data-element binds element", function() {
 	equal(element.childNodes[0], childElement);
 });
 
-
 test("data-text binding updates Text node", function() {
     var element = $('<span data-text="this.person().name()"></span>')[0],
     obj = {
@@ -212,4 +211,27 @@ test("data-text binding updates Text node", function() {
     binding = just.binding(element, obj);
 
     equal(element.childNodes[0].textContent, "Raj");
+});
+
+test("data-value binding updates input text value", function() {
+    var element = $('<input type="text" data-value="this.name()"/>')[0],
+    obj = {
+        name: just.property("Raj") 
+    },
+    binding = just.binding(element, obj);
+
+    equal(element.value, "Raj");
+});
+
+test("data-value binding updates property when input text value changes", function() {
+    var element = $('<input type="text" data-value="this.name"/>')[0],
+    obj = {
+        name: just.property("") 
+    },
+    binding = just.binding(element, obj);
+
+    element.value = "Raj";
+    element.onchange();
+    
+    equal(obj.name(), "Raj");
 });

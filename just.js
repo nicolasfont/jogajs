@@ -11,7 +11,7 @@
                 previousValue = value;
                 value = newValue;
                 for (i = 0; i < observers.length; i++) {
-                    observers[i](value, previousValue);
+                    observers[i](property, previousValue);
                 }
                 return this;
             }
@@ -47,12 +47,12 @@
         		dataValue = element.dataset[dataKey],
         		property = new Function("return " + dataValue).apply(obj);
     			
-    			if (typeof property === "function" && property.subscribe) {    				
-    				bindingFunction(property());
-    				property.subscribe(bindingFunction);
-    			} else {
-    				bindingFunction(property);
+    			if (typeof property != "function" || !property.subscribe) {
+    				property = just.property(property);
     			}
+    			
+				bindingFunction(property);
+				property.subscribe(bindingFunction);
     		})(dataKey);
     	}
     	
@@ -62,21 +62,21 @@
     
     function ElementBinding(element, obj) { 
         this.id = function(id) {
-        	element.id = id;
+        	element.id = id();
         };
         
-        this.class = function(className, lastClassName) {
+        this.class = function(property, lastClassName) {
             if (lastClassName) {
                 element.classList.remove(lastClassName);
             }
-            element.classList.add(className);
+            element.classList.add(property());
         };
         
-        this.title = function(title) {
-        	element.title = title;
+        this.title = function(property) {
+        	element.title = property();
         };
         
-        this.text = function(text) {
+        this.text = function(property) {
             var i,
             childNodes = [];
 
@@ -88,16 +88,16 @@
                 element.removeChild(childNodes[i]);
             }
             
-            element.appendChild(document.createTextNode(text));
+            element.appendChild(document.createTextNode(property()));
         };
         
-        this.onclick = function(onclick) {
+        this.onclick = function(property) {
         	element.onclick = function(e) {
-        		onclick.call(obj, e);
+        		property().call(obj, e);
         	};
         };
 
-        this.element = function(childElement) {
+        this.element = function(property) {
             var i,
             childNodes = [];
 
@@ -109,8 +109,16 @@
                 element.removeChild(childNodes[i]);
             }
 
-            element.appendChild(childElement);
-        }
+            element.appendChild(property());
+        };
+        
+        this.value = function(property) {
+            element.value = property();
+            
+            element.onchange = function() {
+            	property(element.value);
+            };
+        };
     }
     just.ElementBinding = ElementBinding;
 
