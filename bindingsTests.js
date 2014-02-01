@@ -5,7 +5,7 @@ test("can create an element", function () {
     element = just.element($('<span/>')[0], obj);
 
     ok(element);
-    equal(just.bindings.length, 1);
+    ok(element.dataset.binding);
 });
 
 test("can create a binding from an html string", function () {

@@ -1,7 +1,5 @@
 (function() {
     var just = {};
-    
-    just.bindings = [];
 
     function DependencyTracker() {
         var observers = [];
@@ -90,7 +88,6 @@
 
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].unsubscribe(computedProperty.notify);
-
             }
 
             dependencies = [];
@@ -156,7 +153,7 @@
         		dataValue = element.dataset[dataKey],
         		property = new Function("return " + dataValue).apply(obj);
     			
-    			if (typeof property != "function" || !property.subscribe) {
+    			if (typeof property !== "function" || !property.subscribe) {
     				property = just.property(property);
     			}
     			
@@ -165,7 +162,7 @@
     		})(dataKey);
     	}
     	
-    	just.bindings.push(binding);
+    	element.dataset.binding = binding;
     	
     	return element;
     };
