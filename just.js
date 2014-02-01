@@ -3,41 +3,138 @@
     
     just.bindings = [];
 
-    function property(initialValue) {
-        var value = null,
-        observers = [];
-        
-        function property(newValue) {
-            var i, previousValue;
-            if (typeof newValue != 'undefined') {
-                previousValue = value;
-                value = newValue;
-                for (i = 0; i < observers.length; i++) {
-                    observers[i](property, previousValue);
-                }
-                return this;
-            }
-            return value;
-        };
-        
-        property.subscribe = function(observer) {
+    function DependencyTracker() {
+        var observers = [];
+
+        this.subscribe = function(observer) {
             observers.push(observer);
             return this;
         };
-        
-        property.unsubscribe = function(observer) {
+
+        this.unsubscribe = function(observer) {
             var index = observers.indexOf(observer);
-            if (index != -1) {
+            if (index !== -1) {
                 observers.splice(index, 1);
             }
             return this;
         };
+
+        this.notify = function(changedProperty) {
+            var i;
+            for (i = 0; i < observers.length; i++) {
+                observers[i](changedProperty);
+            }
+            return this;
+        };
+    }
+    just.dependencyTracker = new DependencyTracker();
+
+    function objectProperty(initialValue) {
+        var value = null,
+        previousValue = null,
+        observers = [];
         
-        property(initialValue);
+        function objectProperty(newValue) {
+            var i;
+            if (typeof newValue === 'undefined') {
+                just.dependencyTracker.notify(objectProperty);
+                return value;
+            } else {
+                previousValue = value;
+                value = newValue;
+                objectProperty.notify();
+                return this;
+            }
+        };
         
-        return property;
+        objectProperty.subscribe = function(observer) {
+            observers.push(observer);
+            return this;
+        };
+        
+        objectProperty.unsubscribe = function(observer) {
+            var index = observers.indexOf(observer);
+            if (index !== -1) {
+                observers.splice(index, 1);
+            }
+            return this;
+        };
+
+        objectProperty.notify = function() {
+            var i;
+            for (i = 0; i < observers.length; i++) {
+                observers[i](objectProperty, previousValue);
+            }
+            return this;
+        };
+        
+        objectProperty(initialValue);
+        
+        return objectProperty;
     };
-    just.property = property;
+    just.property = objectProperty;
+
+    function computedProperty(f) {
+        var f,
+        observers = [],
+        dependencies = [];
+
+        function computedProperty() {
+            var value,
+            i,
+            subscriber = function(changedProperty) {
+                if (dependencies.indexOf(changedProperty) === -1) {
+                    dependencies.push(changedProperty);
+                }
+            };
+
+            for (i = 0; i < dependencies.length; i++) {
+                dependencies[i].unsubscribe(computedProperty.notify);
+
+            }
+
+            dependencies = [];
+
+            just.dependencyTracker.subscribe(subscriber);
+
+            value = f();
+
+            just.dependencyTracker.unsubscribe(subscriber);
+
+            for (i = 0; i < dependencies.length; i++) {
+                dependencies[i].subscribe(computedProperty.notify);
+            }
+
+            return value;
+        }
+
+        computedProperty.subscribe = function(observer) {
+            observers.push(observer);
+            return this;
+        };
+
+        computedProperty.unsubscribe = function(observer) {
+            var index = observers.indexOf(observer);
+            if (index !== -1) {
+                observers.splice(index, 1);
+            }
+            return this;
+        };
+
+        computedProperty.notify = function() {
+            var i;
+            computedProperty();
+            for (i = 0; i < observers.length; i++) {
+                observers[i](computedProperty);
+            }
+            return this;
+        };
+
+        computedProperty();
+
+        return computedProperty;
+    }
+    just.computedProperty = computedProperty;
     
     function element(el, obj) {
     	var element = el,
