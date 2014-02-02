@@ -77,7 +77,7 @@
         observers = [],
         dependencies = [];
 
-        function computedProperty() {
+        function computedProperty(newFunc) {
             var value,
             i,
             subscriber = function(changedProperty) {
@@ -85,6 +85,13 @@
                     dependencies.push(changedProperty);
                 }
             };
+            
+            if (newFunc) {
+            	f = newFunc;
+            	value = f();
+            	computedProperty.notify();
+            	return value;
+            }
 
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].unsubscribe(computedProperty.notify);
