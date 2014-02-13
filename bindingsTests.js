@@ -2,7 +2,7 @@ module("bindings");
 
 test("can create an element", function () {
     var obj = {},
-    element = just.element($('<span/>')[0], obj);
+    element = just.element(document.createElement("span"), obj);
 
     ok(element);
     ok(element.dataset.binding);
@@ -183,7 +183,7 @@ test("data-onclick binding can be changed to a different function", function() {
 });
 
 test("data-element binds element", function() {
-	var childElement = $('<div/>')[0],
+	var childElement = document.createElement("div"),
     obj = {
         el: just.property(childElement)
     },
