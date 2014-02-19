@@ -86,13 +86,12 @@
                 wrapped(newValue);
             }
 
-            wrapped = null;
-
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].unsubscribe(computedProperty.notify);
             }
 
             dependencies = [];
+            wrapped = null;
 
             just.dependencyTracker.subscribe(subscriber);
 
