@@ -269,46 +269,6 @@ test("computed property notifies subscribers twice when nested dependency is upd
     equal(computed(), 3);
 });
 
-test("computed property notifies subscribers when reassigned function", function() {
-    var prop1 = just.property(2),
-    computed = just.computedProperty(function() {
-        return 1;
-    }),
-    notified = 0;
-
-    computed.subscribe(function() {
-        notified += 1;
-    });
-
-    computed(function() {
-    	return prop1();
-    });
-
-    equal(notified, 1);
-    equal(computed(), 2);
-});
-
-test("computed property notifies subscribers twice when reassigned function and then updated dependency", function() {
-    var prop1 = just.property(2),
-    computed = just.computedProperty(function() {
-        return 1;
-    }),
-    notified = 0;
-
-    computed.subscribe(function() {
-        notified += 1;
-    });
-
-    computed(function() {
-    	return prop1();
-    });
-    
-    prop1(3);
-
-    equal(notified, 2);
-    equal(computed(), 3);
-});
-
 test("wrapper property gets value of wrapped property", function() {
     var prop1 = just.property(1),
     wrapper = just.wrapperProperty(function() {
