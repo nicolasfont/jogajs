@@ -29,25 +29,23 @@
 
     function objectProperty(initialValue) {
         var value = null,
-        observers = [];
-        
+            observers = [];
+
         function objectProperty(newValue) {
-            var i;
-            if (typeof newValue === 'undefined') {
+            if (newValue === undefined) {
                 just.dependencyTracker.notify(objectProperty);
                 return value;
-            } else {
-                value = newValue;
-                objectProperty.notify();
-                return this;
             }
+            value = newValue;
+            objectProperty.notify();
+            return this;
         };
-        
+
         objectProperty.subscribe = function(observer) {
             observers.push(observer);
             return this;
         };
-        
+
         objectProperty.unsubscribe = function(observer) {
             var index = observers.indexOf(observer);
             if (index !== -1) {
@@ -63,28 +61,28 @@
             }
             return this;
         };
-        
+
         objectProperty(initialValue);
-        
+
         return objectProperty;
     };
     just.property = objectProperty;
 
     function computedProperty(f) {
         var observers = [],
-        dependencies = [],
-        wrapped;
+            dependencies = [],
+            wrapped;
 
         function computedProperty(newValue) {
             var value,
-            i,
-            subscriber = function(changedProperty) {
-                if (dependencies.indexOf(changedProperty) === -1) {
-                    dependencies.push(changedProperty);
-                }
-            };
-            
-            if(typeof newValue !== "undefined" && wrapped) {
+                i,
+                subscriber = function(changedProperty) {
+                    if (dependencies.indexOf(changedProperty) === -1) {
+                        dependencies.push(changedProperty);
+                    }
+                };
+
+            if(newValue !== undefined && wrapped) {
                 wrapped(newValue);
             }
 
@@ -142,42 +140,12 @@
         return computedProperty;
     }
     just.computedProperty = computedProperty;
-    
-    function element(el, obj) {
-    	var element = el,
-    	binding,
-    	div,
-    	dataKey;
-    	
-    	if(!(el instanceof HTMLElement)) {
-    		div = document.createElement("div");
-    		div.innerHTML = el;
-    		element = div.firstChild;
-    	}
-    	
-        binding = new ElementBinding(element, obj);
 
-    	for (dataKey in element.dataset) {
-            var bindingFunction = binding[dataKey],
-            dataValue = element.dataset[dataKey],
-            property = just.computedProperty(new Function("return " + dataValue).bind(obj));
-
-            bindingFunction = bindingFunction.bind(binding);
-            bindingFunction(property);
-            property.subscribe(bindingFunction);
-        }
-    	
-    	element.dataset.binding = binding;
-    	
-    	return element;
-    };
-    just.element = element;
-    
     function ElementBinding(element, obj) { 
         this.id = function(id) {
-        	element.id = id();
+            element.id = id();
         };
-        
+
         this.class = function(property) {
             if (this.lastClassName) {
                 element.classList.remove(this.lastClassName);
@@ -187,33 +155,33 @@
         };
 
         this.title = function(property) {
-        	element.title = property();
+            element.title = property();
         };
-        
+
         this.text = function(property) {
             var i,
-            childNodes = [];
+                childNodes = [];
 
             for (i = 0; i < element.childNodes.length; i++) {
                 childNodes.push(element.childNodes[i]);
             }
-            
+
             for (i = 0; i < childNodes.length; i++) {
                 element.removeChild(childNodes[i]);
             }
-            
+
             element.appendChild(document.createTextNode(property()));
         };
-        
+
         this.onclick = function(property) {
-        	element.onclick = function(e) {
-        		property().call(obj, e);
-        	};
+            element.onclick = function(e) {
+                property().call(obj, e);
+            };
         };
 
         this.element = function(property) {
             var i,
-            childNodes = [];
+                childNodes = [];
 
             for (i = 0; i < element.childNodes.length; i++) {
                 childNodes.push(element.childNodes[i]);
@@ -225,16 +193,49 @@
 
             element.appendChild(property());
         };
-        
+
         this.value = function(property) {
             element.value = property();
-            
+
             element.onchange = function() {
-            	property(element.value);
+                property(element.value);
             };
         };
     }
     just.ElementBinding = ElementBinding;
+    
+    function element(el, obj) {
+        var element = el,
+            binding,
+            bindingFunction,
+            div,
+            dataKey,
+            dataValue,
+            property;
+
+        if (!(el instanceof HTMLElement)) {
+            div = document.createElement("div");
+            div.innerHTML = el;
+            element = div.firstChild;
+        }
+
+        binding = new ElementBinding(element, obj);
+
+        for (dataKey in element.dataset) {
+            bindingFunction = binding[dataKey],
+            dataValue = element.dataset[dataKey],
+            property = just.computedProperty(new Function("return " + dataValue).bind(obj));
+
+            bindingFunction = bindingFunction.bind(binding);
+            bindingFunction(property);
+            property.subscribe(bindingFunction);
+        }
+
+        element.dataset.binding = binding;
+
+        return element;
+    }
+    just.element = element;
 
     window.just = just;
 })();
