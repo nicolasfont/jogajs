@@ -72,9 +72,10 @@
 
     function computedProperty(f) {
         var observers = [],
-        dependencies = [];
+        dependencies = [],
+        wrapped;
 
-        function computedProperty() {
+        function computedProperty(newValue) {
             var value,
             i,
             subscriber = function(changedProperty) {
@@ -82,9 +83,18 @@
                     dependencies.push(changedProperty);
                 }
             };
+            
+            if(typeof newValue !== "undefined" && wrapped) {
+                wrapped(newValue);
+            }
 
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].unsubscribe(computedProperty.notify);
+            }
+            
+            if (wrapped) {
+                wrapped.unsubscribe(computedProperty.notify);
+                wrapped = null;
             }
 
             dependencies = [];
@@ -97,6 +107,12 @@
 
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].subscribe(computedProperty.notify);
+            }
+            
+            if (typeof value === "function" && value.subscribe && value.unsubscribe) {
+                wrapped = value;
+                wrapped.subscribe(computedProperty.notify);
+                return wrapped();
             }
 
             return value;
@@ -129,64 +145,6 @@
         return computedProperty;
     }
     just.computedProperty = computedProperty;
-
-    function wrapperProperty(f) {
-        var observers = [],
-        computed = just.computedProperty(f),
-        wrapped;
-
-        function wrapperProperty(newValue) {
-            var value;
-
-            if(typeof newValue !== "undefined" && wrapped) {
-                wrapped(newValue);
-            }
-
-            if (wrapped) {
-                wrapped.unsubscribe(wrapperProperty.notify);
-                wrapped = null;
-            }
-
-            value = computed();
-
-            if (typeof value === "function" && value.subscribe && value.unsubscribe) {
-                wrapped = value;
-                wrapped.subscribe(wrapperProperty.notify);
-                return wrapped();
-            }
-
-            return value;
-        }
-
-        wrapperProperty.subscribe = function(observer) {
-            observers.push(observer);
-            return this;
-        };
-
-        wrapperProperty.unsubscribe = function(observer) {
-            var index = observers.indexOf(observer);
-            if (index !== -1) {
-                observers.splice(index, 1);
-            }
-            return this;
-        };
-
-        wrapperProperty.notify = function() {
-            var i;
-            wrapperProperty();
-            for (i = 0; i < observers.length; i++) {
-                observers[i](wrapperProperty);
-            }
-            return this;
-        };
-
-        computed.subscribe(wrapperProperty.notify);
-
-        wrapperProperty();
-
-        return wrapperProperty;
-    }
-    just.wrapperProperty = wrapperProperty;
     
     function element(el, obj) {
     	var element = el,
@@ -205,7 +163,7 @@
     	for (dataKey in element.dataset) {
             var bindingFunction = binding[dataKey],
             dataValue = element.dataset[dataKey],
-            property = just.wrapperProperty(new Function("return " + dataValue).bind(obj));
+            property = just.computedProperty(new Function("return " + dataValue).bind(obj));
 
             bindingFunction = bindingFunction.bind(binding);
             bindingFunction(property);
