@@ -88,13 +88,10 @@
                 wrapped(newValue);
             }
 
+            wrapped = null;
+
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].unsubscribe(computedProperty.notify);
-            }
-            
-            if (wrapped) {
-                wrapped.unsubscribe(computedProperty.notify);
-                wrapped = null;
             }
 
             dependencies = [];
@@ -105,14 +102,14 @@
 
             just.dependencyTracker.unsubscribe(subscriber);
 
-            for (i = 0; i < dependencies.length; i++) {
-                dependencies[i].subscribe(computedProperty.notify);
-            }
-            
             if (typeof value === "function" && value.subscribe && value.unsubscribe) {
                 wrapped = value;
-                wrapped.subscribe(computedProperty.notify);
-                return wrapped();
+                value = wrapped();
+                subscriber(wrapped);
+            }
+
+            for (i = 0; i < dependencies.length; i++) {
+                dependencies[i].subscribe(computedProperty.notify);
             }
 
             return value;

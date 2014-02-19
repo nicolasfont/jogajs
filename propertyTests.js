@@ -295,6 +295,24 @@ test("computed property notifies subscribers when wrapped property is updated", 
     equal(notified, 1);
 });
 
+test("computed property notifies subscribers only once when wrapped property is also a dependency and is updated", function() {
+    var prop1 = just.property(1),
+    computed = just.computedProperty(function() {
+        prop1();
+        return prop1;
+    }),
+    notified = 0;
+
+    computed.subscribe(function() {
+        notified += 1;
+    });
+
+    prop1(2);
+
+    equal(computed(), 2);
+    equal(notified, 1);
+});
+
 test("computed property notifies subscribers when dependency is updated and wrapping a property", function() {
     var prop2 = just.property(1),
     prop1 = just.property({
