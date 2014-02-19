@@ -1,5 +1,6 @@
 var express = require('express'),
-    server = express.createServer();
+    server = express.createServer(),
+    port = process.env.PORT || process.env.C9_PORT || 9090;
 
 server.get('/', function(req, res) {
     res.send('Hello World');
@@ -7,5 +8,5 @@ server.get('/', function(req, res) {
 
 server.use(express.static(__dirname));
 
-server.listen(process.env.PORT || process.env.C9_PORT);
-console.log('Listening on port ' + (process.env.PORT || process.env.C9_PORT));
+server.listen(port);
+console.log('Listening on port ' + port);

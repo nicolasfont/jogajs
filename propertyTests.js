@@ -71,19 +71,6 @@ test("notifies observers when property is set", function() {
     equal(notified2, property);
 });
 
-test("notifies previous value to observers when property is set", function() {
-    var property = just.property("value1"),
-        previousValue;
-
-    property.subscribe(function(value, lastValue) {
-        previousValue = lastValue;
-    });
-
-    property('value2');
-
-    equal(previousValue, 'value1');
-});
-
 test("can unsubscribe observers", function() {
     var property = just.property(),
         notified1 = false,
@@ -320,4 +307,123 @@ test("computed property notifies subscribers twice when reassigned function and 
 
     equal(notified, 2);
     equal(computed(), 3);
+});
+
+test("wrapper property gets value of wrapped property", function() {
+    var prop1 = just.property(1),
+    wrapper = just.wrapperProperty(function() {
+        return prop1;
+    });
+
+    equal(wrapper(), 1);
+});
+
+test("wrapper property gets value of wrapped value", function() {
+    var wrapper = just.wrapperProperty(function() {
+        return 1;
+    });
+
+    equal(wrapper(), 1);
+});
+
+test("wrapper property notifies subscribers when wrapped property is updated", function() {
+    var prop1 = just.property(1),
+    wrapper = just.wrapperProperty(function() {
+        return prop1;
+    }),
+    notified = 0;
+
+    wrapper.subscribe(function() {
+        notified += 1;
+    });
+
+    prop1(2);
+
+    equal(wrapper(), 2);
+    equal(notified, 1);
+});
+
+test("wrapper property notifies subscribers when dependency is updated", function() {
+    var prop2 = just.property(1),
+    prop1 = just.property({
+        prop2: prop2
+    }),
+    wrapper = just.wrapperProperty(function() {
+        return prop1().prop2;
+    }),
+    notified = 0;
+
+    wrapper.subscribe(function() {
+        notified += 1;
+    });
+
+    prop1({
+        prop2: just.property(2)
+    });
+
+    equal(wrapper(), 2);
+    equal(notified, 1);
+});
+
+test("wrapper property notifies subscribers twice when nested dependency is updated after parent dependency is updated", function() {
+    var prop2 = just.property(1),
+    prop1 = just.property({
+        prop2: prop2
+    }),
+    wrapper = just.wrapperProperty(function() {
+        return prop1().prop2;
+    }),
+    notified = 0;
+
+    wrapper.subscribe(function() {
+        notified += 1;
+    });
+
+    prop1({
+        prop2: just.property(2)
+    });
+
+    prop1().prop2(3);
+
+    equal(notified, 2);
+    equal(wrapper(), 3);
+});
+
+test("wrapper property can set wrapped property", function() {
+    var prop1 = just.property(1),
+    wrapper = just.wrapperProperty(function() {
+        return prop1;
+    }),
+    notified = 0;
+
+    wrapper.subscribe(function() {
+        notified += 1;
+    });
+
+    wrapper(2);
+
+    equal(wrapper(), 2);
+    equal(prop1(), 2);
+    equal(notified, 1);
+});
+
+test("wrapper property can set nested wrapped property", function() {
+    var prop2 = just.property(1),
+    prop1 = just.property({
+        prop2: prop2
+    }),
+    wrapper = just.wrapperProperty(function() {
+        return prop1().prop2;
+    }),
+    notified = 0;
+
+    wrapper.subscribe(function() {
+        notified += 1;
+    });
+
+    wrapper(2);
+
+    equal(wrapper(), 2);
+    equal(prop2(), 2);
+    equal(notified, 1);
 });

@@ -29,7 +29,6 @@
 
     function objectProperty(initialValue) {
         var value = null,
-        previousValue = null,
         observers = [];
         
         function objectProperty(newValue) {
@@ -38,7 +37,6 @@
                 just.dependencyTracker.notify(objectProperty);
                 return value;
             } else {
-                previousValue = value;
                 value = newValue;
                 objectProperty.notify();
                 return this;
@@ -61,7 +59,7 @@
         objectProperty.notify = function() {
             var i;
             for (i = 0; i < observers.length; i++) {
-                observers[i](objectProperty, previousValue);
+                observers[i](objectProperty);
             }
             return this;
         };
@@ -73,8 +71,7 @@
     just.property = objectProperty;
 
     function computedProperty(f) {
-        var f,
-        observers = [],
+        var observers = [],
         dependencies = [];
 
         function computedProperty(newFunc) {
@@ -85,7 +82,7 @@
                     dependencies.push(changedProperty);
                 }
             };
-            
+
             if (newFunc) {
             	f = newFunc;
             	value = f();
@@ -139,6 +136,64 @@
         return computedProperty;
     }
     just.computedProperty = computedProperty;
+
+    function wrapperProperty(f) {
+        var observers = [],
+        computed = just.computedProperty(f),
+        wrapped;
+
+        function wrapperProperty(newValue) {
+            var value;
+
+            if(typeof newValue !== "undefined" && wrapped) {
+                wrapped(newValue);
+            }
+
+            if (wrapped) {
+                wrapped.unsubscribe(wrapperProperty.notify);
+                wrapped = null;
+            }
+
+            value = computed();
+
+            if (typeof value === "function" && value.subscribe && value.unsubscribe) {
+                wrapped = value;
+                wrapped.subscribe(wrapperProperty.notify);
+                return wrapped();
+            }
+
+            return value;
+        }
+
+        wrapperProperty.subscribe = function(observer) {
+            observers.push(observer);
+            return this;
+        };
+
+        wrapperProperty.unsubscribe = function(observer) {
+            var index = observers.indexOf(observer);
+            if (index !== -1) {
+                observers.splice(index, 1);
+            }
+            return this;
+        };
+
+        wrapperProperty.notify = function() {
+            var i;
+            wrapperProperty();
+            for (i = 0; i < observers.length; i++) {
+                observers[i](wrapperProperty);
+            }
+            return this;
+        };
+
+        computed.subscribe(wrapperProperty.notify);
+
+        wrapperProperty();
+
+        return wrapperProperty;
+    }
+    just.wrapperProperty = wrapperProperty;
     
     function element(el, obj) {
     	var element = el,
@@ -153,40 +208,36 @@
     	}
     	
         binding = new ElementBinding(element, obj);
-    	
+
     	for (dataKey in element.dataset) {
-    		(function(dataKey){
-    			var bindingFunction = binding[dataKey],
-        		dataValue = element.dataset[dataKey],
-        		property = new Function("return " + dataValue).apply(obj);
-    			
-    			if (typeof property !== "function" || !property.subscribe) {
-    				property = just.property(property);
-    			}
-    			
-				bindingFunction(property);
-				property.subscribe(bindingFunction);
-    		})(dataKey);
-    	}
+            var bindingFunction = binding[dataKey],
+            dataValue = element.dataset[dataKey],
+            property = just.wrapperProperty(new Function("return " + dataValue).bind(obj));
+
+            bindingFunction = bindingFunction.bind(binding);
+            bindingFunction(property);
+            property.subscribe(bindingFunction);
+        }
     	
     	element.dataset.binding = binding;
     	
     	return element;
     };
-    just.element = element
+    just.element = element;
     
     function ElementBinding(element, obj) { 
         this.id = function(id) {
         	element.id = id();
         };
         
-        this.class = function(property, lastClassName) {
-            if (lastClassName) {
-                element.classList.remove(lastClassName);
+        this.class = function(property) {
+            if (this.lastClassName) {
+                element.classList.remove(this.lastClassName);
             }
-            element.classList.add(property());
+            this.lastClassName = property();
+            element.classList.add(this.lastClassName);
         };
-        
+
         this.title = function(property) {
         	element.title = property();
         };

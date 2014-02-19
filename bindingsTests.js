@@ -17,29 +17,59 @@ test("can create a binding from an html string", function () {
 
 test("can bind data-class attribute to object property", function() {
 	var obj = {
-        clazz: just.property("test")
+        class: just.property("test")
     },
-    element = just.element('<span data-class="this.clazz"/>', obj);
+    element = just.element('<span data-class="this.class"/>', obj);
 
     equal(element.className, "test");
 });
 
 test("can bind data-class attribute to object value", function() {
 	var obj = {
-        clazz: "test"
+        class: "test"
     },
-    element = just.element('<span data-class="this.clazz"/>', obj);
+    element = just.element('<span data-class="this.class"/>', obj);
 
     equal(element.className, "test");
 });
 
 test("updating object property updates binding", function() {
     var obj = {
-        clazz: just.property("test")
+        class: just.property("test")
     },
-    element = just.element('<span data-class="this.clazz"/>', obj);
+    element = just.element('<span data-class="this.class"/>', obj);
 	
-    obj.clazz("test2");
+    obj.class("test2");
+
+    equal(element.className, "test2");
+});
+
+test("updating object nested property updates binding", function() {
+    var nested = {
+        class: just.property("test")
+    },
+    obj = {
+        nested: just.property(nested)
+    },
+    element = just.element('<span data-class="this.nested().class"/>', obj);
+
+    obj.nested().class("test2");
+
+    equal(element.className, "test2");
+});
+
+test("updating object parent property updates binding", function() {
+    var nested = {
+        class: just.property("test")
+    },
+    obj = {
+        nested: just.property(nested)
+    },
+    element = just.element('<span data-class="this.nested().class"/>', obj);
+
+    obj.nested({
+       class: just.property("test2")
+    });
 
     equal(element.className, "test2");
 });
@@ -56,9 +86,9 @@ test("can bind data-title", function() {
 test("can bind two data attributes", function() {
 	var obj = {
 	    title: just.property("title1"),
-	    clazz: just.property("class1")
+	    class: just.property("class1")
     },
-    element = just.element('<span data-title="this.title" data-class="this.clazz"/>', obj);
+    element = just.element('<span data-title="this.title" data-class="this.class"/>', obj);
 	
     equal(element.title, "title1");
     equal(element.className, "class1");
@@ -67,12 +97,12 @@ test("can bind two data attributes", function() {
 test("can bind two data attributes and update them", function() {
 	var obj = {
 	    title: just.property("title1"),
-	    clazz: just.property("class1")
+	    class: just.property("class1")
     },
-    element = just.element('<span data-title="this.title" data-class="this.clazz"/>', obj);
+    element = just.element('<span data-title="this.title" data-class="this.class"/>', obj);
 	
     obj.title("title2");
-    obj.clazz("class2");
+    obj.class("class2");
 	
     equal(element.title, "title2");
     equal(element.className, "class2");
@@ -80,11 +110,11 @@ test("can bind two data attributes and update them", function() {
 
 test("data-class binding preserves existing classes", function() {
     var obj = {
-        clazz: just.property("test")
+        class: just.property("test")
     },
-    element = just.element('<span class="existing1 existing2" data-class="this.clazz"/>', obj);
+    element = just.element('<span class="existing1 existing2" data-class="this.class"/>', obj);
 
-    obj.clazz("test2");
+    obj.class("test2");
 
     equal(element.className, "existing1 existing2 test2");
 });
