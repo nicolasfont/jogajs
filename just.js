@@ -141,67 +141,71 @@
     }
     just.computedProperty = computedProperty;
 
-    function ElementBinding(element, obj) { 
-        this.id = function(id) {
-            element.id = id();
-        };
-
-        this.class = function(property) {
-            if (this.lastClassName) {
-                element.classList.remove(this.lastClassName);
-            }
-            this.lastClassName = property();
-            element.classList.add(this.lastClassName);
-        };
-
-        this.title = function(property) {
-            element.title = property();
-        };
-
-        this.text = function(property) {
-            var i,
-                childNodes = [];
-
-            for (i = 0; i < element.childNodes.length; i++) {
-                childNodes.push(element.childNodes[i]);
-            }
-
-            for (i = 0; i < childNodes.length; i++) {
-                element.removeChild(childNodes[i]);
-            }
-
-            element.appendChild(document.createTextNode(property()));
-        };
-
-        this.onclick = function(property) {
-            element.onclick = function(e) {
-                property().call(obj, e);
-            };
-        };
-
-        this.element = function(property) {
-            var i,
-                childNodes = [];
-
-            for (i = 0; i < element.childNodes.length; i++) {
-                childNodes.push(element.childNodes[i]);
-            }
-
-            for (i = 0; i < childNodes.length; i++) {
-                element.removeChild(childNodes[i]);
-            }
-
-            element.appendChild(property());
-        };
-
-        this.value = function(property) {
-            element.value = property();
-
-            element.onchange = function() {
-                property(element.value);
-            };
-        };
+    function ElementBinding(element, obj) {
+        this.el = element;
+        this.obj = obj;
     }
+    
+    ElementBinding.prototype.id = function(id) {
+        this.el.id = id();
+    };
+
+    ElementBinding.prototype.class = function(property) {
+        if (this.lastClassName) {
+            this.el.classList.remove(this.lastClassName);
+        }
+        this.lastClassName = property();
+        this.el.classList.add(this.lastClassName);
+    };
+
+    ElementBinding.prototype.title = function(property) {
+        this.el.title = property();
+    };
+
+    ElementBinding.prototype.text = function(property) {
+        var i,
+            childNodes = [];
+
+        for (i = 0; i < this.el.childNodes.length; i++) {
+            childNodes.push(this.el.childNodes[i]);
+        }
+
+        for (i = 0; i < childNodes.length; i++) {
+            this.el.removeChild(childNodes[i]);
+        }
+
+        this.el.appendChild(document.createTextNode(property()));
+    };
+
+    ElementBinding.prototype.onclick = function(property) {
+        this.el.onclick = function(e) {
+            property().call(this.obj, e);
+        }.bind(this);
+    };
+
+    ElementBinding.prototype.element = function(property) {
+        var i,
+            childNodes = [];
+
+        for (i = 0; i < this.el.childNodes.length; i++) {
+            childNodes.push(this.el.childNodes[i]);
+        }
+
+        for (i = 0; i < childNodes.length; i++) {
+            this.el.removeChild(childNodes[i]);
+        }
+
+        this.el.appendChild(property());
+    };
+
+    ElementBinding.prototype.value = function(property) {
+        this.el.value = property();
+
+        this.el.onchange = function() {
+            property(this.el.value);
+        }.bind(this);
+    };
+
     just.ElementBinding = ElementBinding;
     
     function element(el, obj) {
