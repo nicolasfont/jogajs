@@ -397,3 +397,16 @@ test("computed property can set nested wrapped property", function() {
     equal(prop2(), 2);
     equal(notified, 1);
 });
+
+test("computed property can be chained when setting a wrapped property", function() {
+    var prop1 = just.property(1),
+        obj = {
+            computed: just.property(function() {
+                return prop1;
+            })
+        };
+
+    var o = obj.computed('value');
+
+    equal(o, obj);
+});

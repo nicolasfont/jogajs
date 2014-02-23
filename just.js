@@ -76,14 +76,15 @@
         function computedProperty(newValue) {
             var value,
                 i,
-                subscriber = function(changedProperty) {
-                    if (dependencies.indexOf(changedProperty) === -1) {
-                        dependencies.push(changedProperty);
+                subscriber = function(property) {
+                    if (dependencies.indexOf(property) === -1) {
+                        dependencies.push(property);
                     }
                 };
 
             if(newValue !== undefined && wrapped) {
                 wrapped(newValue);
+                return this;
             }
 
             for (i = 0; i < dependencies.length; i++) {
