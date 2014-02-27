@@ -145,7 +145,9 @@
         var dataKey,
             bindingFunction,
             dataValue,
-            property;
+            property,
+            i,
+            child;
 
         this.el = element;
         this.obj = obj;
@@ -158,6 +160,11 @@
             bindingFunction = bindingFunction.bind(this);
             bindingFunction(property);
             property.subscribe(bindingFunction);
+        }
+        
+        for (i = 0; i < element.childNodes.length; i++) {
+            child = element.childNodes[i];
+            child.binding = new ElementBinding(child, obj);
         }
     }
     
@@ -234,12 +241,6 @@
         }
 
         element.binding = new ElementBinding(element, obj);
-        
-        for (var i = 0; i < element.childNodes.length; i++) {
-            var child = element.childNodes[i];
-            
-            child.binding = new ElementBinding(child, obj);
-        }
 
         return element;
     }
