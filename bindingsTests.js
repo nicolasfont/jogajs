@@ -5,7 +5,7 @@ test("can create an element", function () {
     element = just.element(document.createElement("span"), obj);
 
     ok(element);
-    ok(element.dataset.binding);
+    ok(element.binding);
 });
 
 test("can create a binding from an html string", function () {
@@ -253,4 +253,14 @@ test("data-value binding updates property when input text value changes", functi
     element.onchange();
     
     equal(obj.name(), "Raj");
+});
+
+test("can bind nested elements", function() {
+    var obj = {
+        name: just.property("test")
+    },
+    element = just.element('<div data-class="this.name">some text node<span data-class="this.name"/>some other text node</div>', obj);
+    
+    equal(element.className, "test");
+    equal(element.childNodes[1].className, "test");
 });

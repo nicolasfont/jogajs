@@ -233,7 +233,13 @@
             element = div.firstChild;
         }
 
-        element.dataset.binding = new ElementBinding(element, obj);
+        element.binding = new ElementBinding(element, obj);
+        
+        for (var i = 0; i < element.childNodes.length; i++) {
+            var child = element.childNodes[i];
+            
+            child.binding = new ElementBinding(child, obj);
+        }
 
         return element;
     }
