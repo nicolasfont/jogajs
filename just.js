@@ -142,8 +142,23 @@
     just.computedProperty = computedProperty;
 
     function ElementBinding(element, obj) {
+        var dataKey,
+            bindingFunction,
+            dataValue,
+            property;
+
         this.el = element;
         this.obj = obj;
+
+        for (dataKey in element.dataset) {
+            bindingFunction = this[dataKey],
+            dataValue = element.dataset[dataKey],
+            property = just.computedProperty(new Function("return " + dataValue).bind(obj));
+
+            bindingFunction = bindingFunction.bind(this);
+            bindingFunction(property);
+            property.subscribe(bindingFunction);
+        }
     }
     
     ElementBinding.prototype.id = function(id) {
@@ -210,12 +225,7 @@
     
     function element(el, obj) {
         var element = el,
-            binding,
-            bindingFunction,
-            div,
-            dataKey,
-            dataValue,
-            property;
+            div;
 
         if (!(el instanceof HTMLElement)) {
             div = document.createElement("div");
@@ -223,19 +233,7 @@
             element = div.firstChild;
         }
 
-        binding = new ElementBinding(element, obj);
-
-        for (dataKey in element.dataset) {
-            bindingFunction = binding[dataKey],
-            dataValue = element.dataset[dataKey],
-            property = just.computedProperty(new Function("return " + dataValue).bind(obj));
-
-            bindingFunction = bindingFunction.bind(binding);
-            bindingFunction(property);
-            property.subscribe(bindingFunction);
-        }
-
-        element.dataset.binding = binding;
+        element.dataset.binding = new ElementBinding(element, obj);
 
         return element;
     }
