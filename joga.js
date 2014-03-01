@@ -1,5 +1,5 @@
 (function() {
-    var just = {};
+    var joga = {};
 
     function DependencyTracker() {
         var observers = [];
@@ -25,7 +25,7 @@
             return this;
         };
     }
-    just.dependencyTracker = new DependencyTracker();
+    joga.dependencyTracker = new DependencyTracker();
 
     function objectProperty(initialValue) {
         var value = null,
@@ -33,13 +33,13 @@
 
         function objectProperty(newValue) {
             if (newValue === undefined) {
-                just.dependencyTracker.notify(objectProperty);
+                joga.dependencyTracker.notify(objectProperty);
                 return value;
             }
             value = newValue;
             objectProperty.notify();
             return this;
-        };
+        }
 
         objectProperty.subscribe = function(observer) {
             observers.push(observer);
@@ -65,8 +65,8 @@
         objectProperty(initialValue);
 
         return objectProperty;
-    };
-    just.property = objectProperty;
+    }
+    joga.property = objectProperty;
 
     function computedProperty(f) {
         var observers = [],
@@ -94,11 +94,11 @@
             dependencies = [];
             wrapped = null;
 
-            just.dependencyTracker.subscribe(subscriber);
+            joga.dependencyTracker.subscribe(subscriber);
 
             value = f();
 
-            just.dependencyTracker.unsubscribe(subscriber);
+            joga.dependencyTracker.unsubscribe(subscriber);
 
             if (typeof value === "function" && value.subscribe && value.unsubscribe) {
                 wrapped = value;
@@ -139,7 +139,7 @@
 
         return computedProperty;
     }
-    just.computedProperty = computedProperty;
+    joga.computedProperty = computedProperty;
 
     function ElementBinding(element, obj) {
         var dataKey,
@@ -155,7 +155,7 @@
         for (dataKey in element.dataset) {
             bindingFunction = this[dataKey],
             dataValue = element.dataset[dataKey],
-            property = just.computedProperty(new Function("return " + dataValue).bind(obj));
+            property = joga.computedProperty(new Function("return " + dataValue).bind(obj));
 
             bindingFunction = bindingFunction.bind(this);
             bindingFunction(property);
@@ -228,7 +228,7 @@
         }.bind(this);
     };
 
-    just.ElementBinding = ElementBinding;
+    joga.ElementBinding = ElementBinding;
     
     function element(el, obj) {
         var element = el,
@@ -244,7 +244,7 @@
 
         return element;
     }
-    just.element = element;
+    joga.element = element;
 
-    window.just = just;
+    window.joga = joga;
 })();

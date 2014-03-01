@@ -1,18 +1,18 @@
 module('property');
 
 test("is a function", function() {
-    ok(typeof(just.property()) === 'function');
+    ok(typeof(joga.property()) === 'function');
 });
 
 test("returns null when not initialized", function() {
-    var property = just.property();
+    var property = joga.property();
 
     equal(property(), null);
     notEqual(typeof(property()), 'undefined');
 });
 
 test("can hold a value", function() {
-    var property = just.property();
+    var property = joga.property();
 
     property('value');
 
@@ -20,14 +20,14 @@ test("can hold a value", function() {
 });
 
 test("can be initialized with a value", function() {
-    var property = just.property('value');
+    var property = joga.property('value');
 
     equal(property(), 'value');
 });
 
 test("can hold a value when assigned to an object", function() {
     var obj = {
-        property: just.property()
+        property: joga.property()
     };
 
     obj.property('value');
@@ -37,7 +37,7 @@ test("can hold a value when assigned to an object", function() {
 
 test("can be chained when setting", function() {
     var obj = {
-        property: just.property()
+        property: joga.property()
     };
 
     var o = obj.property('value');
@@ -46,7 +46,7 @@ test("can be chained when setting", function() {
 });
 
 test("can be reassigned with null", function() {
-    var property = just.property();
+    var property = joga.property();
 
     property('value');
     property(null);
@@ -55,7 +55,7 @@ test("can be reassigned with null", function() {
 });
 
 test("notifies observers when property is set", function() {
-    var property = just.property(),
+    var property = joga.property(),
         notified1,
         notified2;
 
@@ -72,7 +72,7 @@ test("notifies observers when property is set", function() {
 });
 
 test("can unsubscribe observers", function() {
-    var property = just.property(),
+    var property = joga.property(),
         notified1 = false,
         notified2,
         f = function(value) {
@@ -90,7 +90,7 @@ test("can unsubscribe observers", function() {
 });
 
 test("unsubscribe a non subscribed observer does nothing", function() {
-    var property = just.property(),
+    var property = joga.property(),
     notified;
 
     property.subscribe(function(value) {
@@ -103,7 +103,7 @@ test("unsubscribe a non subscribed observer does nothing", function() {
 });
 
 test("computed property returns value", function() {
-    var property = just.computedProperty(function() {
+    var property = joga.computedProperty(function() {
         return 1;
     });
 
@@ -111,8 +111,8 @@ test("computed property returns value", function() {
 });
 
 test("computed property notifies subscribers when dependency changes", function() {
-    var prop1 = just.property(),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(),
+    computed = joga.computedProperty(function() {
         return prop1();
     }),
     notified;
@@ -127,8 +127,8 @@ test("computed property notifies subscribers when dependency changes", function(
 });
 
 test("computed property notifies subscribers only once when dependency changes", function() {
-    var prop1 = just.property(),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(),
+    computed = joga.computedProperty(function() {
         return prop1();
     }),
     notified = 0;
@@ -145,8 +145,8 @@ test("computed property notifies subscribers only once when dependency changes",
 });
 
 test("computed property notifies subscribers only once when dependency is called twice", function() {
-    var prop1 = just.property(1),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(1),
+    computed = joga.computedProperty(function() {
         return prop1() + prop1();
     }),
     notified = 0;
@@ -163,8 +163,8 @@ test("computed property notifies subscribers only once when dependency is called
 });
 
 test("computed property notifies subscribers twice when dependency is updated twice", function() {
-    var prop1 = just.property(1),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(1),
+    computed = joga.computedProperty(function() {
         return prop1();
     }),
     notified = 0;
@@ -182,10 +182,10 @@ test("computed property notifies subscribers twice when dependency is updated tw
 });
 
 test("computed property notifies subscribers once when nested dependency is updated", function() {
-    var prop1 = just.property({
-        prop2: just.property(1)
+    var prop1 = joga.property({
+        prop2: joga.property(1)
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2();
     }),
     notified = 0;
@@ -201,10 +201,10 @@ test("computed property notifies subscribers once when nested dependency is upda
 });
 
 test("computed property notifies subscribers once when parent dependency is updated", function() {
-    var prop1 = just.property({
-        prop2: just.property(1)
+    var prop1 = joga.property({
+        prop2: joga.property(1)
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2();
     }),
     notified = 0;
@@ -214,7 +214,7 @@ test("computed property notifies subscribers once when parent dependency is upda
     });
 
     prop1({
-        prop2: just.property(2)
+        prop2: joga.property(2)
     });
 
     equal(notified, 1);
@@ -222,11 +222,11 @@ test("computed property notifies subscribers once when parent dependency is upda
 });
 
 test("computed property notifies subscribers once when original nested dependency is updated after parent dependency is updated", function() {
-    var prop2 = just.property(1),
-    prop1 = just.property({
+    var prop2 = joga.property(1),
+    prop1 = joga.property({
         prop2: prop2
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2();
     }),
     notified = 0;
@@ -236,7 +236,7 @@ test("computed property notifies subscribers once when original nested dependenc
     });
 
     prop1({
-        prop2: just.property(2)
+        prop2: joga.property(2)
     });
 
     prop2(3);
@@ -246,11 +246,11 @@ test("computed property notifies subscribers once when original nested dependenc
 });
 
 test("computed property notifies subscribers twice when nested dependency is updated after parent dependency is updated", function() {
-    var prop2 = just.property(1),
-    prop1 = just.property({
+    var prop2 = joga.property(1),
+    prop1 = joga.property({
         prop2: prop2
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2();
     }),
     notified = 0;
@@ -260,7 +260,7 @@ test("computed property notifies subscribers twice when nested dependency is upd
     });
 
     prop1({
-        prop2: just.property(2)
+        prop2: joga.property(2)
     });
 
     prop1().prop2(3);
@@ -270,8 +270,8 @@ test("computed property notifies subscribers twice when nested dependency is upd
 });
 
 test("computed property gets value of wrapped property", function() {
-    var prop1 = just.property(1),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(1),
+    computed = joga.computedProperty(function() {
         return prop1;
     });
 
@@ -279,8 +279,8 @@ test("computed property gets value of wrapped property", function() {
 });
 
 test("computed property notifies subscribers when wrapped property is updated", function() {
-    var prop1 = just.property(1),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(1),
+    computed = joga.computedProperty(function() {
         return prop1;
     }),
     notified = 0;
@@ -296,8 +296,8 @@ test("computed property notifies subscribers when wrapped property is updated", 
 });
 
 test("computed property notifies subscribers only once when wrapped property is also a dependency and is updated", function() {
-    var prop1 = just.property(1),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(1),
+    computed = joga.computedProperty(function() {
         prop1();
         return prop1;
     }),
@@ -314,11 +314,11 @@ test("computed property notifies subscribers only once when wrapped property is 
 });
 
 test("computed property notifies subscribers when dependency is updated and wrapping a property", function() {
-    var prop2 = just.property(1),
-    prop1 = just.property({
+    var prop2 = joga.property(1),
+    prop1 = joga.property({
         prop2: prop2
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2;
     }),
     notified = 0;
@@ -328,7 +328,7 @@ test("computed property notifies subscribers when dependency is updated and wrap
     });
 
     prop1({
-        prop2: just.property(2)
+        prop2: joga.property(2)
     });
 
     equal(computed(), 2);
@@ -336,11 +336,11 @@ test("computed property notifies subscribers when dependency is updated and wrap
 });
 
 test("computed property notifies subscribers twice when nested dependency is updated after parent dependency is updated and wrapping property", function() {
-    var prop2 = just.property(1),
-    prop1 = just.property({
+    var prop2 = joga.property(1),
+    prop1 = joga.property({
         prop2: prop2
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2;
     }),
     notified = 0;
@@ -350,7 +350,7 @@ test("computed property notifies subscribers twice when nested dependency is upd
     });
 
     prop1({
-        prop2: just.property(2)
+        prop2: joga.property(2)
     });
 
     prop1().prop2(3);
@@ -360,8 +360,8 @@ test("computed property notifies subscribers twice when nested dependency is upd
 });
 
 test("computed property can set wrapped property", function() {
-    var prop1 = just.property(1),
-    computed = just.computedProperty(function() {
+    var prop1 = joga.property(1),
+    computed = joga.computedProperty(function() {
         return prop1;
     }),
     notified = 0;
@@ -378,11 +378,11 @@ test("computed property can set wrapped property", function() {
 });
 
 test("computed property can set nested wrapped property", function() {
-    var prop2 = just.property(1),
-    prop1 = just.property({
+    var prop2 = joga.property(1),
+    prop1 = joga.property({
         prop2: prop2
     }),
-    computed = just.computedProperty(function() {
+    computed = joga.computedProperty(function() {
         return prop1().prop2;
     }),
     notified = 0;
@@ -399,9 +399,9 @@ test("computed property can set nested wrapped property", function() {
 });
 
 test("computed property can be chained when setting a wrapped property", function() {
-    var prop1 = just.property(1),
+    var prop1 = joga.property(1),
         obj = {
-            computed: just.property(function() {
+            computed: joga.property(function() {
                 return prop1;
             })
         };

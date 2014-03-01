@@ -1,4 +1,2 @@
-justjs
+joga.js
 ======
-
-js ui library
