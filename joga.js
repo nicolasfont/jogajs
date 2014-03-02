@@ -96,7 +96,7 @@
 
             joga.dependencyTracker.subscribe(subscriber);
 
-            value = f();
+            value = f(newValue);
 
             joga.dependencyTracker.unsubscribe(subscriber);
 
@@ -108,6 +108,10 @@
 
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].subscribe(computedProperty.notify);
+            }
+            
+            if (newValue !== undefined) {
+                computedProperty.notify();
             }
 
             return value;

@@ -269,6 +269,25 @@ test("computed property notifies subscribers twice when nested dependency is upd
     equal(computed(), 3);
 });
 
+test("computed property passes parameter as an argument to its function", function() {
+    var passed,
+    notified = 0,
+    computed = joga.computedProperty(function(arg) {
+        if (arg !== undefined) {
+            passed = arg;
+        }
+    });
+    
+    computed.subscribe(function() {
+        notified += 1;
+    });
+    
+    computed(1);
+    
+    equal(passed, 1);
+    equal(notified, 1);
+});
+
 test("computed property gets value of wrapped property", function() {
     var prop1 = joga.property(1),
     computed = joga.computedProperty(function() {
@@ -335,7 +354,7 @@ test("computed property notifies subscribers when dependency is updated and wrap
     equal(notified, 1);
 });
 
-test("computed property notifies subscribers twice when nested dependency is updated after parent dependency is updated and wrapping property", function() {
+test("computed property notifies subscribers twice when nested dependency is updated after parent dependency is updated and wrapping a property", function() {
     var prop2 = joga.property(1),
     prop1 = joga.property({
         prop2: prop2
