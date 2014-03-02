@@ -66,6 +66,7 @@
 
         return objectProperty;
     }
+    joga.objectProperty = objectProperty;
     joga.property = objectProperty;
 
     function computedProperty(f) {

@@ -102,6 +102,10 @@ test("unsubscribe a non subscribed observer does nothing", function() {
     equal(notified, property);
 });
 
+test("joga.property is an alias of joga.objectProperty", function() {
+    equal(joga.property, joga.objectProperty);
+});
+
 test("computed property returns value", function() {
     var property = joga.computedProperty(function() {
         return 1;
