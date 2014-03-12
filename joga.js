@@ -27,7 +27,7 @@
     }
     joga.dependencyTracker = new DependencyTracker();
 
-    function objectProperty(initialValue) {
+    function objectPropertyFactoy(initialValue) {
         var value = null,
             observers = [];
 
@@ -66,10 +66,10 @@
 
         return objectProperty;
     }
-    joga.objectProperty = objectProperty;
-    joga.property = objectProperty;
+    joga.objectProperty = objectPropertyFactoy;
+    joga.property = objectPropertyFactoy;
 
-    function computedProperty(f) {
+    function computedPropertyFactoy(f) {
         var observers = [],
             dependencies = [],
             wrapped;
@@ -144,9 +144,9 @@
 
         return computedProperty;
     }
-    joga.computedProperty = computedProperty;
+    joga.computedProperty = computedPropertyFactoy;
 
-    function ElementBinding(element, obj) {
+    function ElementBinding(element, model) {
         var dataKey,
             bindingFunction,
             dataValue,
@@ -155,12 +155,12 @@
             child;
 
         this.el = element;
-        this.obj = obj;
+        this.model = model;
 
         for (dataKey in element.dataset) {
             bindingFunction = this[dataKey],
             dataValue = element.dataset[dataKey],
-            property = joga.computedProperty(new Function("return " + dataValue).bind(obj));
+            property = joga.computedProperty(new Function("return " + dataValue).bind(model));
 
             bindingFunction = bindingFunction.bind(this);
             bindingFunction(property);
@@ -169,7 +169,7 @@
         
         for (i = 0; i < element.childNodes.length; i++) {
             child = element.childNodes[i];
-            child.binding = new ElementBinding(child, obj);
+            child.binding = new ElementBinding(child, model);
         }
     }
     
@@ -206,7 +206,7 @@
 
     ElementBinding.prototype.onclick = function(property) {
         this.el.onclick = function(e) {
-            property().call(this.obj, e);
+            property().call(this.model, e);
         }.bind(this);
     };
 
@@ -235,7 +235,7 @@
 
     joga.ElementBinding = ElementBinding;
     
-    function element(el, obj) {
+    function element(el, model) {
         var div;
 
         if (!(el instanceof HTMLElement)) {
@@ -244,7 +244,7 @@
             el = div.firstChild;
         }
 
-        el.binding = new ElementBinding(el, obj);
+        el.binding = new ElementBinding(el, model);
 
         return el;
     }
