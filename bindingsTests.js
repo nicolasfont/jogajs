@@ -108,6 +108,17 @@ test("can bind two data attributes and update them", function() {
     equal(element.className, "class2");
 });
 
+test("can bind nested elements", function() {
+    var obj = {
+        name: joga.property("test")
+    },
+    element = joga.element('<div data-class="this.name">some text node<span data-class="this.name"><div data-class="this.name"/></span>some other text node</div>', obj);
+    
+    equal(element.className, "test");
+    equal(element.childNodes[1].className, "test");
+    equal(element.childNodes[1].childNodes[0].className, "test");
+});
+
 test("data-class binding preserves existing classes", function() {
     var obj = {
         class: joga.property("test")
@@ -253,17 +264,6 @@ test("data-value binding updates property when input text value changes", functi
     element.onchange();
     
     equal(obj.name(), "Raj");
-});
-
-test("can bind nested elements", function() {
-    var obj = {
-        name: joga.property("test")
-    },
-    element = joga.element('<div data-class="this.name">some text node<span data-class="this.name"><div data-class="this.name"/></span>some other text node</div>', obj);
-    
-    equal(element.className, "test");
-    equal(element.childNodes[1].className, "test");
-    equal(element.childNodes[1].childNodes[0].className, "test");
 });
 
 test("data-elements binds element array", function() {
