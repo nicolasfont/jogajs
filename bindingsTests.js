@@ -85,8 +85,8 @@ test("can bind data-title", function() {
 
 test("can bind two data attributes", function() {
 	var obj = {
-	    title: joga.property("title1"),
-	    class: joga.property("class1")
+        title: joga.property("title1"),
+        class: joga.property("class1")
     },
     element = joga.element('<span data-title="this.title" data-class="this.class"/>', obj);
 	
@@ -96,8 +96,8 @@ test("can bind two data attributes", function() {
 
 test("can bind two data attributes and update them", function() {
 	var obj = {
-	    title: joga.property("title1"),
-	    class: joga.property("class1")
+        title: joga.property("title1"),
+        class: joga.property("class1")
     },
     element = joga.element('<span data-title="this.title" data-class="this.class"/>', obj);
 	
@@ -173,7 +173,7 @@ test("data-onclick binds to a function", function() {
 	var called = false,
     obj = {
         clickHandler: function() {
-        	called = true;
+            called = true;
         }
     },
     element = joga.element('<span data-onclick="this.clickHandler"/>', obj);
@@ -189,9 +189,9 @@ test("data-onclick binds to a function property", function() {
 	calledWithEvent,
     obj = {
         clickHandler: joga.property(function(event) {
-        	called = true;
-        	calledWithThis = this;
-        	calledWithEvent = event;
+            called = true;
+            calledWithThis = this;
+            calledWithEvent = event;
         })
     },
     element = joga.element('<span data-onclick="this.clickHandler"/>', obj);
@@ -208,7 +208,7 @@ test("data-onclick binding can be changed to a different function", function() {
 	called2 = false,
     obj = {
         clickHandler: joga.property(function() {
-        	called1 = true;
+            called1 = true;
         })
     },
     element = joga.element('<span data-onclick="this.clickHandler"/>', obj);
@@ -236,9 +236,9 @@ test("data-element binds element", function() {
 
 test("data-text binding updates Text node", function() {
     var obj = {
-    	person: joga.property({
-    		name: joga.property("Raj")
-    	}) 
+        person: joga.property({
+            name: joga.property("Raj")
+        }) 
     },
     element = joga.element('<span data-text="this.person().name()"></span>', obj);
 
