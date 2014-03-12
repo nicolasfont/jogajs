@@ -236,18 +236,17 @@
     joga.ElementBinding = ElementBinding;
     
     function element(el, obj) {
-        var element = el,
-            div;
+        var div;
 
         if (!(el instanceof HTMLElement)) {
             div = document.createElement("div");
             div.innerHTML = el;
-            element = div.firstChild;
+            el = div.firstChild;
         }
 
-        element.binding = new ElementBinding(element, obj);
+        el.binding = new ElementBinding(el, obj);
 
-        return element;
+        return el;
     }
     joga.element = element;
 
