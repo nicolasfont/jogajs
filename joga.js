@@ -224,6 +224,24 @@
 
         this.el.appendChild(property());
     };
+    
+    ElementBinding.prototype.elements = function(property) {
+        var i,
+            childNodes = [],
+            elements = property();
+
+        for (i = 0; i < this.el.childNodes.length; i++) {
+            childNodes.push(this.el.childNodes[i]);
+        }
+
+        for (i = 0; i < childNodes.length; i++) {
+            this.el.removeChild(childNodes[i]);
+        }
+        
+        for (i =0; i < elements.length; i++) {
+            this.el.appendChild(elements[i]);
+        }
+    };
 
     ElementBinding.prototype.value = function(property) {
         this.el.value = property();

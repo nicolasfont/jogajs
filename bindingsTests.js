@@ -265,3 +265,16 @@ test("can bind nested elements", function() {
     equal(element.childNodes[1].className, "test");
     equal(element.childNodes[1].childNodes[0].className, "test");
 });
+
+test("data-elements binds element array", function() {
+	var el1 = document.createElement("div"),
+    el2 = document.createElement("div"),
+    obj = {
+        elements: joga.property([el1, el2])
+    },
+    element = joga.element('<span data-elements="this.elements"/>', obj);
+
+    equal(element.childNodes.length, 2);
+	equal(element.childNodes[0], el1);
+	equal(element.childNodes[1], el2);
+});
