@@ -1,2 +1,2 @@
-joga.js
+joga
 ======
