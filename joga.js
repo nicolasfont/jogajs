@@ -173,6 +173,19 @@
         }
     }
     
+    function removeChildNodes(element) {
+        var i,
+            childNodes = [];
+
+        for (i = 0; i < element.childNodes.length; i++) {
+            childNodes.push(element.childNodes[i]);
+        }
+
+        for (i = 0; i < childNodes.length; i++) {
+            element.removeChild(childNodes[i]);
+        }
+    }
+    
     ElementBinding.prototype.id = function(id) {
         this.el.id = id();
     };
@@ -190,17 +203,7 @@
     };
 
     ElementBinding.prototype.text = function(property) {
-        var i,
-            childNodes = [];
-
-        for (i = 0; i < this.el.childNodes.length; i++) {
-            childNodes.push(this.el.childNodes[i]);
-        }
-
-        for (i = 0; i < childNodes.length; i++) {
-            this.el.removeChild(childNodes[i]);
-        }
-
+        removeChildNodes(this.el);
         this.el.appendChild(document.createTextNode(property()));
     };
 
@@ -211,32 +214,15 @@
     };
 
     ElementBinding.prototype.element = function(property) {
-        var i,
-            childNodes = [];
-
-        for (i = 0; i < this.el.childNodes.length; i++) {
-            childNodes.push(this.el.childNodes[i]);
-        }
-
-        for (i = 0; i < childNodes.length; i++) {
-            this.el.removeChild(childNodes[i]);
-        }
-
+        removeChildNodes(this.el);
         this.el.appendChild(property());
     };
     
     ElementBinding.prototype.elements = function(property) {
         var i,
-            childNodes = [],
             elements = property();
-
-        for (i = 0; i < this.el.childNodes.length; i++) {
-            childNodes.push(this.el.childNodes[i]);
-        }
-
-        for (i = 0; i < childNodes.length; i++) {
-            this.el.removeChild(childNodes[i]);
-        }
+            
+        removeChildNodes(this.el);
         
         for (i =0; i < elements.length; i++) {
             this.el.appendChild(elements[i]);
