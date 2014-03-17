@@ -157,6 +157,11 @@
         this.el = element;
         this.model = model;
 
+        for (i = 0; i < element.childNodes.length; i++) {
+            child = element.childNodes[i];
+            child.binding = new ElementBinding(child, model);
+        }
+
         for (dataKey in element.dataset) {
             bindingFunction = this[dataKey],
             dataValue = element.dataset[dataKey],
@@ -165,11 +170,6 @@
             bindingFunction = bindingFunction.bind(this);
             bindingFunction(property);
             property.subscribe(bindingFunction);
-        }
-        
-        for (i = 0; i < element.childNodes.length; i++) {
-            child = element.childNodes[i];
-            child.binding = new ElementBinding(child, model);
         }
     }
     
