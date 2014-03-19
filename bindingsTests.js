@@ -288,7 +288,7 @@ test("data-foreach with data-do bind element array", function() {
     }
     
     function Child(name) {
-        this.name = name;
+        this.name = joga.property(name);
         this.view = joga.element('<span data-title="this.name"/>', this);
     }
     
@@ -306,7 +306,7 @@ test("data-foreach with data-do bind element array when bindings in reverse orde
     }
     
     function Child(name) {
-        this.name = name;
+        this.name = joga.property(name);
         this.view = joga.element('<span data-title="this.name"/>', this);
     }
     
