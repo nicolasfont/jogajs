@@ -27,7 +27,7 @@
     }
     joga.dependencyTracker = new DependencyTracker();
 
-    function objectPropertyFactoy(initialValue) {
+    function objectPropertyFactory(initialValue) {
         var value = null,
             observers = [];
 
@@ -66,10 +66,10 @@
 
         return objectProperty;
     }
-    joga.objectProperty = objectPropertyFactoy;
-    joga.property = objectPropertyFactoy;
+    joga.objectProperty = objectPropertyFactory;
+    joga.property = objectPropertyFactory;
 
-    function computedPropertyFactoy(f) {
+    function computedPropertyFactory(f) {
         var observers = [],
             dependencies = [],
             wrapped,
@@ -145,7 +145,7 @@
 
         return computedProperty;
     }
-    joga.computedProperty = computedPropertyFactoy;
+    joga.computedProperty = computedPropertyFactory;
 
     function ElementBinding(element, model) {
         var dataKey,
