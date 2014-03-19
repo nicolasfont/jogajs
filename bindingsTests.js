@@ -278,3 +278,39 @@ test("data-elements binds element array", function() {
 	equal(element.childNodes[0], el1);
 	equal(element.childNodes[1], el2);
 });
+
+test("data-foreach with data-do bind element array", function() {
+    var parent = new Parent();
+    
+    function Parent() {
+        this.models = joga.property([new Child("test1"), new Child("test2")]);
+        this.element = joga.element('<span data-foreach="this.models" data-do="this.view"/>', this);
+    }
+    
+    function Child(name) {
+        this.name = name;
+        this.view = joga.element('<span data-title="this.name"/>', this);
+    }
+    
+    equal(parent.element.childNodes.length, 2);
+    equal(parent.element.childNodes[0].title, "test1");
+    equal(parent.element.childNodes[1].title, "test2");
+});
+
+test("data-foreach with data-do bind element array when bindings in reverse order", function() {
+    var parent = new Parent();
+    
+    function Parent() {
+        this.models = joga.property([new Child("test1"), new Child("test2")]);
+        this.element = joga.element('<span data-do="this.view" data-foreach="this.models"/>', this);
+    }
+    
+    function Child(name) {
+        this.name = name;
+        this.view = joga.element('<span data-title="this.name"/>', this);
+    }
+    
+    equal(parent.element.childNodes.length, 2);
+    equal(parent.element.childNodes[0].title, "test1");
+    equal(parent.element.childNodes[1].title, "test2");
+});

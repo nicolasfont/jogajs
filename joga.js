@@ -229,6 +229,34 @@
             this.el.appendChild(elements[i]);
         }
     };
+    
+    function foreachDo(binding) {
+        var i,
+        childNodes = [],
+        models;
+    
+        if (!binding.doValue || !binding.foreachValue) {
+            return;
+        }
+        
+        removeChildNodes(binding.el);
+        
+        models = binding.foreachValue.apply(binding.model);
+        
+        for (i =0; i < models.length; i++) {
+            binding.el.appendChild(binding.doValue.apply(models[i]));
+        }
+    }
+    
+    ElementBinding.prototype.foreach = function(property) {
+        this.foreachValue = property;
+        foreachDo(this);
+    };
+    
+    ElementBinding.prototype.do = function(property) {
+        this.doValue = property;
+        foreachDo(this);
+    };
 
     ElementBinding.prototype.value = function(property) {
         this.el.value = property.apply(this.model);
