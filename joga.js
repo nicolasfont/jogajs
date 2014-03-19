@@ -166,7 +166,7 @@
         for (dataKey in element.dataset) {
             bindingFunction = this[dataKey],
             dataValue = element.dataset[dataKey],
-            property = joga.computedProperty(new Function("return " + dataValue).bind(model));
+            property = joga.computedProperty(new Function("return " + dataValue));
 
             bindingFunction = bindingFunction.bind(this);
             bindingFunction(property);
@@ -187,41 +187,41 @@
         }
     }
     
-    ElementBinding.prototype.id = function(id) {
-        this.el.id = id();
+    ElementBinding.prototype.id = function(property) {
+        this.el.id = property.apply(this.model);
     };
 
     ElementBinding.prototype.class = function(property) {
         if (this.lastClassName) {
             this.el.classList.remove(this.lastClassName);
         }
-        this.lastClassName = property();
+        this.lastClassName = property.apply(this.model);
         this.el.classList.add(this.lastClassName);
     };
 
     ElementBinding.prototype.title = function(property) {
-        this.el.title = property();
+        this.el.title = property.apply(this.model);
     };
 
     ElementBinding.prototype.text = function(property) {
         removeChildNodes(this.el);
-        this.el.appendChild(document.createTextNode(property()));
+        this.el.appendChild(document.createTextNode(property.apply(this.model)));
     };
 
     ElementBinding.prototype.onclick = function(property) {
         this.el.onclick = function(e) {
-            property().call(this.model, e);
+            property.apply(this.model).call(this.model, e);
         }.bind(this);
     };
 
     ElementBinding.prototype.element = function(property) {
         removeChildNodes(this.el);
-        this.el.appendChild(property());
+        this.el.appendChild(property.apply(this.model));
     };
     
     ElementBinding.prototype.elements = function(property) {
         var i,
-            elements = property();
+            elements = property.apply(this.model);
             
         removeChildNodes(this.el);
         
@@ -231,10 +231,10 @@
     };
 
     ElementBinding.prototype.value = function(property) {
-        this.el.value = property();
+        this.el.value = property.apply(this.model);
 
         this.el.onchange = function() {
-            property(this.el.value);
+            property.call(this.model, this.el.value);
         }.bind(this);
     };
 
