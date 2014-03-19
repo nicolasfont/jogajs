@@ -72,7 +72,8 @@
     function computedPropertyFactoy(f) {
         var observers = [],
             dependencies = [],
-            wrapped;
+            wrapped,
+            self;
 
         function computedProperty(newValue) {
             var value,
@@ -82,10 +83,12 @@
                         dependencies.push(property);
                     }
                 };
+                
+            self = this;
 
             if(newValue !== undefined && wrapped) {
                 wrapped(newValue);
-                return this;
+                return self;
             }
 
             for (i = 0; i < dependencies.length; i++) {
@@ -97,7 +100,7 @@
 
             joga.dependencyTracker.subscribe(subscriber);
 
-            value = f(newValue);
+            value = f.call(self, newValue);
 
             joga.dependencyTracker.unsubscribe(subscriber);
 
@@ -120,7 +123,7 @@
 
         computedProperty.subscribe = function(observer) {
             observers.push(observer);
-            return this;
+            return self;
         };
 
         computedProperty.unsubscribe = function(observer) {
@@ -128,19 +131,17 @@
             if (index !== -1) {
                 observers.splice(index, 1);
             }
-            return this;
+            return self;
         };
 
         computedProperty.notify = function() {
             var i;
-            computedProperty();
+            computedProperty.apply(self);
             for (i = 0; i < observers.length; i++) {
                 observers[i](computedProperty);
             }
-            return this;
+            return self;
         };
-
-        computedProperty();
 
         return computedProperty;
     }

@@ -120,6 +120,8 @@ test("computed property notifies subscribers when dependency changes", function(
         return prop1();
     }),
     notified;
+    
+    computed();
 
     computed.subscribe(function() {
         notified = true;
@@ -137,6 +139,7 @@ test("computed property notifies subscribers only once when dependency changes",
     }),
     notified = 0;
 
+    computed();
     computed();
 
     computed.subscribe(function() {
@@ -193,6 +196,8 @@ test("computed property notifies subscribers once when nested dependency is upda
         return prop1().prop2();
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -212,6 +217,8 @@ test("computed property notifies subscribers once when parent dependency is upda
         return prop1().prop2();
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -234,6 +241,8 @@ test("computed property notifies subscribers once when original nested dependenc
         return prop1().prop2();
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -258,6 +267,8 @@ test("computed property notifies subscribers twice when nested dependency is upd
         return prop1().prop2();
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -273,6 +284,22 @@ test("computed property notifies subscribers twice when nested dependency is upd
     equal(computed(), 3);
 });
 
+test("computed property calls function with the correct this object", function() {
+    var model;
+    
+    function Model() {
+        this.firstName = joga.property("first");
+        this.lastName = joga.property("last");
+        this.name = joga.computedProperty(function() {
+            return this.firstName() + " " + this.lastName();
+        });
+    }
+    
+    model = new Model();
+    
+    equal("first last", model.name());
+});
+
 test("computed property passes parameter as an argument to its function", function() {
     var passed,
     notified = 0,
@@ -281,6 +308,8 @@ test("computed property passes parameter as an argument to its function", functi
             passed = arg;
         }
     });
+    
+    computed();
     
     computed.subscribe(function() {
         notified += 1;
@@ -307,6 +336,8 @@ test("computed property notifies subscribers when wrapped property is updated", 
         return prop1;
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -325,6 +356,8 @@ test("computed property notifies subscribers only once when wrapped property is 
         return prop1;
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -345,6 +378,8 @@ test("computed property notifies subscribers when dependency is updated and wrap
         return prop1().prop2;
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -367,6 +402,8 @@ test("computed property notifies subscribers twice when nested dependency is upd
         return prop1().prop2;
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -388,6 +425,8 @@ test("computed property can set wrapped property", function() {
         return prop1;
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
@@ -409,6 +448,8 @@ test("computed property can set nested wrapped property", function() {
         return prop1().prop2;
     }),
     notified = 0;
+    
+    computed();
 
     computed.subscribe(function() {
         notified += 1;
