@@ -228,7 +228,7 @@ test("data-element binds element", function() {
     obj = {
         el: joga.property(childElement)
     },
-    element = joga.element('<span data-element="this.el"/>', obj);
+    element = joga.element('<div data-element="this.el"/>', obj);
 
     equal(element.childNodes.length, 1);
 	equal(element.childNodes[0], childElement);
@@ -272,7 +272,7 @@ test("data-elements binds element array", function() {
     obj = {
         elements: joga.property([el1, el2])
     },
-    element = joga.element('<span data-elements="this.elements"/>', obj);
+    element = joga.element('<div data-elements="this.elements"/>', obj);
 
     equal(element.childNodes.length, 2);
 	equal(element.childNodes[0], el1);
@@ -284,12 +284,12 @@ test("data-foreach with data-do bind element array", function() {
     
     function Parent() {
         this.models = joga.property([new Child("test1"), new Child("test2")]);
-        this.element = joga.element('<span data-foreach="this.models" data-do="this.view"/>', this);
+        this.element = joga.element('<div data-foreach="this.models" data-do="this.view"/>', this);
     }
     
     function Child(name) {
         this.name = joga.property(name);
-        this.view = joga.element('<span data-title="this.name"/>', this);
+        this.view = joga.element('<div data-title="this.name"/>', this);
     }
     
     equal(parent.element.childNodes.length, 2);
@@ -302,12 +302,12 @@ test("data-foreach with data-do bind element array when bindings in reverse orde
     
     function Parent() {
         this.models = joga.property([new Child("test1"), new Child("test2")]);
-        this.element = joga.element('<span data-do="this.view" data-foreach="this.models"/>', this);
+        this.element = joga.element('<div data-do="this.view" data-foreach="this.models"/>', this);
     }
     
     function Child(name) {
         this.name = joga.property(name);
-        this.view = joga.element('<span data-title="this.name"/>', this);
+        this.view = joga.element('<div data-title="this.name"/>', this);
     }
     
     equal(parent.element.childNodes.length, 2);
