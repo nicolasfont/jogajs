@@ -86,7 +86,7 @@
                 
             self = this;
 
-            if(newValue !== undefined && wrapped) {
+            if (newValue !== undefined && wrapped) {
                 wrapped(newValue);
                 return self;
             }
@@ -164,8 +164,8 @@
         }
 
         for (dataKey in element.dataset) {
-            bindingFunction = this[dataKey],
-            dataValue = element.dataset[dataKey],
+            bindingFunction = this[dataKey];
+            dataValue = element.dataset[dataKey];
             property = joga.computedProperty(new Function("return " + dataValue));
 
             bindingFunction = bindingFunction.bind(this);
@@ -225,15 +225,15 @@
             
         removeChildNodes(this.el);
         
-        for (i =0; i < elements.length; i++) {
+        for (i = 0; i < elements.length; i++) {
             this.el.appendChild(elements[i]);
         }
     };
     
     function foreachDo(binding) {
         var i,
-        childNodes = [],
-        models;
+            childNodes = [],
+            models;
     
         if (!binding.doValue || !binding.foreachValue) {
             return;
@@ -243,7 +243,7 @@
         
         models = binding.foreachValue.apply(binding.model);
         
-        for (i =0; i < models.length; i++) {
+        for (i = 0; i < models.length; i++) {
             binding.el.appendChild(binding.doValue.apply(models[i]));
         }
     }
@@ -284,4 +284,4 @@
     joga.element = element;
 
     window.joga = joga;
-})();
+}());
