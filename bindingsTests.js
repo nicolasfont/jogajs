@@ -15,6 +15,27 @@ test("can create a binding from an html string", function () {
     ok(element);
 });
 
+test("can create a binding from non html string", function () {
+    var obj = {},
+    element = joga.element('123 test', obj);
+
+    ok(element);
+});
+
+test("can create a binding from a number", function () {
+    var obj = {},
+    element = joga.element(123, obj);
+
+    ok(element);
+});
+
+test("can create a binding from a non element object", function () {
+    var obj = {},
+    element = joga.element({test: 123}, obj);
+
+    ok(element);
+});
+
 test("can bind data-class attribute to object property", function() {
 	var obj = {
         class: joga.property("test")
