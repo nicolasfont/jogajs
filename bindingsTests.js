@@ -43,6 +43,7 @@ test("can bind data-class attribute to object property", function() {
     element = joga.element('<span data-class="this.class"/>', obj);
 
     equal(element.className, "test");
+    ok(element.binding.dataProperties.class);
 });
 
 test("can bind data-class attribute to object value", function() {

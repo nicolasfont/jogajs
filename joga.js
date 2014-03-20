@@ -157,6 +157,7 @@
 
         this.el = element;
         this.model = model;
+        this.dataProperties = {};
 
         for (i = 0; i < element.childNodes.length; i++) {
             child = element.childNodes[i];
@@ -167,6 +168,7 @@
             bindingFunction = this[dataKey];
             dataValue = element.dataset[dataKey];
             property = joga.computedProperty(new Function("return " + dataValue));
+            this.dataProperties[dataKey] = property;
 
             bindingFunction = bindingFunction.bind(this);
             bindingFunction(property);
@@ -175,15 +177,8 @@
     }
     
     function removeChildNodes(element) {
-        var i,
-            childNodes = [];
-
-        for (i = 0; i < element.childNodes.length; i++) {
-            childNodes.push(element.childNodes[i]);
-        }
-
-        for (i = 0; i < childNodes.length; i++) {
-            element.removeChild(childNodes[i]);
+        while(element.firstChild) {
+            element.removeChild(element.firstChild);
         }
     }
     
@@ -230,33 +225,24 @@
         }
     };
     
-    function foreachDo(binding) {
+    function foreachDo() {
         var i,
-            childNodes = [],
             models;
     
-        if (!binding.doValue || !binding.foreachValue) {
-            return;
-        }
-        
-        removeChildNodes(binding.el);
-        
-        models = binding.foreachValue.apply(binding.model);
-        
-        for (i = 0; i < models.length; i++) {
-            binding.el.appendChild(binding.doValue.apply(models[i]));
+        if (this.dataProperties.foreach && this.dataProperties.do) {
+            removeChildNodes(this.el);
+            
+            models = this.dataProperties.foreach.apply(this.model);
+            
+            for (i = 0; i < models.length; i++) {
+                this.el.appendChild(this.dataProperties.do.apply(models[i]));
+            }
         }
     }
     
-    ElementBinding.prototype.foreach = function(property) {
-        this.foreachValue = property;
-        foreachDo(this);
-    };
+    ElementBinding.prototype.foreach = foreachDo;
     
-    ElementBinding.prototype.do = function(property) {
-        this.doValue = property;
-        foreachDo(this);
-    };
+    ElementBinding.prototype.do = foreachDo;
 
     ElementBinding.prototype.value = function(property) {
         this.el.value = property.apply(this.model);
