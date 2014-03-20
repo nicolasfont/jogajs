@@ -245,17 +245,6 @@ test("data-onclick binding can be changed to a different function", function() {
     ok(called2);
 });
 
-test("data-element binds element", function() {
-	var childElement = document.createElement("div"),
-    obj = {
-        el: joga.property(childElement)
-    },
-    element = joga.element('<div data-element="this.el"/>', obj);
-
-    equal(element.childNodes.length, 1);
-	equal(element.childNodes[0], childElement);
-});
-
 test("data-text binding updates Text node", function() {
     var obj = {
         person: joga.property({
@@ -288,13 +277,24 @@ test("data-value binding updates property when input text value changes", functi
     equal(obj.name(), "Raj");
 });
 
-test("data-elements binds element array", function() {
+test("data-child binds element", function() {
+	var childElement = document.createElement("div"),
+    obj = {
+        el: joga.property(childElement)
+    },
+    element = joga.element('<div data-child="this.el">test<div>test</div></div>', obj);
+
+    equal(element.childNodes.length, 1);
+	equal(element.childNodes[0], childElement);
+});
+
+test("data-childNodes binds element array", function() {
 	var el1 = document.createElement("div"),
     el2 = document.createElement("div"),
     obj = {
         elements: joga.property([el1, el2])
     },
-    element = joga.element('<div data-elements="this.elements"/>', obj);
+    element = joga.element('<div data-childNodes="this.elements"/>', obj);
 
     equal(element.childNodes.length, 2);
 	equal(element.childNodes[0], el1);

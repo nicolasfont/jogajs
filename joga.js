@@ -155,7 +155,7 @@
             i,
             child;
 
-        this.el = element;
+        this.element = element;
         this.model = model;
         this.dataProperties = {};
 
@@ -183,45 +183,45 @@
     }
     
     ElementBinding.prototype.id = function(property) {
-        this.el.id = property.apply(this.model);
+        this.element.id = property.apply(this.model);
     };
 
     ElementBinding.prototype.class = function(property) {
         if (property.lastClassName) {
-            this.el.classList.remove(property.lastClassName);
+            this.element.classList.remove(property.lastClassName);
         }
         property.lastClassName = property.apply(this.model);
-        this.el.classList.add(property.lastClassName);
+        this.element.classList.add(property.lastClassName);
     };
 
     ElementBinding.prototype.title = function(property) {
-        this.el.title = property.apply(this.model);
+        this.element.title = property.apply(this.model);
     };
 
     ElementBinding.prototype.text = function(property) {
-        removeChildNodes(this.el);
-        this.el.appendChild(document.createTextNode(property.apply(this.model)));
+        removeChildNodes(this.element);
+        this.element.appendChild(document.createTextNode(property.apply(this.model)));
     };
 
     ElementBinding.prototype.onclick = function(property) {
-        this.el.onclick = function(e) {
+        this.element.onclick = function(e) {
             property.apply(this.model).call(this.model, e);
         }.bind(this);
     };
 
-    ElementBinding.prototype.element = function(property) {
-        removeChildNodes(this.el);
-        this.el.appendChild(property.apply(this.model));
+    ElementBinding.prototype.child = function(property) {
+        removeChildNodes(this.element);
+        this.element.appendChild(property.apply(this.model));
     };
     
-    ElementBinding.prototype.elements = function(property) {
+    ElementBinding.prototype.childnodes = function(property) {
         var i,
-            elements = property.apply(this.model);
+            nodes = property.apply(this.model);
             
-        removeChildNodes(this.el);
+        removeChildNodes(this.element);
         
-        for (i = 0; i < elements.length; i++) {
-            this.el.appendChild(elements[i]);
+        for (i = 0; i < nodes.length; i++) {
+            this.element.appendChild(nodes[i]);
         }
     };
     
@@ -230,12 +230,12 @@
             models;
     
         if (this.dataProperties.foreach && this.dataProperties.do) {
-            removeChildNodes(this.el);
+            removeChildNodes(this.element);
             
             models = this.dataProperties.foreach.apply(this.model);
             
             for (i = 0; i < models.length; i++) {
-                this.el.appendChild(this.dataProperties.do.apply(models[i]));
+                this.element.appendChild(this.dataProperties.do.apply(models[i]));
             }
         }
     }
@@ -245,10 +245,10 @@
     ElementBinding.prototype.do = foreachDo;
 
     ElementBinding.prototype.value = function(property) {
-        this.el.value = property.apply(this.model);
+        this.element.value = property.apply(this.model);
 
-        this.el.onchange = function() {
-            property.call(this.model, this.el.value);
+        this.element.onchange = function() {
+            property.call(this.model, this.element.value);
         }.bind(this);
     };
 
