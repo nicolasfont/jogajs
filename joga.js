@@ -187,11 +187,11 @@
     };
 
     ElementBinding.prototype.class = function(property) {
-        if (this.lastClassName) {
-            this.el.classList.remove(this.lastClassName);
+        if (property.lastClassName) {
+            this.el.classList.remove(property.lastClassName);
         }
-        this.lastClassName = property.apply(this.model);
-        this.el.classList.add(this.lastClassName);
+        property.lastClassName = property.apply(this.model);
+        this.el.classList.add(property.lastClassName);
     };
 
     ElementBinding.prototype.title = function(property) {
