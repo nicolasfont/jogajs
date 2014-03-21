@@ -108,10 +108,6 @@
                 wrapped.call(self, newValue);
                 return self;
             }
-            
-            if (newValue !== undefined) {
-                computedProperty.notify();
-            }
 
             return value;
         }

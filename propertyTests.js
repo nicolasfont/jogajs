@@ -306,6 +306,7 @@ test("computed property passes parameter as an argument to its function", functi
     computed = joga.computedProperty(function(arg) {
         if (arg !== undefined) {
             passed = arg;
+            computed.notify();
         }
     });
     

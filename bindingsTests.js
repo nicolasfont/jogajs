@@ -363,7 +363,7 @@ test("data-childNodes binds element array", function() {
     
     function Model() {
         this.elements = joga.property([el1, el2]);
-        this.element = joga.element('<div data-childNodes="this.elements()"/>');
+        this.element = joga.element('<div data-childnodes="this.elements()"/>');
 	}
 	
 	model = new Model();
