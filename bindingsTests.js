@@ -48,41 +48,35 @@ test("can create a binding from a non element object an call its toString method
 });
 
 test("can bind data-class attribute to object property", function() {
-	var model;
+	var model = new Model();
 	
 	function Model() {
         this.class = joga.property("test");
         this.element = joga.element('<span data-class="this.class()"/>');
 	}
-	
-	model = new Model();
 	
     equal(model.element().className, "test");
     ok(model.element().binding.dataProperties.class);
 });
 
 test("can bind data-class attribute to object value", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.class = "test";
         this.element = joga.element('<span data-class="this.class"/>');
 	}
-	
-	model = new Model();
 
     equal(model.element().className, "test");
 });
 
 test("updating object property updates binding", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.class = joga.property("test");
         this.element = joga.element('<span data-class="this.class()"/>');
 	}
-	
-	model = new Model();
 	
     model.class("test2");
 
@@ -94,7 +88,7 @@ test("updating object property updates binding", function() {
 });
 
 test("updating object nested property updates binding", function() {
-    var parent;
+    var parent = new Parent();
 	
 	function Parent() {
         this.child = joga.property(new Child());
@@ -104,8 +98,6 @@ test("updating object nested property updates binding", function() {
 	function Child() {
         this.class = joga.property("test");
 	}
-	
-	parent = new Parent();
 
     parent.child().class("test2");
 
@@ -117,7 +109,7 @@ test("updating object nested property updates binding", function() {
 });
 
 test("updating object parent property updates binding", function() {
-    var parent;
+    var parent = new Parent();
 	
 	function Parent() {
         this.child = joga.property(new Child('test1'));
@@ -127,8 +119,6 @@ test("updating object parent property updates binding", function() {
 	function Child(clazz) {
         this.class = joga.property(clazz);
 	}
-	
-	parent = new Parent();
 
     parent.child(new Child('test2'));
 
@@ -140,43 +130,37 @@ test("updating object parent property updates binding", function() {
 });
 
 test("can bind data-title", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.title = joga.property("test");
         this.element = joga.element('<span data-title="this.title()"/>');
 	}
-	
-	model = new Model();
 
     equal(model.element().title, "test");
 });
 
 test("can bind two data attributes", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.title = joga.property("title1");
         this.class = joga.property("class1");
         this.element = joga.element('<span data-title="this.title()" data-class="this.class()"/>');
 	}
-	
-	model = new Model();
 	
     equal(model.element().title, "title1");
     equal(model.element().className, "class1");
 });
 
 test("can bind two data attributes and update them", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.title = joga.property("title1");
         this.class = joga.property("class1");
         this.element = joga.element('<span data-title="this.title()" data-class="this.class()"/>');
 	}
-	
-	model = new Model();
 	
     model.title("title2");
     model.class("class2");
@@ -186,14 +170,12 @@ test("can bind two data attributes and update them", function() {
 });
 
 test("can bind nested elements", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.name = joga.property("test");
         this.element = joga.element('<div data-class="this.name()">some text node<span data-class="this.name()"><div data-class="this.name()"/></span>some other text node</div>');
 	}
-	
-	model = new Model();
     
     equal(model.element().className, "test");
     equal(model.element().childNodes[1].className, "test");
@@ -201,14 +183,12 @@ test("can bind nested elements", function() {
 });
 
 test("data-class binding preserves existing classes", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.class = joga.property("test");
         this.element = joga.element('<span class="existing1 existing2" data-class="this.class()"/>');
 	}
-	
-	model = new Model();
 
     model.class("test2");
 
@@ -216,62 +196,54 @@ test("data-class binding preserves existing classes", function() {
 });
 
 test("data-text binding updates Text node", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.name = joga.property("test");
         this.element = joga.element('<span data-text="this.name()"></span>');
 	}
-	
-	model = new Model();
 
     equal(model.element().childNodes.length, 1);
     equal(model.element().childNodes[0].textContent, "test");
 });
 
 test("data-text binding updates Text node overwriting existing text", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.name = joga.property("test1");
         this.element = joga.element('<span data-text="this.name()">test2</span>');
 	}
-	
-	model = new Model();
 
     equal(model.element().childNodes.length, 1);
     equal(model.element().childNodes[0].textContent, "test1");
 });
 
 test("data-text binding updates Text node overwriting existing text and elements", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.name = joga.property("test1");
         this.element = joga.element('<span data-text="this.name()">test2<div>test3</div></span>');
 	}
 	
-	model = new Model();
-	
 	equal(model.element().childNodes.length, 1);
     equal(model.element().childNodes[0].textContent, "test1");
 });
 
 test("data-id binding updates element id", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.id = joga.property("123");
         this.element = joga.element('<span data-id="this.id()"/>');
 	}
-	
-	model = new Model();
 
     equal(model.element().id, "123");
 });
 
 test("data-onclick binds to a function", function() {
-    var model,
+    var model = new Model(),
     called;
 	
 	function Model() {
@@ -281,8 +253,6 @@ test("data-onclick binds to a function", function() {
 	Model.prototype.clickHandler = function() {
         called = true;
     };
-	
-	model = new Model();
 
 	model.element().click();
 	
@@ -290,7 +260,7 @@ test("data-onclick binds to a function", function() {
 });
 
 test("data-onclick binds to a function property", function() {
-	var model,
+	var model = new Model(),
 	called = false,
 	calledWithThis,
 	calledWithEvent;
@@ -303,8 +273,6 @@ test("data-onclick binds to a function property", function() {
             calledWithEvent = event;
         });
 	}
-	
-	model = new Model();
 
 	model.element().click();
 	
@@ -314,7 +282,8 @@ test("data-onclick binds to a function property", function() {
 });
 
 test("data-onclick binding can be changed to a different function", function() {
-	var called1 = 0,
+	var model = new Model(),
+	called1 = 0,
 	called2 = 0,
 	called3 = 0;
 
@@ -324,8 +293,6 @@ test("data-onclick binding can be changed to a different function", function() {
             called1++;
         });
 	}
-	
-	model = new Model();
 
 	model.clickHandler(function() {
 		called2++;
@@ -349,27 +316,23 @@ test("data-onclick binding can be changed to a different function", function() {
 });
 
 test("data-value binding updates input text value", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.name = joga.property("test");
         this.element = joga.element('<input type="text" data-value="this.name()"/>');
 	}
-	
-	model = new Model();
 
     equal(model.element().value, "test");
 });
 
 test("data-value binding updates property when input text value changes", function() {
-    var model;
+    var model = new Model();
 	
 	function Model() {
         this.name = joga.property("");
         this.element = joga.element('<input type="text" data-value="this.name()"/>');
 	}
-	
-	model = new Model();
 
     model.element().value = "test";
     model.element().onchange();
@@ -386,7 +349,7 @@ test("data-child binds element", function() {
         this.element = joga.element('<div data-child="this.el()">test<div>test</div></div>');
 	}
 	
-	model = new Model();
+	model = new Model()
 
     equal(model.element().childNodes.length, 1);
 	equal(model.element().childNodes[0], childElement);
