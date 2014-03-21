@@ -254,18 +254,21 @@
 
     joga.ElementBinding = ElementBinding;
     
-    function element(el, model) {
-        var div;
-
-        if (!(el instanceof HTMLElement)) {
-            div = document.createElement("div");
-            div.innerHTML = el;
-            el = div.firstChild;
-        }
-
-        el.binding = new ElementBinding(el, model);
-
-        return el;
+    function element(el) {
+        var instance;
+        
+        return joga.computedProperty(function() {
+            if (!instance) {
+                if (!(el instanceof HTMLElement)) {
+                    var div = document.createElement("div");
+                    div.innerHTML = el;
+                    el = div.firstChild;
+                }
+                el.binding = new ElementBinding(el, this);
+                instance = el;
+            }
+            return instance; 
+        });
     }
     joga.element = element;
 
