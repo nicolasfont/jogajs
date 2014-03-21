@@ -395,7 +395,8 @@ test("data-child binds element", function() {
 test("data-childNodes binds element array", function() {
 	var model,
 	el1 = document.createElement("div"),
-    el2 = document.createElement("div");
+	el2 = document.createElement("div"),
+    el3 = document.createElement("div");
     
     function Model() {
         this.elements = joga.property([el1, el2]);
@@ -407,6 +408,14 @@ test("data-childNodes binds element array", function() {
     equal(model.element().childNodes.length, 2);
 	equal(model.element().childNodes[0], el1);
 	equal(model.element().childNodes[1], el2);
+	
+	model.elements().push(el3);
+    model.elements.notify();
+    
+    equal(model.element().childNodes.length, 3);
+    equal(model.element().childNodes[0], el1);
+	equal(model.element().childNodes[1], el2);
+	equal(model.element().childNodes[2], el3);
 });
 
 test("data-foreach with data-do bind element array", function() {
@@ -425,6 +434,14 @@ test("data-foreach with data-do bind element array", function() {
     equal(parent.element().childNodes.length, 2);
     equal(parent.element().childNodes[0].title, "test1");
     equal(parent.element().childNodes[1].title, "test2");
+    
+    parent.models().push(new Child("test3"));
+    parent.models.notify();
+    
+    equal(parent.element().childNodes.length, 3);
+    equal(parent.element().childNodes[0].title, "test1");
+    equal(parent.element().childNodes[1].title, "test2");
+    equal(parent.element().childNodes[2].title, "test3");
 });
 
 test("data-foreach with data-do bind element array when bindings in reverse order", function() {
@@ -443,4 +460,12 @@ test("data-foreach with data-do bind element array when bindings in reverse orde
     equal(parent.element().childNodes.length, 2);
     equal(parent.element().childNodes[0].title, "test1");
     equal(parent.element().childNodes[1].title, "test2");
+    
+    parent.models().push(new Child("test3"));
+    parent.models.notify();
+    
+    equal(parent.element().childNodes.length, 3);
+    equal(parent.element().childNodes[0].title, "test1");
+    equal(parent.element().childNodes[1].title, "test2");
+    equal(parent.element().childNodes[2].title, "test3");
 });
