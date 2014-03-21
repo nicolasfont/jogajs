@@ -68,7 +68,7 @@
     }
     joga.objectProperty = objectPropertyFactory;
     joga.property = objectPropertyFactory;
-
+    
     function computedPropertyFactory(f) {
         var observers = [],
             dependencies = [],
@@ -82,14 +82,10 @@
                     if (dependencies.indexOf(property) === -1) {
                         dependencies.push(property);
                     }
+                    wrapped = property;
                 };
                 
             self = this;
-
-            if (newValue !== undefined && wrapped) {
-                wrapped(newValue);
-                return self;
-            }
 
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].unsubscribe(computedProperty.notify);
@@ -104,14 +100,13 @@
 
             joga.dependencyTracker.unsubscribe(subscriber);
 
-            if (typeof value === "function" && value.subscribe && value.unsubscribe) {
-                wrapped = value;
-                value = wrapped();
-                subscriber(wrapped);
-            }
-
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].subscribe(computedProperty.notify);
+            }
+            
+            if (newValue !== undefined && wrapped) {
+                wrapped.call(self, newValue);
+                return self;
             }
             
             if (newValue !== undefined) {

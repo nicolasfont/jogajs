@@ -321,39 +321,11 @@ test("computed property passes parameter as an argument to its function", functi
     equal(notified, 1);
 });
 
-test("computed property gets value of wrapped property", function() {
-    var prop1 = joga.property(1),
-    computed = joga.computedProperty(function() {
-        return prop1;
-    });
-
-    equal(computed(), 1);
-});
-
-test("computed property notifies subscribers when wrapped property is updated", function() {
-    var prop1 = joga.property(1),
-    computed = joga.computedProperty(function() {
-        return prop1;
-    }),
-    notified = 0;
-    
-    computed();
-
-    computed.subscribe(function() {
-        notified += 1;
-    });
-
-    prop1(2);
-
-    equal(computed(), 2);
-    equal(notified, 1);
-});
-
 test("computed property notifies subscribers only once when wrapped property is also a dependency and is updated", function() {
     var prop1 = joga.property(1),
     computed = joga.computedProperty(function() {
         prop1();
-        return prop1;
+        return prop1();
     }),
     notified = 0;
     
@@ -367,62 +339,12 @@ test("computed property notifies subscribers only once when wrapped property is 
 
     equal(computed(), 2);
     equal(notified, 1);
-});
-
-test("computed property notifies subscribers when dependency is updated and wrapping a property", function() {
-    var prop2 = joga.property(1),
-    prop1 = joga.property({
-        prop2: prop2
-    }),
-    computed = joga.computedProperty(function() {
-        return prop1().prop2;
-    }),
-    notified = 0;
-    
-    computed();
-
-    computed.subscribe(function() {
-        notified += 1;
-    });
-
-    prop1({
-        prop2: joga.property(2)
-    });
-
-    equal(computed(), 2);
-    equal(notified, 1);
-});
-
-test("computed property notifies subscribers twice when nested dependency is updated after parent dependency is updated and wrapping a property", function() {
-    var prop2 = joga.property(1),
-    prop1 = joga.property({
-        prop2: prop2
-    }),
-    computed = joga.computedProperty(function() {
-        return prop1().prop2;
-    }),
-    notified = 0;
-    
-    computed();
-
-    computed.subscribe(function() {
-        notified += 1;
-    });
-
-    prop1({
-        prop2: joga.property(2)
-    });
-
-    prop1().prop2(3);
-
-    equal(notified, 2);
-    equal(computed(), 3);
 });
 
 test("computed property can set wrapped property", function() {
     var prop1 = joga.property(1),
     computed = joga.computedProperty(function() {
-        return prop1;
+        return prop1();
     }),
     notified = 0;
     
@@ -445,7 +367,7 @@ test("computed property can set nested wrapped property", function() {
         prop2: prop2
     }),
     computed = joga.computedProperty(function() {
-        return prop1().prop2;
+        return prop1().prop2();
     }),
     notified = 0;
     
@@ -465,8 +387,8 @@ test("computed property can set nested wrapped property", function() {
 test("computed property can be chained when setting a wrapped property", function() {
     var prop1 = joga.property(1),
         obj = {
-            computed: joga.property(function() {
-                return prop1;
+            computed: joga.computedProperty(function() {
+                return prop1();
             })
         };
 
