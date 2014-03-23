@@ -2,7 +2,7 @@ module("bindings");
 
 test("can create an element", function () {
     var el = document.createElement("span"),
-    element = joga.element(el);
+        element = joga.element(el);
 
     equal(element(), el);
     ok(element().binding);
@@ -37,11 +37,11 @@ test("can create a binding from a non element object", function () {
 
 test("can create a binding from a non element object an call its toString method", function () {
     var element = joga.element({
-        test: 123,
-        toString: function() {
-            return "test";
-        }
-    });
+            test: 123,
+            toString: function() {
+                return "test";
+            }
+        });
 
     ok(element() instanceof Text);
     equal(element().wholeText, 'test');
@@ -244,7 +244,7 @@ test("data-id binding updates element id", function() {
 
 test("data-onclick binds to a function", function() {
     var model = new Model(),
-    called;
+        called;
 	
 	function Model() {
         this.element = joga.element('<span data-onclick="this.clickHandler"/>');
@@ -261,9 +261,9 @@ test("data-onclick binds to a function", function() {
 
 test("data-onclick binds to a function property", function() {
 	var model = new Model(),
-	called = false,
-	calledWithThis,
-	calledWithEvent;
+        called = false,
+        calledWithThis,
+        calledWithEvent;
 
 	function Model() {
         this.element = joga.element('<span data-onclick="this.clickHandler()"/>');
@@ -283,9 +283,9 @@ test("data-onclick binds to a function property", function() {
 
 test("data-onclick binding can be changed to a different function", function() {
 	var model = new Model(),
-	called1 = 0,
-	called2 = 0,
-	called3 = 0;
+        called1 = 0,
+        called2 = 0,
+        called3 = 0;
 
     function Model() {
         this.element = joga.element('<span data-onclick="this.clickHandler()"/>');
@@ -342,7 +342,7 @@ test("data-value binding updates property when input text value changes", functi
 
 test("data-child binds element", function() {
     var model,
-    childElement = document.createElement("div");
+        childElement = document.createElement("div");
 	
 	function Model() {
         this.el = joga.property(childElement);
@@ -355,11 +355,35 @@ test("data-child binds element", function() {
 	equal(model.element().childNodes[0], childElement);
 });
 
+test("data-child binds nested element", function() {
+    var child1 = new Child("test1"),
+        child2 = new Child("test2"),
+        parent = new Parent();
+	
+	function Parent() {
+        this.child = joga.property(child1);
+        this.element = joga.element('<div data-child="this.child().element()">test<div>test</div></div>');
+	}
+	
+	function Child(name) {
+        this.name = joga.property(name);
+        this.element = joga.element('<span data-title="this.name()"/>');
+	}
+
+    equal(parent.element().childNodes.length, 1);
+	equal(parent.element().childNodes[0].title, "test1");
+	
+	parent.child(child2);
+	
+    equal(parent.element().childNodes.length, 1);
+	equal(parent.element().childNodes[0].title, "test2");
+});
+
 test("data-childNodes binds element array", function() {
 	var model,
-	el1 = document.createElement("div"),
-	el2 = document.createElement("div"),
-    el3 = document.createElement("div");
+        el1 = document.createElement("div"),
+        el2 = document.createElement("div"),
+        el3 = document.createElement("div");
     
     function Model() {
         this.elements = joga.property([el1, el2]);
