@@ -260,13 +260,13 @@
     function element(el) {
         var instance;
         
-        return joga.computedProperty(function() {
+        return function() {
             if (!instance) {
                 instance = createElement(el);
                 instance.binding = new ElementBinding(instance, this);
             }
             return instance; 
-        });
+        };
     }
     joga.element = element;
 

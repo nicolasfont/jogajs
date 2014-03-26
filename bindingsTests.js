@@ -349,6 +349,31 @@ test("data-childNodes binds element array", function() {
 	equal(model.element().childNodes[2], el3);
 });
 
+test("data-childNodes adds elements after binding", function() {
+    var model,
+        el1 = document.createElement("div"),
+        el2 = document.createElement("div");
+        
+    function Model() {
+        this.elements = joga.property([]);
+        this.element = joga.element('<div data-childnodes="this.elements()"/>');
+    }
+    
+    model = new Model();
+    
+    model.element();
+    
+    model.elements().push(el1);
+    model.elements.notify();
+    
+    model.elements().push(el2);
+    model.elements.notify();
+    
+    equal(model.element().childNodes.length, 2);
+    equal(model.element().childNodes[0], el1);
+    equal(model.element().childNodes[1], el2);
+});
+
 test("data-foreach with data-do bind element array", function() {
     var parent = new Parent();
     
