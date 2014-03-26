@@ -242,12 +242,12 @@ test("data-id binding updates element id", function() {
     equal(model.element().id, "123");
 });
 
-test("data-onclick binds to a function", function() {
+test("data-onclick evaluates property", function() {
     var model = new Model(),
         called;
 	
 	function Model() {
-        this.element = joga.element('<span data-onclick="this.clickHandler"/>');
+        this.element = joga.element('<span data-onclick="this.clickHandler()"/>');
 	}
 	
 	Model.prototype.clickHandler = function() {
@@ -257,62 +257,6 @@ test("data-onclick binds to a function", function() {
 	model.element().click();
 	
     ok(called);
-});
-
-test("data-onclick binds to a function property", function() {
-	var model = new Model(),
-        called = false,
-        calledWithThis,
-        calledWithEvent;
-
-	function Model() {
-        this.element = joga.element('<span data-onclick="this.clickHandler()"/>');
-        this.clickHandler = joga.property(function(event) {
-            called = true;
-            calledWithThis = this;
-            calledWithEvent = event;
-        });
-	}
-
-	model.element().click();
-	
-    ok(called);
-    equal(calledWithThis, model);
-    ok(calledWithEvent instanceof MouseEvent);
-});
-
-test("data-onclick binding can be changed to a different function", function() {
-	var model = new Model(),
-        called1 = 0,
-        called2 = 0,
-        called3 = 0;
-
-    function Model() {
-        this.element = joga.element('<span data-onclick="this.clickHandler()"/>');
-        this.clickHandler = joga.property(function(event) {
-            called1++;
-        });
-	}
-
-	model.clickHandler(function() {
-		called2++;
-	});
-	
-	model.element().click();
-	
-    equal(called1, 0);
-    equal(called2, 1);
-    
-	model.clickHandler(function() {
-		called3++;
-	});
-	
-	model.element().click();
-	model.element().click();
-	
-    equal(called1, 0);
-    equal(called2, 1);
-    equal(called3, 2);
 });
 
 test("data-value binding updates input text value", function() {

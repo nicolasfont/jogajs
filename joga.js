@@ -196,7 +196,7 @@
 
     ElementBinding.prototype.onclick = function(property) {
         this.element.onclick = function(e) {
-            property.apply(this.model).call(this.model, e);
+            return property.call(this.model, e);
         }.bind(this);
     };
 
