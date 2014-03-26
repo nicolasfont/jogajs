@@ -355,7 +355,7 @@ test("computed property can set wrapped property", function() {
         notified += 1;
     });
 
-    computed(2);
+    computed.applyWrapped([2]);
 
     equal(computed(), 2);
     equal(prop1(), 2);
@@ -378,22 +378,9 @@ test("computed property can set nested wrapped property", function() {
         notified += 1;
     });
 
-    computed(2);
+    computed.applyWrapped([2]);
 
     equal(computed(), 2);
     equal(prop2(), 2);
     equal(notified, 1);
-});
-
-test("computed property can be chained when setting a wrapped property", function() {
-    var prop1 = joga.property(1),
-        obj = {
-            computed: joga.computedProperty(function() {
-                return prop1();
-            })
-        };
-
-    var o = obj.computed('value');
-
-    equal(o, obj);
 });

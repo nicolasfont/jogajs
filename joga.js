@@ -103,11 +103,6 @@
             for (i = 0; i < dependencies.length; i++) {
                 dependencies[i].subscribe(computedProperty.notify);
             }
-            
-            if (newValue !== undefined && wrapped) {
-                wrapped.call(self, newValue);
-                return self;
-            }
 
             return value;
         }
@@ -131,6 +126,11 @@
             for (i = 0; i < observers.length; i++) {
                 observers[i](computedProperty);
             }
+            return self;
+        };
+        
+        computedProperty.applyWrapped = function(args) {
+            wrapped.apply(self, args);
             return self;
         };
 
@@ -239,7 +239,7 @@
         this.element.value = property.apply(this.model);
 
         this.element.onchange = function() {
-            property.call(this.model, this.element.value);
+            property.applyWrapped([this.element.value]);
         }.bind(this);
     };
 
