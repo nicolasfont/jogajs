@@ -384,3 +384,20 @@ test("computed property can set nested wrapped property", function() {
     equal(prop2(), 2);
     equal(notified, 1);
 });
+
+test("nested computed properties observe in a tree", function() {
+    var prop = joga.property(1),
+        computed = joga.computedProperty(function() {
+            return prop();
+        }),
+        rootComputed = joga.computedProperty(function() {
+            return computed();
+        });
+        
+    equal(rootComputed(), 1);
+    equal(rootComputed.observers.length, 0);
+    equal(computed.observers.length, 1);
+    equal(computed.observers[0], rootComputed.notify);
+    equal(prop.observers.length, 1);
+    equal(prop.observers[0], computed.notify);
+});

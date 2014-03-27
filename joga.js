@@ -10,17 +10,13 @@
         };
 
         this.unsubscribe = function(observer) {
-            var index = this.observers.indexOf(observer);
-            if (index !== -1) {
-                this.observers.splice(index, 1);
-            }
+            this.observers.pop();
             return this;
         };
 
         this.notify = function(changedProperty) {
-            var i;
-            for (i = 0; i < this.observers.length; i++) {
-                this.observers[i](changedProperty);
+            if (this.observers.length > 0) {
+                this.observers[this.observers.length-1](changedProperty);
             }
             return this;
         };
@@ -99,6 +95,8 @@
             for (i = 0; i < computedProperty.dependencies.length; i++) {
                 computedProperty.dependencies[i].subscribe(computedProperty.notify);
             }
+            
+            joga.dependencyTracker.notify(computedProperty);
 
             return value;
         }
