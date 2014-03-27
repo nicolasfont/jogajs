@@ -2,25 +2,25 @@
     var joga = {};
 
     function DependencyTracker() {
-        var observers = [];
+        this.observers = [];
 
         this.subscribe = function(observer) {
-            observers.push(observer);
+            this.observers.push(observer);
             return this;
         };
 
         this.unsubscribe = function(observer) {
-            var index = observers.indexOf(observer);
+            var index = this.observers.indexOf(observer);
             if (index !== -1) {
-                observers.splice(index, 1);
+                this.observers.splice(index, 1);
             }
             return this;
         };
 
         this.notify = function(changedProperty) {
             var i;
-            for (i = 0; i < observers.length; i++) {
-                observers[i](changedProperty);
+            for (i = 0; i < this.observers.length; i++) {
+                this.observers[i](changedProperty);
             }
             return this;
         };
@@ -28,36 +28,36 @@
     joga.dependencyTracker = new DependencyTracker();
 
     function objectPropertyFactory(initialValue) {
-        var value = null,
-            observers = [];
 
         function objectProperty(newValue) {
             if (newValue === undefined) {
                 joga.dependencyTracker.notify(objectProperty);
-                return value;
+                return objectProperty.value;
             }
-            value = newValue;
+            objectProperty.value = newValue;
             objectProperty.notify();
             return this;
         }
+        objectProperty.value = null;
+        objectProperty.observers = [];
 
         objectProperty.subscribe = function(observer) {
-            observers.push(observer);
+            objectProperty.observers.push(observer);
             return this;
         };
 
         objectProperty.unsubscribe = function(observer) {
-            var index = observers.indexOf(observer);
+            var index = objectProperty.observers.indexOf(observer);
             if (index !== -1) {
-                observers.splice(index, 1);
+                objectProperty.observers.splice(index, 1);
             }
             return this;
         };
 
         objectProperty.notify = function() {
             var i;
-            for (i = 0; i < observers.length; i++) {
-                observers[i](objectProperty);
+            for (i = 0; i < objectProperty.observers.length; i++) {
+                objectProperty.observers[i](objectProperty);
             }
             return this;
         };
@@ -70,68 +70,69 @@
     joga.property = objectPropertyFactory;
     
     function computedPropertyFactory(f) {
-        var observers = [],
-            dependencies = [],
-            wrapped,
-            self;
 
         function computedProperty(newValue) {
             var value,
                 i,
                 subscriber = function(property) {
-                    if (dependencies.indexOf(property) === -1) {
-                        dependencies.push(property);
+                    if (computedProperty.dependencies.indexOf(property) === -1) {
+                        computedProperty.dependencies.push(property);
                     }
-                    wrapped = property;
+                    computedProperty.wrapped = property;
                 };
                 
-            self = this;
+            computedProperty.self = this;
 
-            for (i = 0; i < dependencies.length; i++) {
-                dependencies[i].unsubscribe(computedProperty.notify);
+            for (i = 0; i < computedProperty.dependencies.length; i++) {
+                computedProperty.dependencies[i].unsubscribe(computedProperty.notify);
             }
 
-            dependencies = [];
-            wrapped = null;
+            computedProperty.dependencies = [];
+            computedProperty.wrapped = null;
 
             joga.dependencyTracker.subscribe(subscriber);
 
-            value = f.call(self, newValue);
+            value = f.call(computedProperty.self, newValue);
 
             joga.dependencyTracker.unsubscribe(subscriber);
 
-            for (i = 0; i < dependencies.length; i++) {
-                dependencies[i].subscribe(computedProperty.notify);
+            for (i = 0; i < computedProperty.dependencies.length; i++) {
+                computedProperty.dependencies[i].subscribe(computedProperty.notify);
             }
 
             return value;
         }
+        
+        computedProperty.observers = [];
+        computedProperty.dependencies = [];
+        computedProperty.wrapped;
+        computedProperty.self;
 
         computedProperty.subscribe = function(observer) {
-            observers.push(observer);
-            return self;
+            computedProperty.observers.push(observer);
+            return computedProperty.self;
         };
 
         computedProperty.unsubscribe = function(observer) {
-            var index = observers.indexOf(observer);
+            var index = computedProperty.observers.indexOf(observer);
             if (index !== -1) {
-                observers.splice(index, 1);
+                computedProperty.observers.splice(index, 1);
             }
-            return self;
+            return computedProperty.self;
         };
 
         computedProperty.notify = function() {
             var i;
-            computedProperty.apply(self);
-            for (i = 0; i < observers.length; i++) {
-                observers[i](computedProperty);
+            computedProperty.apply(computedProperty.self);
+            for (i = 0; i < computedProperty.observers.length; i++) {
+                computedProperty.observers[i](computedProperty);
             }
-            return self;
+            return computedProperty.self;
         };
         
         computedProperty.applyWrapped = function(args) {
-            wrapped.apply(self, args);
-            return self;
+            computedProperty.wrapped.apply(computedProperty.self, args);
+            return computedProperty.self;
         };
 
         return computedProperty;
