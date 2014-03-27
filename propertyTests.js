@@ -251,6 +251,8 @@ test("computed property notifies subscribers once when original nested dependenc
     prop1({
         prop2: joga.property(2)
     });
+    
+    computed();
 
     prop2(3);
 
@@ -277,6 +279,8 @@ test("computed property notifies subscribers twice when nested dependency is upd
     prop1({
         prop2: joga.property(2)
     });
+    
+    computed();
 
     prop1().prop2(3);
 

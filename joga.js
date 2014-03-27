@@ -121,7 +121,6 @@
 
         computedProperty.notify = function() {
             var i;
-            computedProperty.apply(computedProperty.self);
             for (i = 0; i < computedProperty.observers.length; i++) {
                 computedProperty.observers[i](computedProperty);
             }
@@ -194,8 +193,9 @@
     };
 
     ElementBinding.prototype.onclick = function(property) {
-        this.element.onclick = function(e) {
-            return property.call(this.model, e);
+        this.element.onclick = function(event) {
+            event.preventDefault ? event.preventDefault() : event.returnValue = false;
+            property.call(this.model, event);
         }.bind(this);
     };
 
