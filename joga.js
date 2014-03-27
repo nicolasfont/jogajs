@@ -4,12 +4,12 @@
     function DependencyTracker() {
         this.observers = [];
 
-        this.subscribe = function(observer) {
+        this.push = function(observer) {
             this.observers.push(observer);
             return this;
         };
 
-        this.unsubscribe = function(observer) {
+        this.pop = function() {
             this.observers.pop();
             return this;
         };
@@ -86,11 +86,11 @@
             computedProperty.dependencies = [];
             computedProperty.wrapped = null;
 
-            joga.dependencyTracker.subscribe(subscriber);
+            joga.dependencyTracker.push(subscriber);
 
             value = f.call(computedProperty.self, newValue);
 
-            joga.dependencyTracker.unsubscribe(subscriber);
+            joga.dependencyTracker.pop();
 
             for (i = 0; i < computedProperty.dependencies.length; i++) {
                 computedProperty.dependencies[i].subscribe(computedProperty.notify);
@@ -259,13 +259,13 @@
     function element(el) {
         var instance;
         
-        return function() {
+        return joga.computedProperty(function() {
             if (!instance) {
                 instance = createElement(el);
                 instance.binding = new ElementBinding(instance, this);
             }
             return instance; 
-        };
+        });
     }
     joga.element = element;
 
