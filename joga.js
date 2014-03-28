@@ -16,7 +16,7 @@
 
         this.notify = function(changedProperty) {
             if (this.observers.length > 0) {
-                this.observers[this.observers.length-1](changedProperty);
+                this.observers[this.observers.length - 1](changedProperty);
             }
             return this;
         };
@@ -34,6 +34,7 @@
             objectProperty.notify();
             return this;
         }
+
         objectProperty.value = null;
         objectProperty.observers = [];
 
@@ -67,7 +68,7 @@
     
     function computedPropertyFactory(f) {
 
-        function computedProperty(newValue) {
+        function computedProperty() {
             var value,
                 i,
                 subscriber = function(property) {
@@ -88,14 +89,14 @@
 
             joga.dependencyTracker.push(subscriber);
 
-            value = f.call(computedProperty.self, newValue);
+            value = f.apply(computedProperty.self, arguments);
 
             joga.dependencyTracker.pop();
 
             for (i = 0; i < computedProperty.dependencies.length; i++) {
                 computedProperty.dependencies[i].subscribe(computedProperty.notify);
             }
-            
+
             joga.dependencyTracker.notify(computedProperty);
 
             return value;
@@ -126,7 +127,7 @@
             }
             return computedProperty.self;
         };
-        
+
         computedProperty.applyWrapped = function(args) {
             computedProperty.wrapped.apply(computedProperty.self, args);
             return computedProperty.self;
@@ -135,6 +136,39 @@
         return computedProperty;
     }
     joga.computedProperty = computedPropertyFactory;
+    
+    function createElement(element) {
+        var div;
+
+        if (element instanceof Node) {
+            return element;
+        }
+
+        div = document.createElement("div");
+        div.innerHTML = element;
+        return div.firstChild;
+    }
+    
+    function elementPropertyFactory(element) {
+    
+        function elementProperty() {
+            if (elementProperty.value === null) {
+                joga.dependencyTracker.push(function(){});
+                
+                elementProperty.value = createElement(element);
+                elementProperty.value.binding = new ElementBinding(elementProperty.value, this);
+                
+                joga.dependencyTracker.pop();
+            }
+            return elementProperty.value;
+        }
+        
+        elementProperty.value = null;
+        
+        return elementProperty;
+    }
+    joga.elementProperty = elementPropertyFactory;
+    joga.element = elementPropertyFactory;
 
     function ElementBinding(element, model) {
         var dataKey,
@@ -195,7 +229,7 @@
     ElementBinding.prototype.onclick = function(property) {
         this.element.onclick = function(event) {
             event.preventDefault ? event.preventDefault() : event.returnValue = false;
-            property.call(this.model, event);
+            property.call(this.model);
         }.bind(this);
     };
 
@@ -207,9 +241,9 @@
     ElementBinding.prototype.childnodes = function(property) {
         var i,
             nodes = property.apply(this.model);
-            
+
         removeChildNodes(this.element);
-        
+
         for (i = 0; i < nodes.length; i++) {
             this.element.appendChild(nodes[i]);
         }
@@ -221,9 +255,9 @@
     
         if (this.dataProperties.foreach && this.dataProperties.do) {
             removeChildNodes(this.element);
-            
+
             models = this.dataProperties.foreach.apply(this.model);
-            
+
             for (i = 0; i < models.length; i++) {
                 this.element.appendChild(this.dataProperties.do.apply(models[i]));
             }
@@ -243,31 +277,6 @@
     };
 
     joga.ElementBinding = ElementBinding;
-    
-    function createElement(element) {
-        var div;
-        
-        if (element instanceof Node) {
-            return element;
-        }
-        
-        div = document.createElement("div");
-        div.innerHTML = element;
-        return div.firstChild;
-    }
-    
-    function element(el) {
-        var instance;
-        
-        return joga.computedProperty(function() {
-            if (!instance) {
-                instance = createElement(el);
-                instance.binding = new ElementBinding(instance, this);
-            }
-            return instance; 
-        });
-    }
-    joga.element = element;
 
     window.joga = joga;
 }());
