@@ -1,0 +1,3 @@
+define(['bindingsTests', 'propertyTests'], function() {
+    
+});
