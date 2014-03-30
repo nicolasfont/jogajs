@@ -89,7 +89,7 @@
 
             joga.dependencyTracker.push(subscriber);
 
-            value = f.apply(computedProperty.self, arguments);
+            value = computedProperty.f.apply(computedProperty.self, arguments);
 
             joga.dependencyTracker.pop();
 
@@ -106,6 +106,7 @@
         computedProperty.dependencies = [];
         computedProperty.wrapped;
         computedProperty.self;
+        computedProperty.f = f;
 
         computedProperty.subscribe = function(observer) {
             computedProperty.observers.push(observer);
@@ -136,7 +137,7 @@
         return computedProperty;
     }
     joga.computedProperty = computedPropertyFactory;
-    
+
     function createElement(element) {
         var div;
 
@@ -148,23 +149,23 @@
         div.innerHTML = element;
         return div.firstChild;
     }
-    
+
     function elementPropertyFactory(element) {
-    
+
         function elementProperty() {
             if (elementProperty.value === null) {
                 joga.dependencyTracker.push(function(){});
-                
+
                 elementProperty.value = createElement(element);
                 elementProperty.value.binding = new ElementBinding(elementProperty.value, this);
-                
+
                 joga.dependencyTracker.pop();
             }
             return elementProperty.value;
         }
-        
+
         elementProperty.value = null;
-        
+
         return elementProperty;
     }
     joga.elementProperty = elementPropertyFactory;
