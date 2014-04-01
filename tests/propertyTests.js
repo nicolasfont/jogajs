@@ -71,6 +71,24 @@ define(['../joga'], function(joga) {
         equal(notified1, property);
         equal(notified2, property);
     });
+        
+    test("notifies only initial observers when property is set", function() {
+        var property = joga.property(),
+            notified1 = false,
+            notified2 = false;
+        
+        property.subscribe(function(value) {
+            notified1 = true;
+            property.subscribe(function(value) {
+                notified2 = value;
+            });
+        });
+        
+        property('value');
+
+        ok(notified1);
+        ok(!notified2);
+    });
     
     test("can unsubscribe observers", function() {
         var property = joga.property(),
@@ -131,6 +149,29 @@ define(['../joga'], function(joga) {
         prop1("test");
     
         equal(notified, true);
+    });
+
+    test("computed property notifies only initial observers when dependency changes", function() {
+        var prop1 = joga.property(),
+        computed = joga.computed(function() {
+            return prop1();
+        }),
+        notified1 = false,
+        notified2 = false;
+        
+        computed();
+    
+        computed.subscribe(function() {
+            notified1 = true;
+            computed.subscribe(function(value) {
+                notified2 = true;
+            });
+        });
+    
+        prop1("test");
+    
+        equal(notified1, true);
+        equal(notified2, false);
     });
     
     test("computed property notifies subscribers only once when dependency changes", function() {

@@ -29,9 +29,10 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
         };
 
         objectProperty.notify = function() {
-            var i;
-            for (i = 0; i < objectProperty.observers.length; i++) {
-                objectProperty.observers[i](objectProperty);
+            var observers = objectProperty.observers.slice(0),
+                i;
+            for (i = 0; i < observers.length; i++) {
+                observers[i](objectProperty);
             }
             return this;
         };
