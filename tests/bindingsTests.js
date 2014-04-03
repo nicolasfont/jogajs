@@ -428,4 +428,47 @@ define(['../joga'], function(joga) {
         equal(parent.element().childNodes[2].title, "test3");
     });
 
+    test("foreach do bindings bind to each model", function() {
+        function Child(description) {
+            this.isEditing = joga.property(false);
+            this.viewElement = joga.element('<div/>');
+            this.editElement = joga.element('<div/>');
+            this.element = joga.computed(function () {
+                return this.isEditing() ? this.editElement() : this.viewElement();
+            });
+        }
+
+        function Parent() {
+            this.children = joga.property([]);
+            this.element = joga.element('<div data-foreach="this.children()" data-do="this.element()"></div>');
+            //this.element = joga.element('<div data-childnodes="this.views()"></div>');
+        }
+        
+        Parent.prototype.add = function (description) {
+            var child = new Child(description);
+            this.children().push(child);
+            this.children.notify();
+        };
+        
+        var parent = new Parent();
+        parent.element();
+        
+        window.parent = parent;
+        
+        parent.add('test1');
+        parent.element();
+        
+        parent.add('test2');
+        parent.element();
+        
+        parent.children()[0].isEditing(true);
+        parent.element();
+        
+        equal(parent.element().childNodes[0], parent.children()[0].editElement());
+        
+        parent.children()[1].isEditing(true);
+        parent.element();
+        
+        equal(parent.element().childNodes[1], parent.children()[1].editElement());
+    });
 });

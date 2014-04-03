@@ -1,4 +1,4 @@
-define(['joga/computedPropertyFactory'], function (computedProperty) {
+define(['joga/computedPropertyFactory'], function (computed) {
     
     function ElementBinding(element, model) {
         var dataKey,
@@ -20,7 +20,7 @@ define(['joga/computedPropertyFactory'], function (computedProperty) {
         for (dataKey in element.dataset) {
             bindingFunction = this[dataKey];
             dataValue = element.dataset[dataKey];
-            property = computedProperty(new Function("return " + dataValue));
+            property = computed(new Function("return " + dataValue));
             this.dataProperties[dataKey] = property;
 
             bindingFunction = bindingFunction.bind(this);
@@ -59,7 +59,7 @@ define(['joga/computedPropertyFactory'], function (computedProperty) {
     ElementBinding.prototype.onclick = function(property) {
         this.element.onclick = function(event) {
             event.preventDefault ? event.preventDefault() : event.returnValue = false;
-            property.call(this.model);
+            this.dataProperties.onclick.call(this.model);
         }.bind(this);
     };
 
@@ -80,17 +80,21 @@ define(['joga/computedPropertyFactory'], function (computedProperty) {
     };
     
     function foreachDo() {
-        var i,
-            models;
-    
         if (this.dataProperties.foreach && this.dataProperties.do) {
-            removeChildNodes(this.element);
-
-            models = this.dataProperties.foreach.apply(this.model);
-
-            for (i = 0; i < models.length; i++) {
-                this.element.appendChild(this.dataProperties.do.apply(models[i]));
-            }
+            
+            var foreachDoProperty = computed(function() {
+                var models = this.dataProperties.foreach.apply(this.model),
+                views = [],
+                i;
+                for (i = 0; i < models.length; i++) {
+                    views.push(this.dataProperties.do.f.apply(models[i]));
+                }
+                return views;
+            }.bind(this));
+            
+            this.childnodes(foreachDoProperty);
+            
+            foreachDoProperty.subscribe(this.childnodes.bind(this));
         }
     }
     
@@ -102,7 +106,7 @@ define(['joga/computedPropertyFactory'], function (computedProperty) {
         this.element.value = property.apply(this.model);
 
         this.element.onchange = function() {
-            property.applyWrapped([this.element.value]);
+            this.dataProperties.value.applyWrapped([this.element.value]);
         }.bind(this);
     };
     
