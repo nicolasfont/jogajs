@@ -1,46 +1,62 @@
 define(['joga/dependencyTracker'], function(dependencyTracker) {
     
     function objectPropertyFactory(initialValue) {
-
-        function objectProperty(newValue) {
-            if (newValue === undefined) {
-                dependencyTracker.notify(objectProperty);
-                return objectProperty.value;
-            }
-            objectProperty.value = newValue;
-            objectProperty.notify();
-            return this;
+        
+        function objectProperty(value) {
+            objectProperty.this = this;
+            return objectProperty.evaluate(value);
         }
-
-        objectProperty.value = null;
-        objectProperty.observers = [];
-
+        
+        objectProperty.evaluate = function (newValue) {
+            if (newValue === undefined) {
+                dependencyTracker.notify(this);
+                return this.value;
+            }
+            this.value = newValue;
+            this.notify();
+            return this.this;
+        };
+    
+        objectProperty.initialize = function (initialValue) {
+            this.value = null;
+            this.observers = [];
+            this.evaluate(initialValue);
+        };
+        
         objectProperty.subscribe = function(observer) {
-            objectProperty.observers.push(observer);
+            this.observers.push(observer);
             return this;
         };
 
         objectProperty.unsubscribe = function(observer) {
-            var index = objectProperty.observers.indexOf(observer);
+            var index = this.observers.indexOf(observer);
             if (index !== -1) {
-                objectProperty.observers.splice(index, 1);
+                this.observers.splice(index, 1);
             }
             return this;
         };
 
         objectProperty.notify = function() {
-            var observers = objectProperty.observers.slice(0),
+            var observers = this.observers.slice(0),
                 i;
             for (i = 0; i < observers.length; i++) {
-                observers[i](objectProperty);
+                observers[i](this);
+            }
+            return this;
+        };
+        
+        objectProperty.mixinTo = function(property) {
+            var key;
+            for(key in this) {
+                property[key] = this[key];
             }
             return this;
         };
 
-        objectProperty(initialValue);
-
+        objectProperty.initialize(initialValue);
+        
         return objectProperty;
     }
-    
+
     return objectPropertyFactory;
 });

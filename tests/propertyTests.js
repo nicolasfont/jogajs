@@ -447,4 +447,19 @@ define(['../joga'], function(joga) {
         equal(prop.observers.length, 1);
         equal(prop.observers[0], computed.notify);
     });
+    
+    test("boolean property can toggle value and notifies subscribers", function() {
+        var prop = joga.boolean(false),
+            notified = 0;
+        
+        prop.subscribe(function() {
+            notified = 1;
+        });
+        
+        prop.toggle();
+        
+        ok(prop());
+        equal(notified, 1);
+        
+    });
 });
