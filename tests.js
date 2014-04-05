@@ -1,3 +1,9 @@
-define(['tests/bindingsTests', 'tests/propertyTests'], function() {
+define([
+    'tests/bindingsTests',
+    'tests/objectPropertyTests',
+    'tests/computedPropertyTests',
+    'tests/booleanPropertyTests',
+    'tests/stringPropertyTests'
+], function() {
     
 });

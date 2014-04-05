@@ -52,6 +52,14 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
             }
             return this;
         };
+        
+        objectProperty.isNull = function() {
+            return this() === null;
+        };
+        
+        objectProperty.isNotNull = function() {
+            return !this.isNull();
+        };
 
         objectProperty.initialize(initialValue);
         
