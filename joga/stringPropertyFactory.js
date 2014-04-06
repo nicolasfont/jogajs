@@ -9,25 +9,30 @@ define(['joga/objectPropertyFactory'], function(objectPropertyFactory) {
         
         objectPropertyFactory().mixinTo(stringProperty);
         
-        stringProperty.isBlank = function() {
-            return this() === null || this().trim() === "";
-        };
-        
-        stringProperty.isNotBlank = function() {
-            return !this.isBlank();
-        };
-        
-        stringProperty.isEmpty = function() {
-            return this() === null || this() === "";
-        };
-        
-        stringProperty.isNotEmpty = function() {
-            return !this.isEmpty();
-        };
+        stringProperty.isBlank = isBlank;
+        stringProperty.isNotBlank = isNotBlank;
+        stringProperty.isEmpty = isEmpty;
+        stringProperty.isNotEmpty = isNotEmpty;
         
         stringProperty.initialize(initialValue);
         
         return stringProperty;
+    }
+    
+    function isBlank() {
+        return this() === null || this().trim() === "";
+    }
+
+    function isNotBlank() {
+        return !this.isBlank();
+    }
+
+    function isEmpty() {
+        return this() === null || this() === "";
+    }
+
+    function isNotEmpty() {
+        return !this.isEmpty();
     }
 
     return stringPropertyFactory;
