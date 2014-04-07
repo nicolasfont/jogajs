@@ -13,6 +13,10 @@ define(['joga/objectProperty'], function (objectProperty) {
         arrayProperty.pop = pop;
         arrayProperty.remove = remove;
         arrayProperty.clear = clear;
+        arrayProperty.shift = shift;
+        arrayProperty.unshift = unshift;
+        arrayProperty.reverse = reverse;
+        arrayProperty.sort = sort;
         
         arrayProperty.initialize(initialValue);
         
@@ -42,6 +46,27 @@ define(['joga/objectProperty'], function (objectProperty) {
     
     function clear() {
         this([]);
+        this.notify();
+    }
+    
+    function shift() {
+        var shifted = this().shift();
+        this.notify();
+        return shifted;
+    }
+    
+    function unshift(value) {
+        this().unshift(value);
+        this.notify();
+    }
+    
+    function reverse() {
+        this().reverse();
+        this.notify();
+    }
+    
+    function sort(comparator) {
+        this().sort(comparator);
         this.notify();
     }
 
