@@ -1,4 +1,4 @@
-define(['joga/objectPropertyFactory'], function(objectPropertyFactory) {
+define(['joga/objectProperty'], function(objectProperty) {
     
     function stringPropertyFactory(initialValue) {
         
@@ -7,7 +7,7 @@ define(['joga/objectPropertyFactory'], function(objectPropertyFactory) {
             return stringProperty.evaluate(value);
         }
         
-        objectPropertyFactory().mixinTo(stringProperty);
+        objectProperty().mixinTo(stringProperty);
         
         stringProperty.isBlank = isBlank;
         stringProperty.isNotBlank = isNotBlank;

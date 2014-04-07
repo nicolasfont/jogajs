@@ -1,29 +1,29 @@
 define([
     'joga/dependencyTracker',
-    'joga/objectPropertyFactory',
-    'joga/booleanPropertyFactory',
-    'joga/computedPropertyFactory',
-    'joga/stringPropertyFactory',
-    'joga/elementPropertyFactory',
+    'joga/objectProperty',
+    'joga/booleanProperty',
+    'joga/computedProperty',
+    'joga/stringProperty',
+    'joga/elementProperty',
     'joga/ElementBinding'
 ],
 function (
     dependencyTracker,
-    objectPropertyFactory,
-    booleanPropertyFactory,
-    computedPropertyFactory,
-    stringPropertyFactory,
-    elementPropertyFactory,
+    objectProperty,
+    booleanProperty,
+    computedProperty,
+    stringProperty,
+    elementProperty,
     ElementBinding) {
     
     var joga = {
         dependencyTracker: dependencyTracker,
-        object: objectPropertyFactory,
-        property: objectPropertyFactory,
-        boolean: booleanPropertyFactory,
-        string: stringPropertyFactory,
-        computed: computedPropertyFactory,
-        element: elementPropertyFactory,
+        object: objectProperty,
+        property: objectProperty,
+        boolean: booleanProperty,
+        string: stringProperty,
+        computed: computedProperty,
+        element: elementProperty,
         ElementBinding: ElementBinding
     };
     

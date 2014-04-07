@@ -1,4 +1,4 @@
-define(['joga/objectPropertyFactory'], function (objectPropertyFactory) {
+define(['joga/objectProperty'], function (objectProperty) {
     
     function booleanPropertyFactory(initialValue) {
         
@@ -7,7 +7,7 @@ define(['joga/objectPropertyFactory'], function (objectPropertyFactory) {
             return booleanProperty.evaluate(value);
         }
         
-        objectPropertyFactory().mixinTo(booleanProperty);
+        objectProperty().mixinTo(booleanProperty);
         
         booleanProperty.toggle = toggle;
         

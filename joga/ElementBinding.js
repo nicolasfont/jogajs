@@ -1,4 +1,4 @@
-define(['joga/computedPropertyFactory'], function (computed) {
+define(['joga/computedProperty'], function (computed) {
     
     function ElementBinding(element, model) {
         var dataKey,
