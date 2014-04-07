@@ -17,6 +17,7 @@ define(['joga/objectProperty'], function (objectProperty) {
         arrayProperty.unshift = unshift;
         arrayProperty.reverse = reverse;
         arrayProperty.sort = sort;
+        arrayProperty.forEach = forEach;
         
         arrayProperty.initialize(initialValue);
         
@@ -68,6 +69,18 @@ define(['joga/objectProperty'], function (objectProperty) {
     function sort(comparator) {
         this().sort(comparator);
         this.notify();
+    }
+    
+    function forEach(iterator) {
+        var i;
+        
+        if (this.value.forEach) {
+            this.value.forEach(iterator.bind(this.this));
+        } else {
+            for (i = 0; i < this.value.length; i++) {
+                iterator.call(this.this, this.value[i], i);
+            }
+        }
     }
 
     return arrayPropertyFactory;

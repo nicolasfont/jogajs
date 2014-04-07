@@ -19,6 +19,7 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
         objectProperty.isNotNull = isNotNull;
         objectProperty.get = get;
         objectProperty.put = put;
+        objectProperty.forEach = forEach;
 
         objectProperty.initialize(initialValue);
         
@@ -86,6 +87,13 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
     function put(key, value) {
         this.value[key] = value;
         this.notify();
+    }
+    
+    function forEach(iterator) {
+        var key;
+        for (key in this()) {
+            iterator.call(this.this, this.value[key], key);
+        }
     }
 
     return objectPropertyFactory;

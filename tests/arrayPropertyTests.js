@@ -161,4 +161,18 @@ define(['../joga'], function(joga) {
         equal(prop()[1], 2);
         equal(notified, 1);
     });
+    
+    test("array property can iterate over value", function() {
+        var prop = joga.array([5, 3, 1]),
+            result = [];
+        
+        prop.forEach(function(value, index) {
+            result[index] = value;
+        });
+        
+        equal(result.length, 3);
+        equal(result[0], 5);
+        equal(result[1], 3);
+        equal(result[2], 1);
+    });
 });

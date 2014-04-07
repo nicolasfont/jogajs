@@ -164,4 +164,25 @@ define(['../joga'], function(joga) {
         
         equal(prop().key, 1);
     });
+    
+    test("object property can iterate over value", function() {
+        var prop = joga.object({
+            a: 1,
+            b: 2
+        }),
+        result = [];
+        
+        prop.forEach(function(value, key) {
+            result.push({
+                key: key,
+                value: value
+            });
+        });
+        
+        equal(result.length, 2);
+        equal(result[0].key, 'a');
+        equal(result[0].value, 1);
+        equal(result[1].key, 'b');
+        equal(result[1].value, 2);
+    });
 });
