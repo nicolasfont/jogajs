@@ -148,4 +148,20 @@ define(['../joga'], function(joga) {
         
         equal(prop.isNotNull(), false);
     });
+    
+    test("object property can get element by key", function() {
+        var prop = joga.object({
+            key: 1
+        });
+        
+        equal(prop.get('key'), 1);
+    });
+    
+    test("object property can put element and notifies subscribers", function() {
+        var prop = joga.object({});
+        
+        prop.put('key', 1);
+        
+        equal(prop().key, 1);
+    });
 });

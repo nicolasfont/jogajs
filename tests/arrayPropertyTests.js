@@ -142,4 +142,23 @@ define(['../joga'], function(joga) {
         equal(notified, 1);
     });
     
+    test("array property can get value by index", function() {
+        var prop = joga.array([5, 3, 1]);
+        
+        equal(prop.get(1), 3);
+    });
+    
+    test("array property can put value by index and notifies subscribers", function() {
+        var prop = joga.array([5, 3, 1]),
+            notified = 0;
+        
+        prop.subscribe(function() {
+            notified = 1;
+        });
+        
+        prop.put(1, 2);
+        
+        equal(prop()[1], 2);
+        equal(notified, 1);
+    });
 });
