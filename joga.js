@@ -4,6 +4,7 @@ define([
     'joga/booleanProperty',
     'joga/computedProperty',
     'joga/stringProperty',
+    'joga/arrayProperty',
     'joga/elementProperty',
     'joga/ElementBinding'
 ],
@@ -13,6 +14,7 @@ function (
     booleanProperty,
     computedProperty,
     stringProperty,
+    arrayProperty,
     elementProperty,
     ElementBinding) {
     
@@ -22,6 +24,7 @@ function (
         property: objectProperty,
         boolean: booleanProperty,
         string: stringProperty,
+        array: arrayProperty,
         computed: computedProperty,
         element: elementProperty,
         ElementBinding: ElementBinding

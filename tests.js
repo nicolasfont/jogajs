@@ -3,7 +3,8 @@ define([
     'tests/objectPropertyTests',
     'tests/computedPropertyTests',
     'tests/booleanPropertyTests',
-    'tests/stringPropertyTests'
+    'tests/stringPropertyTests',
+    'tests/arrayPropertyTests'
 ], function() {
     
 });
