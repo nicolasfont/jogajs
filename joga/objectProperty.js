@@ -1,20 +1,19 @@
 define(['joga/dependencyTracker'], function(dependencyTracker) {
     
     function objectPropertyFactory(initialValue) {
-        
+
         function objectProperty(value) {
-            objectProperty.this = this;
-            return objectProperty.evaluate(value);
+            return objectProperty.evaluate(value, this);
         }
-        
+
         objectProperty.evaluate = evaluate;
         objectProperty.initialize = initialize;
         objectProperty.mixinTo = mixinTo;
-        
+
         objectProperty.subscribe = subscribe;
         objectProperty.unsubscribe = unsubscribe;
         objectProperty.notify = notify;
-        
+
         objectProperty.isNull = isNull;
         objectProperty.isNotNull = isNotNull;
         objectProperty.get = get;
@@ -22,11 +21,12 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
         objectProperty.forEach = forEach;
 
         objectProperty.initialize(initialValue);
-        
+
         return objectProperty;
     }
-    
-    function evaluate(newValue) {
+
+    function evaluate(newValue, self) {
+        this.this = self === window ? this.this : self;
         if (newValue === undefined) {
             dependencyTracker.notify(this);
             return this.value;
@@ -41,7 +41,7 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
         this.observers = [];
         this.evaluate(initialValue);
     }
-    
+
     function mixinTo(property) {
         var key;
         for(key in this) {
@@ -79,16 +79,16 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
     function isNotNull() {
         return !this.isNull();
     }
-    
+
     function get(key) {
         return this()[key];
     }
-    
+
     function put(key, value) {
         this.value[key] = value;
         this.notify();
     }
-    
+
     function forEach(iterator) {
         var key;
         for (key in this()) {

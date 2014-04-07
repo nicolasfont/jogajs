@@ -1,14 +1,13 @@
 define(['joga/objectProperty'], function (objectProperty) {
     
     function arrayPropertyFactory(initialValue) {
-        
+
         function arrayProperty(value) {
-            arrayProperty.this = this;
-            return arrayProperty.evaluate(value);
+            return arrayProperty.evaluate(value, this);
         }
-        
+
         objectProperty().mixinTo(arrayProperty);
-        
+
         arrayProperty.push = push;
         arrayProperty.pop = pop;
         arrayProperty.remove = remove;
@@ -18,24 +17,24 @@ define(['joga/objectProperty'], function (objectProperty) {
         arrayProperty.reverse = reverse;
         arrayProperty.sort = sort;
         arrayProperty.forEach = forEach;
-        
+
         arrayProperty.initialize(initialValue);
-        
+
         return arrayProperty;
     }
-    
+
     function push(value) {
         this.value.push(value);
         this.notify();
         return this;
     }
-    
+
     function pop() {
         var popped = this.value.pop();
         this.notify();
         return popped;
     }
-    
+
     function remove(value) {
         var index = this.value.indexOf(value);
         while (index !== -1) {
@@ -44,37 +43,37 @@ define(['joga/objectProperty'], function (objectProperty) {
         }
         this.notify();
     }
-    
+
     function clear() {
         this([]);
         this.notify();
     }
-    
+
     function shift() {
         var shifted = this().shift();
         this.notify();
         return shifted;
     }
-    
+
     function unshift(value) {
         this().unshift(value);
         this.notify();
     }
-    
+
     function reverse() {
         this().reverse();
         this.notify();
     }
-    
+
     function sort(comparator) {
         this().sort(comparator);
         this.notify();
     }
-    
+
     function forEach(iterator) {
         var i;
-        
-        if (this.value.forEach) {
+
+        if (this().forEach) {
             this.value.forEach(iterator.bind(this.this));
         } else {
             for (i = 0; i < this.value.length; i++) {

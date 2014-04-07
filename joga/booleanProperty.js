@@ -3,8 +3,7 @@ define(['joga/objectProperty'], function (objectProperty) {
     function booleanPropertyFactory(initialValue) {
         
         function booleanProperty(value) {
-            booleanProperty.this = this;
-            return booleanProperty.evaluate(value);
+            return booleanProperty.evaluate(value, this);
         }
         
         objectProperty().mixinTo(booleanProperty);

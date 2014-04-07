@@ -3,8 +3,7 @@ define(['joga/objectProperty'], function(objectProperty) {
     function stringPropertyFactory(initialValue) {
         
         function stringProperty(value) {
-            stringProperty.this = this;
-            return stringProperty.evaluate(value);
+            return stringProperty.evaluate(value, this);
         }
         
         objectProperty().mixinTo(stringProperty);

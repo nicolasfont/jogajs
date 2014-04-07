@@ -137,6 +137,17 @@ define(['../joga'], function(joga) {
         equal(prop.isNull(), false);
     });
     
+    test("object property isNull can be chained", function() {
+        var model = new Model();
+        
+        function Model() {
+            this.prop = joga.object();
+        }
+        
+        equal(model.prop.isNull(), true);
+        equal(model.prop(1).prop.isNull(), false);
+    });
+    
     test("object property isNotNull returns true when not null", function() {
         var prop = joga.object({});
         
