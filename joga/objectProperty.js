@@ -26,14 +26,14 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
     }
 
     function evaluate(newValue, self) {
-        this.this = self === window ? this.this : self;
+        this.self = self === window ? this.self : self;
         if (newValue === undefined) {
             dependencyTracker.notify(this);
             return this.value;
         }
         this.value = newValue;
         this.notify();
-        return this.this;
+        return this.self;
     }
 
     function initialize(initialValue) {
@@ -92,7 +92,7 @@ define(['joga/dependencyTracker'], function(dependencyTracker) {
     function forEach(iterator) {
         var key;
         for (key in this()) {
-            iterator.call(this.this, this.value[key], key);
+            iterator.call(this.self, this.value[key], key);
         }
     }
 

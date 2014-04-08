@@ -74,10 +74,10 @@ define(['joga/objectProperty'], function (objectProperty) {
         var i;
 
         if (this().forEach) {
-            this.value.forEach(iterator.bind(this.this));
+            this.value.forEach(iterator.bind(this.self));
         } else {
             for (i = 0; i < this.value.length; i++) {
-                iterator.call(this.this, this.value[i], i);
+                iterator.call(this.self, this.value[i], i);
             }
         }
     }

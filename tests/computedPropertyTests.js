@@ -222,28 +222,6 @@ define(['../joga'], function(joga) {
         equal("first last", model.name());
     });
     
-    test("computed property passes parameter as an argument to its function", function() {
-        var passed,
-        notified = 0,
-        computed = joga.computed(function(arg) {
-            if (arg !== undefined) {
-                passed = arg;
-                computed.notify();
-            }
-        });
-        
-        computed();
-        
-        computed.subscribe(function() {
-            notified += 1;
-        });
-        
-        computed(1);
-        
-        equal(passed, 1);
-        equal(notified, 1);
-    });
-    
     test("computed property notifies subscribers only once when wrapped property is also a dependency and is updated", function() {
         var prop1 = joga.property(1),
         computed = joga.computed(function() {

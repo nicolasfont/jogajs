@@ -16,19 +16,19 @@ define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/ElementBinding'],
     }
 
     function evaluate(newValue, self) {
-        this.this = self === window ? this.this : self;
+        this.self = self === window ? this.self : self;
 
         if (newValue) {
             this.initialValue = newValue;
             this.value = null;
-            return this.this;
+            return this.self;
         }
 
         if (this.value === null) {
             dependencyTracker.push(function () {});
 
             this.value = createElement(this.initialValue);
-            this.value.binding = new ElementBinding(this.value, this.this);
+            this.value.binding = new ElementBinding(this.value, this.self);
 
             dependencyTracker.pop();
         }
