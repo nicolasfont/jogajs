@@ -87,7 +87,7 @@ define(['joga/computedProperty'], function (computed) {
                 views = [],
                 i;
                 for (i = 0; i < models.length; i++) {
-                    views.push(this.dataProperties.do.f.apply(models[i]));
+                    views.push(this.dataProperties.do.value.apply(models[i]));
                 }
                 return views;
             }.bind(this));

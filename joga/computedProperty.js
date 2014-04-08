@@ -22,7 +22,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
             i;
             
         if (newValue) {
-            this.f = newValue;
+            this.value = newValue;
             return this.self;
         }
 
@@ -37,7 +37,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
 
         dependencyTracker.push(this.subscriber);
 
-        value = this.f.apply(this.self, arguments);
+        value = this.value.apply(this.self, arguments);
 
         dependencyTracker.pop();
 
