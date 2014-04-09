@@ -16,7 +16,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/ElementBinding'],
     }
 
     function evaluate(newValue, self) {
-        this.self = self === window ? this.self : self;
+        this.self = self;
 
         if (newValue) {
             this.initialValue = newValue;

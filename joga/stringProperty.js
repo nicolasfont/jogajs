@@ -19,7 +19,7 @@ define(['joga/objectProperty'], function(objectProperty) {
     }
     
     function isBlank() {
-        return this() === null || this().trim() === "";
+        return this.applySelf() === null || this.applySelf().trim() === "";
     }
 
     function isNotBlank() {
@@ -27,7 +27,7 @@ define(['joga/objectProperty'], function(objectProperty) {
     }
 
     function isEmpty() {
-        return this() === null || this() === "";
+        return this.applySelf() === null || this.applySelf() === "";
     }
 
     function isNotEmpty() {

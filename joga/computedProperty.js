@@ -20,13 +20,13 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
     function evaluate(newValue, self) {
         var value,
             i;
-            
+        
+        this.self = self;
+        
         if (newValue) {
             this.value = newValue;
             return this.self;
         }
-
-        this.self = self === window ? this.self : self;
 
         for (i = 0; i < this.dependencies.length; i++) {
             this.dependencies[i].unsubscribe(this.notify);

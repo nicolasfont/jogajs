@@ -45,35 +45,35 @@ define(['joga/objectProperty'], function (objectProperty) {
     }
 
     function clear() {
-        this([]);
+        this.applySelf([[]]);
         this.notify();
     }
 
     function shift() {
-        var shifted = this().shift();
+        var shifted = this.applySelf().shift();
         this.notify();
         return shifted;
     }
 
     function unshift(value) {
-        this().unshift(value);
+        this.applySelf().unshift(value);
         this.notify();
     }
 
     function reverse() {
-        this().reverse();
+        this.applySelf().reverse();
         this.notify();
     }
 
     function sort(comparator) {
-        this().sort(comparator);
+        this.applySelf().sort(comparator);
         this.notify();
     }
 
     function forEach(iterator) {
         var i;
 
-        if (this().forEach) {
+        if (this.applySelf().forEach) {
             this.value.forEach(iterator.bind(this.self));
         } else {
             for (i = 0; i < this.value.length; i++) {
