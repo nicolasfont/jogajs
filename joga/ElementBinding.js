@@ -80,21 +80,21 @@ define(['joga/computedProperty'], function (computed) {
     };
     
     function foreachDo() {
-        if (this.dataProperties.foreach && this.dataProperties.do) {
+        if (this.dataProperties.foreach && this.dataProperties.do && !this.dataProperties.foreachDo) {
             
-            var foreachDoProperty = computed(function() {
+            this.dataProperties.foreachDo = computed(function() {
                 var models = this.dataProperties.foreach.apply(this.model),
-                views = [],
-                i;
+                    views = [],
+                    i;
                 for (i = 0; i < models.length; i++) {
-                    views.push(this.dataProperties.do.value.apply(models[i]));
+                    views.push(this.dataProperties.do.computer.apply(models[i]));
                 }
                 return views;
             }.bind(this));
             
-            this.childnodes(foreachDoProperty);
+            this.childnodes(this.dataProperties.foreachDo);
             
-            foreachDoProperty.subscribe(this.childnodes.bind(this));
+            this.dataProperties.foreachDo.subscribe(this.childnodes.bind(this));
         }
     }
     

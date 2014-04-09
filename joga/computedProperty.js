@@ -23,7 +23,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
         
         this.self = self;
         
-        if (newValue) {
+        if (newValue !== undefined) {
             this.value = newValue;
             return this.self;
         }
@@ -37,7 +37,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
 
         dependencyTracker.push(this.subscriber);
 
-        value = this.value.apply(this.self, arguments);
+        this.value = this.computer.apply(this.self, arguments);
 
         dependencyTracker.pop();
 
@@ -47,11 +47,12 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
 
         dependencyTracker.notify(this);
 
-        return value;
+        return this.value;
     }
     
-    function initialize(value) {
-        objectProperty().initialize.call(this, value);
+    function initialize(initialValue) {
+        objectProperty().initialize.call(this, null);
+        this.computer = initialValue;
         this.dependencies = [];
 
         this.notify = function() {
@@ -70,7 +71,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
             this.wrapped = property;
         }.bind(this);
 
-        this.evaluate(value);
+        this.evaluate(initialValue);
     }
     
     function applyWrapped(args) {
