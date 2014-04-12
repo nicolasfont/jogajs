@@ -1,33 +1,34 @@
 define([
-    'joga/dependencyTracker',
-    'joga/objectProperty',
+    'joga/arrayProperty',
     'joga/booleanProperty',
     'joga/computedProperty',
-    'joga/stringProperty',
-    'joga/arrayProperty',
+    'joga/dependencyTracker',
+    'joga/ElementBinding',
     'joga/elementProperty',
-    'joga/ElementBinding'
+    'joga/objectProperty',
+    'joga/stringProperty'
 ],
 function (
-    dependencyTracker,
-    objectProperty,
+    arrayProperty,
     booleanProperty,
     computedProperty,
-    stringProperty,
-    arrayProperty,
+    dependencyTracker,
+    ElementBinding,
     elementProperty,
-    ElementBinding) {
+    objectProperty,
+    stringProperty
+) {
     
     var joga = {
+        array: arrayProperty,
+        boolean: booleanProperty,
+        computed: computedProperty,
         dependencyTracker: dependencyTracker,
+        ElementBinding: ElementBinding,
+        element: elementProperty,
         object: objectProperty,
         property: objectProperty,
-        boolean: booleanProperty,
-        string: stringProperty,
-        array: arrayProperty,
-        computed: computedProperty,
-        element: elementProperty,
-        ElementBinding: ElementBinding
+        string: stringProperty
     };
     
     window.joga = joga;
