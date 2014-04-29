@@ -69,7 +69,7 @@ define(['joga/computedProperty'], function (computed) {
         if (this.dataProperties.foreach && this.dataProperties.do && !this.dataProperties.foreachDo) {
             
             this.dataProperties.foreachDo = computed(function () {
-                var models = this.dataProperties.foreach.apply(this.model),
+                var models = this.dataProperties.foreach.computer.apply(this.model),
                     elements = [],
                     i;
                 for (i = 0; i < models.length; i++) {
