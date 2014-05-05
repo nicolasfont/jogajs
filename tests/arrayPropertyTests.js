@@ -1,7 +1,7 @@
 module('arrayProperty');
 
 test("array property can push value and notifies subscribers", function() {
-    var prop = joga.array([]),
+    var prop = joga.arrayProperty([]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -16,7 +16,7 @@ test("array property can push value and notifies subscribers", function() {
 });
 
 test("array property can pop value and notifies subscribers", function() {
-    var prop = joga.array([1, 2]),
+    var prop = joga.arrayProperty([1, 2]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -30,7 +30,7 @@ test("array property can pop value and notifies subscribers", function() {
 });
 
 test("array property can remove values and notifies subscribers", function() {
-    var prop = joga.array([5, 3, 5]),
+    var prop = joga.arrayProperty([5, 3, 5]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -45,7 +45,7 @@ test("array property can remove values and notifies subscribers", function() {
 });
 
 test("array property can clear its value and notifies subscribers", function() {
-    var prop = joga.array([5, 3, 5]),
+    var prop = joga.arrayProperty([5, 3, 5]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -59,7 +59,7 @@ test("array property can clear its value and notifies subscribers", function() {
 });
 
 test("array property can shift value and notifies subscribers", function() {
-    var prop = joga.array([5, 3]),
+    var prop = joga.arrayProperty([5, 3]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -73,7 +73,7 @@ test("array property can shift value and notifies subscribers", function() {
 });
 
 test("array property can unshift value and notifies subscribers", function() {
-    var prop = joga.array([5]),
+    var prop = joga.arrayProperty([5]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -89,7 +89,7 @@ test("array property can unshift value and notifies subscribers", function() {
 });
 
 test("array property can reverse value and notifies subscribers", function() {
-    var prop = joga.array([5, 1, 3]),
+    var prop = joga.arrayProperty([5, 1, 3]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -106,7 +106,7 @@ test("array property can reverse value and notifies subscribers", function() {
 });
 
 test("array property can sort value and notifies subscribers", function() {
-    var prop = joga.array([5, 1, 3]),
+    var prop = joga.arrayProperty([5, 1, 3]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -123,7 +123,7 @@ test("array property can sort value and notifies subscribers", function() {
 });
 
 test("array property can sort value using a comparator function and notifies subscribers", function() {
-    var prop = joga.array([5, 1, 3]),
+    var prop = joga.arrayProperty([5, 1, 3]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -142,13 +142,13 @@ test("array property can sort value using a comparator function and notifies sub
 });
 
 test("array property can get value by index", function() {
-    var prop = joga.array([5, 3, 1]);
+    var prop = joga.arrayProperty([5, 3, 1]);
     
     equal(prop.get(1), 3);
 });
 
 test("array property can put value by index and notifies subscribers", function() {
-    var prop = joga.array([5, 3, 1]),
+    var prop = joga.arrayProperty([5, 3, 1]),
         notified = 0;
     
     prop.subscribe(function() {
@@ -167,7 +167,7 @@ test("array property can iterate over value", function() {
         self;
         
     function Model() {
-        this.prop = joga.array([5, 3, 1]);
+        this.prop = joga.arrayProperty([5, 3, 1]);
     }
     
     model.prop();

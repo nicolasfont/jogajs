@@ -20,15 +20,14 @@ function (
 ) {
     
     var joga = {
-        array: arrayProperty,
-        boolean: booleanProperty,
-        computed: computedProperty,
         dependencyTracker: dependencyTracker,
         ElementBinding: ElementBinding,
-        element: elementProperty,
-        object: objectProperty,
-        property: objectProperty,
-        string: stringProperty
+        arrayProperty: arrayProperty,
+        booleanProperty: booleanProperty,
+        computedProperty: computedProperty,
+        elementProperty: elementProperty,
+        objectProperty: objectProperty,
+        stringProperty: stringProperty
     };
     
     window.joga = joga;

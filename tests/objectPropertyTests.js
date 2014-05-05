@@ -1,18 +1,18 @@
 module('objectProperty');
 
 test("is a function", function() {
-    ok(typeof(joga.object()) === 'function');
+    ok(typeof(joga.objectProperty()) === 'function');
 });
 
 test("returns null when not initialized", function() {
-    var property = joga.object();
+    var property = joga.objectProperty();
 
     equal(property(), null);
     notEqual(typeof(property()), 'undefined');
 });
 
 test("can hold a value", function() {
-    var property = joga.object();
+    var property = joga.objectProperty();
 
     property('value');
 
@@ -20,14 +20,14 @@ test("can hold a value", function() {
 });
 
 test("can be initialized with a value", function() {
-    var property = joga.object('value');
+    var property = joga.objectProperty('value');
 
     equal(property(), 'value');
 });
 
 test("can hold a value when assigned to an object", function() {
     var obj = {
-        property: joga.object()
+        property: joga.objectProperty()
     };
 
     obj.property('value');
@@ -37,7 +37,7 @@ test("can hold a value when assigned to an object", function() {
 
 test("can be chained when setting", function() {
     var obj = {
-        property: joga.object()
+        property: joga.objectProperty()
     };
 
     var o = obj.property('value');
@@ -46,7 +46,7 @@ test("can be chained when setting", function() {
 });
 
 test("can be reassigned with null", function() {
-    var property = joga.object();
+    var property = joga.objectProperty();
 
     property('value');
     property(null);
@@ -55,7 +55,7 @@ test("can be reassigned with null", function() {
 });
 
 test("notifies observers when property is set", function() {
-    var property = joga.object(),
+    var property = joga.objectProperty(),
         notified1,
         notified2;
 
@@ -72,7 +72,7 @@ test("notifies observers when property is set", function() {
 });
     
 test("notifies only initial observers when property is set", function() {
-    var property = joga.object(),
+    var property = joga.objectProperty(),
         notified1 = false,
         notified2 = false;
     
@@ -90,7 +90,7 @@ test("notifies only initial observers when property is set", function() {
 });
 
 test("can unsubscribe observers", function() {
-    var property = joga.object(),
+    var property = joga.objectProperty(),
         notified1 = false,
         notified2,
         f = function(value) {
@@ -108,7 +108,7 @@ test("can unsubscribe observers", function() {
 });
 
 test("unsubscribe a non subscribed observer does nothing", function() {
-    var property = joga.object(),
+    var property = joga.objectProperty(),
     notified;
 
     property.subscribe(function(value) {
@@ -120,18 +120,14 @@ test("unsubscribe a non subscribed observer does nothing", function() {
     equal(notified, property);
 });
 
-test("joga.property is an alias of joga.object", function() {
-    equal(joga.property, joga.object);
-});
-
 test("object property isNull returns true when null", function() {
-    var prop = joga.object();
+    var prop = joga.objectProperty();
     
     equal(prop.isNull(), true);
 });
 
 test("object property isNull returns false when not null", function() {
-    var prop = joga.object({});
+    var prop = joga.objectProperty({});
     
     equal(prop.isNull(), false);
 });
@@ -140,7 +136,7 @@ test("object property isNull can be chained", function() {
     var model = new Model();
     
     function Model() {
-        this.prop = joga.object();
+        this.prop = joga.objectProperty();
     }
     
     equal(model.prop.isNull(), true);
@@ -148,19 +144,19 @@ test("object property isNull can be chained", function() {
 });
 
 test("object property isNotNull returns true when not null", function() {
-    var prop = joga.object({});
+    var prop = joga.objectProperty({});
     
     equal(prop.isNotNull(), true);
 });
 
 test("object property isNotNull returns false when null", function() {
-    var prop = joga.object();
+    var prop = joga.objectProperty();
     
     equal(prop.isNotNull(), false);
 });
 
 test("object property can get element by key", function() {
-    var prop = joga.object({
+    var prop = joga.objectProperty({
         key: 1
     });
     
@@ -168,7 +164,7 @@ test("object property can get element by key", function() {
 });
 
 test("object property can put element and notifies subscribers", function() {
-    var prop = joga.object({});
+    var prop = joga.objectProperty({});
     
     prop.put('key', 1);
     
@@ -176,7 +172,7 @@ test("object property can put element and notifies subscribers", function() {
 });
 
 test("object property can iterate over value", function() {
-    var prop = joga.object({
+    var prop = joga.objectProperty({
         a: 1,
         b: 2
     }),
