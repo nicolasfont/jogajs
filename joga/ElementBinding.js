@@ -1,16 +1,12 @@
-define(['joga/computedProperty'], function (computed) {
-    
+define(['joga/computedProperty'], function (computedProperty) {
+
     function ElementBinding(element, model) {
         var dataKey,
-            bindingFunction,
-            dataValue,
-            property,
             i,
             child;
 
         this.element = element;
         this.model = model;
-        this.dataProperties = {};
 
         for (i = 0; i < element.childNodes.length; i++) {
             child = element.childNodes[i];
@@ -18,97 +14,161 @@ define(['joga/computedProperty'], function (computed) {
         }
 
         for (dataKey in element.dataset) {
-            bindingFunction = this[dataKey];
-            dataValue = element.dataset[dataKey];
-            property = computed(new Function("return " + dataValue));
-            this.dataProperties[dataKey] = property;
-
-            bindingFunction = bindingFunction.bind(this);
-            bindingFunction(property);
-            property.subscribe(bindingFunction);
+            this[dataKey] = this[dataKey].bind(this);
+            this[dataKey](new Function("return " + element.dataset[dataKey]));
         }
     }
-    
+
     function removeChildNodes(element) {
         while(element.firstChild) {
             element.removeChild(element.firstChild);
         }
     }
-    
-    ElementBinding.prototype.child = function (property) {
-        removeChildNodes(this.element);
-        this.element.appendChild(property.apply(this.model));
+
+    ElementBinding.prototype.child = function (dataExpression) {
+        var computed = computedProperty(dataExpression);
+
+        this.child.update = function() {
+            removeChildNodes(this.element);
+            this.element.appendChild(computed.apply(this.model));
+        }.bind(this);
+
+        this.child.update();
+
+        computed.subscribe(this.child.update);
     };
-    
-    ElementBinding.prototype.childnodes = function (property) {
+
+    ElementBinding.prototype.childnodes = function (dataExpression) {
         var i,
-            nodes = property.apply(this.model);
+            computed = computedProperty(dataExpression),
+            nodes = computed.apply(this.model);
 
-        removeChildNodes(this.element);
+        this.childnodes.update = function() {
+            removeChildNodes(this.element);
 
-        for (i = 0; i < nodes.length; i++) {
-            this.element.appendChild(nodes[i]);
-        }
+            for (i = 0; i < nodes.length; i++) {
+                this.element.appendChild(nodes[i]);
+            }
+        }.bind(this);
+
+        this.childnodes.update();
+
+        computed.subscribe(this.childnodes.update);
     };
 
-    ElementBinding.prototype.class = function (property) {
-        if (property.lastClassName) {
-            this.element.classList.remove(property.lastClassName);
-        }
-        property.lastClassName = property.apply(this.model);
-        this.element.classList.add(property.lastClassName);
+    ElementBinding.prototype.class = function (dataExpression) {
+        var computed = computedProperty(dataExpression);
+
+        this.class.update = function() {
+            if (this.class.lastClassName) {
+                this.element.classList.remove(this.class.lastClassName);
+            }
+            this.class.lastClassName = computed.apply(this.model);
+            this.element.classList.add(this.class.lastClassName);
+        }.bind(this);
+
+        this.class.update();
+
+        computed.subscribe(this.class.update);
     };
-    
-    ElementBinding.prototype.do = foreachDo;
-    
-    ElementBinding.prototype.id = function (property) {
-        this.element.id = property.apply(this.model);
+
+    ElementBinding.prototype.do = function(dataExpression) {
+            this.do.dataExpression = dataExpression;
+
+            foreachDo.apply(this);
+        };
+
+    ElementBinding.prototype.id = function (dataExpression) {
+        var computed = computedProperty(dataExpression);
+
+        this.id.update = function() {
+            this.element.id = computed.apply(this.model);
+        }.bind(this);
+
+        this.id.update();
+
+        computed.subscribe(this.id.update);
     };
-    
+
     function foreachDo() {
-        if (this.dataProperties.foreach && this.dataProperties.do && !this.dataProperties.foreachDo) {
-            
-            this.dataProperties.foreachDo = computed(function () {
-                var models = this.dataProperties.foreach.computer.apply(this.model),
+        if (this.foreach.dataExpression && this.do.dataExpression) {
+
+            var computed = computedProperty(function () {
+                var models = this.foreach.dataExpression.apply(this.model),
                     elements = [],
                     i;
                 for (i = 0; i < models.length; i++) {
-                    elements.push(this.dataProperties.do.computer.apply(models[i]));
+                    elements.push(this.do.dataExpression.apply(models[i]));
                 }
                 return elements;
             }.bind(this));
-            
-            this.childnodes(this.dataProperties.foreachDo);
-            
-            this.dataProperties.foreachDo.subscribe(this.childnodes.bind(this));
+
+            this.foreach.update = function() {
+                var i,
+                    nodes = computed();
+                removeChildNodes(this.element);
+                for (i = 0; i < nodes.length; i++) {
+                    this.element.appendChild(nodes[i]);
+                }
+            }.bind(this);
+
+            this.foreach.update();
+
+            computed.subscribe(this.foreach.update);
         }
     }
-    
-    ElementBinding.prototype.foreach = foreachDo;
 
-    ElementBinding.prototype.onclick = function (property) {
+    ElementBinding.prototype.foreach = function(dataExpression) {
+        this.foreach.dataExpression = dataExpression;
+        foreachDo.apply(this);
+    };
+
+    ElementBinding.prototype.onclick = function (dataExpression) {
         this.element.onclick = function (event) {
             event.preventDefault ? event.preventDefault() : event.returnValue = false;
-            this.dataProperties.onclick.call(this.model);
+            dataExpression.call(this.model);
         }.bind(this);
     };
 
-    ElementBinding.prototype.text = function (property) {
-        removeChildNodes(this.element);
-        this.element.appendChild(document.createTextNode(property.apply(this.model)));
-    };
+    ElementBinding.prototype.text = function (dataExpression) {
+        var computed = computedProperty(dataExpression);
 
-    ElementBinding.prototype.title = function (property) {
-        this.element.title = property.apply(this.model);
-    };
-
-    ElementBinding.prototype.value = function (property) {
-        this.element.value = property.apply(this.model);
-
-        this.element.onchange = function () {
-            this.dataProperties.value.applyWrapped([this.element.value]);
+        this.text.update = function() {
+            removeChildNodes(this.element);
+            this.element.appendChild(document.createTextNode(computed.apply(this.model)));
         }.bind(this);
+
+        this.text.update();
+
+        computed.subscribe(this.text.update);
     };
-    
+
+    ElementBinding.prototype.title = function (dataExpression) {
+        var computed = computedProperty(dataExpression);
+
+        this.title.update = function() {
+            this.element.title = computed.apply(this.model);
+        }.bind(this);
+
+        this.title.update();
+
+        computed.subscribe(this.title.update);
+    };
+
+    ElementBinding.prototype.value = function (dataExpression) {
+        var computed = computedProperty(dataExpression);
+
+        this.value.update = function() {
+            this.element.value = computed.apply(this.model);
+            this.element.onchange = function () {
+                computed.applyWrapped([this.element.value]);
+            }.bind(this);
+        }.bind(this);
+
+        this.value.update();
+
+        computed.subscribe(this.value.update);
+    };
+
     return ElementBinding;
 });

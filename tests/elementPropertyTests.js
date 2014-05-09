@@ -56,7 +56,6 @@ test("can bind data-class attribute to object property", function() {
     }
 
     equal(model.element().className, "test");
-    ok(model.element().binding.dataProperties.class);
 });
 
 test("can bind data-class attribute to object value", function() {
