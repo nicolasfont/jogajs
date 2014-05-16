@@ -73,10 +73,9 @@ define(['joga/computedProperty'], function (computedProperty) {
     };
 
     ElementBinding.prototype.do = function(dataExpression) {
-            this.do.dataExpression = dataExpression;
-
-            foreachDo.apply(this);
-        };
+        this.do.dataExpression = dataExpression;
+        foreachDo.apply(this);
+    };
 
     ElementBinding.prototype.id = function (dataExpression) {
         var computed = computedProperty(dataExpression);
