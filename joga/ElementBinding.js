@@ -5,7 +5,7 @@ define(['joga/computedProperty'], function (computedProperty) {
         this.model = model;
     }
 
-    function removeChildNodes(element) {
+    ElementBinding.removeChildNodes = function (element) {
         while(element.firstChild) {
             element.removeChild(element.firstChild);
         }
@@ -15,7 +15,7 @@ define(['joga/computedProperty'], function (computedProperty) {
         var computed = computedProperty(dataExpression);
 
         this.child.update = function() {
-            removeChildNodes(this.element);
+            ElementBinding.removeChildNodes(this.element);
             this.element.appendChild(computed.apply(this.model));
         }.bind(this);
 
@@ -30,7 +30,7 @@ define(['joga/computedProperty'], function (computedProperty) {
             nodes = computed.apply(this.model);
 
         this.childnodes.update = function() {
-            removeChildNodes(this.element);
+            ElementBinding.removeChildNodes(this.element);
 
             for (i = 0; i < nodes.length; i++) {
                 this.element.appendChild(nodes[i]);
@@ -91,7 +91,7 @@ define(['joga/computedProperty'], function (computedProperty) {
             this.foreach.update = function() {
                 var i,
                     nodes = computed();
-                removeChildNodes(this.element);
+                ElementBinding.removeChildNodes(this.element);
                 for (i = 0; i < nodes.length; i++) {
                     this.element.appendChild(nodes[i]);
                 }
@@ -119,7 +119,7 @@ define(['joga/computedProperty'], function (computedProperty) {
         var computed = computedProperty(dataExpression);
 
         this.text.update = function() {
-            removeChildNodes(this.element);
+            ElementBinding.removeChildNodes(this.element);
             this.element.appendChild(document.createTextNode(computed.apply(this.model)));
         }.bind(this);
 
