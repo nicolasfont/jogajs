@@ -1,4 +1,4 @@
-define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/ElementBinding'], function (objectProperty, dependencyTracker, ElementBinding) {
+define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/elementBinder'], function (objectProperty, dependencyTracker, elementBinder) {
 
     function elementPropertyFactory(initialValue) {
 
@@ -28,7 +28,8 @@ define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/ElementBinding'],
             dependencyTracker.push(function () {});
 
             this.value = createElement(this.initialValue);
-            this.value.binding = new ElementBinding(this.value, this.self);
+            
+            elementBinder.bind(this.value, this.self);
 
             dependencyTracker.pop();
         }

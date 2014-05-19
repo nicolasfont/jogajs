@@ -1,22 +1,8 @@
 define(['joga/computedProperty'], function (computedProperty) {
 
     function ElementBinding(element, model) {
-        var dataKey,
-            i,
-            child;
-
         this.element = element;
         this.model = model;
-
-        for (i = 0; i < element.childNodes.length; i++) {
-            child = element.childNodes[i];
-            child.binding = new ElementBinding(child, model);
-        }
-
-        for (dataKey in element.dataset) {
-            this[dataKey] = this[dataKey].bind(this);
-            this[dataKey](new Function("return " + element.dataset[dataKey]));
-        }
     }
 
     function removeChildNodes(element) {
