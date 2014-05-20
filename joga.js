@@ -3,7 +3,7 @@ define([
     'joga/booleanProperty',
     'joga/computedProperty',
     'joga/dependencyTracker',
-    'joga/ElementBinding',
+    'joga/bindings/ElementBinding',
     'joga/elementProperty',
     'joga/objectProperty',
     'joga/stringProperty'

@@ -467,3 +467,37 @@ test("foreach do bindings bind to each model", function() {
     
     equal(parent.element().childNodes[1], parent.children()[1].editElement());
 });
+
+test("data-checked binding updates input checked attribute", function() {
+    var model = new Model();
+
+    function Model() {
+        this.test = joga.booleanProperty(true);
+        this.element = joga.elementProperty('<input type="checkbox" data-checked="this.test()"/>');
+    }
+
+    equal(model.element().checked, true);
+    
+    model.test(false);
+    
+    equal(model.element().checked, false);
+});
+
+test("data-checked binding updates property when input checkbox changes", function() {
+    var model = new Model();
+
+    function Model() {
+        this.test = joga.booleanProperty(false);
+        this.element = joga.elementProperty('<input type="checkbox" data-checked="this.test()"/>');
+    }
+    
+    model.element().checked = true;
+    model.element().onchange();
+    
+    equal(model.test(), true);
+    
+    model.element().checked = false;
+    model.element().onchange();
+    
+    equal(model.test(), false);
+});

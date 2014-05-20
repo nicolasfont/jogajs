@@ -140,20 +140,5 @@ define(['joga/computedProperty'], function (computedProperty) {
         computed.subscribe(this.title.update);
     };
 
-    ElementBinding.prototype.value = function (dataExpression) {
-        var computed = computedProperty(dataExpression);
-
-        this.value.update = function() {
-            this.element.value = computed.apply(this.model);
-            this.element.onchange = function () {
-                computed.applyWrapped([this.element.value]);
-            }.bind(this);
-        }.bind(this);
-
-        this.value.update();
-
-        computed.subscribe(this.value.update);
-    };
-
     return ElementBinding;
 });
