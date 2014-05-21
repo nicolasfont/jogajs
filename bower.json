@@ -1,0 +1,23 @@
+{
+  "name": "joga",
+  "version": "0.0.1",
+  "homepage": "https://github.com/nicolasfont/jogajs",
+  "authors": [
+    "Nicolas Font <nicolasfont@gmail.com>"
+  ],
+  "description": "A JavaScript library for building UIs",
+  "main": "joga.js",
+  "keywords": [
+    "joga",
+    "jogajs",
+    "joga-js",
+    "databinding",
+    "data-binding",
+    "mvc",
+    "mv*"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "tests"
+  ]
+}
