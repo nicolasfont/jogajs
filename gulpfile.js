@@ -1,7 +1,8 @@
 var gulp = require('gulp'),
-    rjs = require('gulp-requirejs');
+    rjs = require('gulp-requirejs'),
+    uglify = require('gulp-uglify');
 
-gulp.task('default', function() {
+gulp.task('default', function () {
     rjs({
         baseUrl: 'src/',
         name: '../node_modules/almond/almond',
@@ -10,6 +11,7 @@ gulp.task('default', function() {
         insertRequire: ['joga'],
         out: 'joga.min.js'
     })
+    .pipe(uglify())
     .pipe(gulp.dest('./'));
     
     rjs({
