@@ -23,7 +23,7 @@
     "joga",
     "tests",
     "gulpfile.js",
-    "joga.js",
+    "./joga.js",
     "package.json"
   ]
 }
