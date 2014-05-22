@@ -3,8 +3,8 @@ var gulp = require('gulp'),
 
 gulp.task('default', function() {
     rjs({
-        baseUrl: './',
-        name: 'node_modules/almond/almond',
+        baseUrl: 'src/',
+        name: '../node_modules/almond/almond',
         include: ['joga'],
         wrap: true,
         insertRequire: ['joga'],
