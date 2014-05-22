@@ -1,6 +1,6 @@
 {
   "name": "joga",
-  "version": "0.1.0pre",
+  "version": "0.1.0",
   "description": "A JavaScript library for building UIs",
   "main": "joga.js",
   "directories": {
