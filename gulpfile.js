@@ -10,5 +10,5 @@ gulp.task('default', function() {
         insertRequire: ['joga'],
         out: 'joga.js'
     })
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest('./'));
 });

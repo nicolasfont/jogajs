@@ -1,12 +1,12 @@
 {
   "name": "joga",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "homepage": "http://jogajs.com",
   "authors": [
     "Nicolas Font <nicolasfont@gmail.com>"
   ],
   "description": "A JavaScript library for building UIs",
-  "main": "dist/joga.js",
+  "main": "joga.js",
   "keywords": [
     "joga",
     "jogajs",
