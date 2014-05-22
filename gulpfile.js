@@ -8,6 +8,15 @@ gulp.task('default', function() {
         include: ['joga'],
         wrap: true,
         insertRequire: ['joga'],
+        out: 'joga.min.js'
+    })
+    .pipe(gulp.dest('./'));
+    
+    rjs({
+        baseUrl: 'src/',
+        name: 'joga',
+        include: ['joga'],
+        wrap: true,
         out: 'joga.js'
     })
     .pipe(gulp.dest('./'));
