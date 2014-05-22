@@ -1,6 +1,8 @@
 var gulp = require('gulp'),
     rjs = require('gulp-requirejs'),
-    uglify = require('gulp-uglify');
+    license = require('gulp-license'),
+    uglify = require('gulp-uglify'),
+    organization = "Nicolas Font http://jogajs.com";
 
 gulp.task('default', function () {
     rjs({
@@ -12,6 +14,7 @@ gulp.task('default', function () {
         out: 'joga.min.js'
     })
     .pipe(uglify())
+    .pipe(license('MIT', {tiny: true, organization: organization}))
     .pipe(gulp.dest('./'));
     
     rjs({
@@ -21,5 +24,6 @@ gulp.task('default', function () {
         wrap: true,
         out: 'joga.js'
     })
+    .pipe(license('MIT', {organization: organization}))
     .pipe(gulp.dest('./'));
 });
