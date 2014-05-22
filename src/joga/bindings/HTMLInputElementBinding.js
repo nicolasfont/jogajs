@@ -9,7 +9,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     HTMLInputElementBinding.prototype.checked = function (dataExpression) {
         var computed = computedProperty(dataExpression);
 
-        this.checked.update = function() {
+        this.checked.update = function () {
             this.element.checked = computed.apply(this.model);
             this.element.onchange = function () {
                 computed.applyWrapped([this.element.checked]);
@@ -24,7 +24,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     HTMLInputElementBinding.prototype.value = function (dataExpression) {
         var computed = computedProperty(dataExpression);
 
-        this.value.update = function() {
+        this.value.update = function () {
             this.element.value = computed.apply(this.model);
         }.bind(this);
 

@@ -4,6 +4,7 @@ define([
     'joga/computedProperty',
     'joga/dependencyTracker',
     'joga/bindings/ElementBinding',
+    'joga/bindings/HTMLInputElementBinding',
     'joga/elementProperty',
     'joga/objectProperty',
     'joga/stringProperty'
@@ -14,6 +15,7 @@ function (
     computedProperty,
     dependencyTracker,
     ElementBinding,
+    HTMLInputElementBinding,
     elementProperty,
     objectProperty,
     stringProperty
@@ -22,6 +24,7 @@ function (
     var joga = {
         dependencyTracker: dependencyTracker,
         ElementBinding: ElementBinding,
+        HTMLInputElementBinding: HTMLInputElementBinding,
         arrayProperty: arrayProperty,
         booleanProperty: booleanProperty,
         computedProperty: computedProperty,

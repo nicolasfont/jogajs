@@ -9,12 +9,12 @@ define(['joga/computedProperty'], function (computedProperty) {
         while(element.firstChild) {
             element.removeChild(element.firstChild);
         }
-    }
+    };
 
     ElementBinding.prototype.child = function (dataExpression) {
         var computed = computedProperty(dataExpression);
 
-        this.child.update = function() {
+        this.child.update = function () {
             ElementBinding.removeChildNodes(this.element);
             this.element.appendChild(computed.apply(this.model));
         }.bind(this);
@@ -29,7 +29,7 @@ define(['joga/computedProperty'], function (computedProperty) {
             computed = computedProperty(dataExpression),
             nodes = computed.apply(this.model);
 
-        this.childnodes.update = function() {
+        this.childnodes.update = function () {
             ElementBinding.removeChildNodes(this.element);
 
             for (i = 0; i < nodes.length; i++) {
@@ -45,7 +45,7 @@ define(['joga/computedProperty'], function (computedProperty) {
     ElementBinding.prototype.class = function (dataExpression) {
         var computed = computedProperty(dataExpression);
 
-        this.class.update = function() {
+        this.class.update = function () {
             if (this.class.lastClassName) {
                 this.element.classList.remove(this.class.lastClassName);
             }
@@ -58,7 +58,7 @@ define(['joga/computedProperty'], function (computedProperty) {
         computed.subscribe(this.class.update);
     };
 
-    ElementBinding.prototype.do = function(dataExpression) {
+    ElementBinding.prototype.do = function (dataExpression) {
         this.do.dataExpression = dataExpression;
         foreachDo.apply(this);
     };
@@ -66,7 +66,7 @@ define(['joga/computedProperty'], function (computedProperty) {
     ElementBinding.prototype.id = function (dataExpression) {
         var computed = computedProperty(dataExpression);
 
-        this.id.update = function() {
+        this.id.update = function () {
             this.element.id = computed.apply(this.model);
         }.bind(this);
 
@@ -88,7 +88,7 @@ define(['joga/computedProperty'], function (computedProperty) {
                 return elements;
             }.bind(this));
 
-            this.foreach.update = function() {
+            this.foreach.update = function () {
                 var i,
                     nodes = computed();
                 ElementBinding.removeChildNodes(this.element);
@@ -103,7 +103,7 @@ define(['joga/computedProperty'], function (computedProperty) {
         }
     }
 
-    ElementBinding.prototype.foreach = function(dataExpression) {
+    ElementBinding.prototype.foreach = function (dataExpression) {
         this.foreach.dataExpression = dataExpression;
         foreachDo.apply(this);
     };
@@ -118,7 +118,7 @@ define(['joga/computedProperty'], function (computedProperty) {
     ElementBinding.prototype.text = function (dataExpression) {
         var computed = computedProperty(dataExpression);
 
-        this.text.update = function() {
+        this.text.update = function () {
             ElementBinding.removeChildNodes(this.element);
             this.element.appendChild(document.createTextNode(computed.apply(this.model)));
         }.bind(this);

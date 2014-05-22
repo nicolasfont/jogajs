@@ -1,4 +1,4 @@
-define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectProperty, dependencyTracker) {
+define(['joga/objectProperty', 'joga/dependencyTracker'], function (objectProperty, dependencyTracker) {
 
     function computedPropertyFactory(initialValue) {
 
@@ -55,7 +55,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
         this.computer = initialValue;
         this.dependencies = [];
 
-        this.notify = function() {
+        this.notify = function () {
             var observers = this.observers.slice(0),
                 i;
             for (i = 0; i < observers.length; i++) {
@@ -64,7 +64,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function(objectPropert
             return this.self;
         }.bind(this);
         
-        this.subscriber = function(property) {
+        this.subscriber = function (property) {
             if (this.dependencies.indexOf(property) === -1) {
                 this.dependencies.push(property);
             }

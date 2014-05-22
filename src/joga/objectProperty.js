@@ -1,4 +1,4 @@
-define(['joga/dependencyTracker'], function(dependencyTracker) {
+define(['joga/dependencyTracker'], function (dependencyTracker) {
     
     function objectPropertyFactory(initialValue) {
 

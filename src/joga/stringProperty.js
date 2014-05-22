@@ -1,4 +1,4 @@
-define(['joga/objectProperty'], function(objectProperty) {
+define(['joga/objectProperty'], function (objectProperty) {
     
     function stringPropertyFactory(initialValue) {
         
