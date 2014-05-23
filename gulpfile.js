@@ -1,7 +1,9 @@
 var gulp = require('gulp'),
+    qunit = require('gulp-qunit'),
     rjs = require('gulp-requirejs'),
     header = require('gulp-header'),
     uglify = require('gulp-uglify'),
+
     version = '0.2.0pre',
     year = new Date().getFullYear(),
     banner = [
@@ -11,7 +13,7 @@ var gulp = require('gulp'),
         ''
     ].join('\n');
 
-gulp.task('default', function () {
+gulp.task('build', function () {
     rjs({
         baseUrl: 'src/',
         name: '../node_modules/almond/almond',
@@ -34,3 +36,10 @@ gulp.task('default', function () {
     .pipe(header(banner, {version: version, year: year}))
     .pipe(gulp.dest('./'));
 });
+
+gulp.task('test', function() {
+    gulp.src('./tests/index.html')
+        .pipe(qunit());
+});
+
+gulp.task('default', ['test', 'build']);
