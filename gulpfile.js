@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     rjs = require('gulp-requirejs'),
     header = require('gulp-header'),
     uglify = require('gulp-uglify'),
+    jshint = require('gulp-jshint'),
 
     version = '0.2.0pre',
     year = new Date().getFullYear(),
@@ -42,4 +43,10 @@ gulp.task('test', function() {
         .pipe(qunit());
 });
 
-gulp.task('default', ['test', 'build']);
+gulp.task('lint', function () {
+    return gulp.src('./src/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
+
+gulp.task('default', ['lint', 'test']);
