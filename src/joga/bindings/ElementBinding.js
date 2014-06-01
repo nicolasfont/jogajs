@@ -26,10 +26,11 @@ define(['joga/computedProperty'], function (computedProperty) {
 
     ElementBinding.prototype.childnodes = function (dataExpression) {
         var i,
-            computed = computedProperty(dataExpression),
-            nodes = computed.apply(this.model);
+            computed = computedProperty(dataExpression);
 
         this.childnodes.update = function () {
+            var nodes = computed.apply(this.model);
+            
             ElementBinding.removeChildNodes(this.element);
 
             for (i = 0; i < nodes.length; i++) {
