@@ -1,8 +1,17 @@
-define(['joga/bindings/ElementBinding', 'joga/bindings/HTMLInputElementBinding'], function (ElementBinding, HTMLInputElementBinding) {
+define([
+    'joga/bindings/ElementBinding',
+    'joga/bindings/HTMLInputElementBinding',
+    'joga/bindings/HTMLImageElementBinding'
+], function (
+    ElementBinding,
+    HTMLInputElementBinding,
+    HTMLImageElementBinding
+) {
     
     function ElementBinder() {
         this.mapping = {
-            INPUT: HTMLInputElementBinding
+            INPUT: HTMLInputElementBinding,
+            IMG: HTMLImageElementBinding
         };
     }
     
