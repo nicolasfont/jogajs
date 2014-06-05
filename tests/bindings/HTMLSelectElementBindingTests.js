@@ -50,4 +50,19 @@ define(['joga'], function (joga) {
         equal(model.element().options[2].value, "value3");
     });
 
+    test("data-foreach binding creates options for strings", function() {
+        var model = new Model();
+
+        function Model() {
+            this.options = joga.arrayProperty(["1", "2"]);
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this" data-value="this"/>');
+        }
+
+        equal(model.element().options.length, 2);
+        equal(model.element().options[0].text, "1");
+        equal(model.element().options[0].value, "1");
+        equal(model.element().options[1].text, "2");
+        equal(model.element().options[1].value, "2");
+    });
+
 });
