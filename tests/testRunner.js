@@ -8,7 +8,8 @@ define([
     'elementPropertyTests',
     'bindings/ElementBindingTests',
     'bindings/HTMLInputElementBindingTests',
-    'bindings/HTMLImageElementBindingTests'
+    'bindings/HTMLImageElementBindingTests',
+    'bindings/HTMLSelectElementBindingTests'
 ], function () {
     QUnit.load();
     QUnit.start();
