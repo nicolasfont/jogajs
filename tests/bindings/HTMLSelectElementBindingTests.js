@@ -65,4 +65,50 @@ define(['joga'], function (joga) {
         equal(model.element().options[1].value, "2");
     });
 
+    test("data-selected binding updates selected option", function() {
+        var model = new Model();
+
+        function Option(text, value) {
+            this.text = joga.stringProperty(text);
+            this.value = joga.stringProperty(value);
+        }
+
+        function Model() {
+            this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
+            this.selected = joga.objectProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()" data-value="this.value()" data-selected="this.selected()"/>');
+        }
+
+        model.selected(model.options()[1]);
+
+        equal(model.element().selectedIndex, 1);
+        equal(model.element().value, "value2");
+
+        model.selected(model.options()[0]);
+
+        equal(model.element().selectedIndex, 0);
+        equal(model.element().value, "value1");
+    });
+
+    test("data-selected binding updates property when selection changes", function() {
+        var model = new Model();
+
+        function Option(text, value) {
+            this.text = joga.stringProperty(text);
+            this.value = joga.stringProperty(value);
+        }
+
+        function Model() {
+            this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
+            this.selected = joga.objectProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()" data-value="this.value()" data-selected="this.selected()"/>');
+        }
+
+        model.element().options[1].selected = true;
+
+        model.element().onchange();
+
+        equal(model.selected(), model.options()[1]);
+    });
+
 });
