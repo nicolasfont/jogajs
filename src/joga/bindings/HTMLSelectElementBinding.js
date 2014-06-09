@@ -7,7 +7,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     HTMLSelectElementBinding.prototype = new ElementBinding();
 
     var foreach = function () {
-        if (this.foreach.dataExpression && this.text.dataExpression && this.value.dataExpression) {
+        if (this.foreach.dataExpression) {
 
             var selected = computedProperty(function () {
                 if (this.selected.dataExpression) {
@@ -25,12 +25,21 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
                 for (i = 0; i < models.length; i++) {
                     option = document.createElement('option');
-                    option.text = this.text.dataExpression.apply(models[i]);
-                    option.value = this.value.dataExpression.apply(models[i]);
+
+                    if (this.text.dataExpression) {
+                        option.text = this.text.dataExpression.apply(models[i]);
+                    } else {
+                        option.text = String(models[i]);
+                    }
+
                     option.selected = selected.apply(this.model) === models[i];
 
                     if (selected.apply(this.model) === models[i]) {
-                        selected.applyWrapped([models[i]]);
+                        if (this.value.dataExpression) {
+                            selected.applyWrapped([this.value.dataExpression.apply(models[i])]);
+                        } else {
+                            selected.applyWrapped([models[i]]);
+                        }
                     }
 
                     this.foreach.options.push(option);
@@ -49,7 +58,11 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 this.element.onchange = function () {
                     if (this.selected.dataExpression) {
                         var models = this.foreach.dataExpression.apply(this.model);
-                        selected.applyWrapped([models[this.element.selectedIndex]]);
+                        if (this.value.dataExpression) {
+                            selected.applyWrapped([this.value.dataExpression.apply(models[this.element.selectedIndex])]);
+                        } else {
+                            selected.applyWrapped([models[this.element.selectedIndex]]);
+                        }
                     }
                 }.bind(this);
             }.bind(this);
