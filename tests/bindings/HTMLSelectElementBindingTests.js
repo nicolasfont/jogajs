@@ -72,6 +72,19 @@ define(['joga'], function (joga) {
         equal(model.element().options[1].text, "2");
     });
 
+    test("data-text defaults when null", function() {
+        var model = new Model();
+
+        function Model() {
+            this.options = joga.arrayProperty([null, "2"]);
+            this.element = joga.elementProperty('<select data-foreach="this.options()"/>');
+        }
+
+        equal(model.element().options.length, 2);
+        equal(model.element().options[0].text, "null");
+        equal(model.element().options[1].text, "2");
+    });
+
     test("data-selected binding sets initial selected option", function() {
         var model = new Model();
 
