@@ -12,7 +12,8 @@ define(['joga'], function (joga) {
 
         function Model() {
             this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
-            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()"/>');
+            this.selected = joga.stringProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()" data-selected="this.selected()"/>');
         }
 
         equal(model.element().options.length, 2);
@@ -35,7 +36,8 @@ define(['joga'], function (joga) {
 
         function Model() {
             this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
-            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()"/>');
+            this.selected = joga.stringProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()" data-selected="this.selected()"/>');
         }
 
         equal(model.element().options.length, 2);
@@ -51,7 +53,8 @@ define(['joga'], function (joga) {
 
         function Model() {
             this.options = joga.arrayProperty(["1", "2"]);
-            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this"/>');
+            this.selected = joga.stringProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this" data-selected="this.selected()"/>');
         }
 
         equal(model.element().options.length, 2);
@@ -64,7 +67,8 @@ define(['joga'], function (joga) {
 
         function Model() {
             this.options = joga.arrayProperty(["1", "2"]);
-            this.element = joga.elementProperty('<select data-foreach="this.options()"/>');
+            this.selected = joga.stringProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-selected="this.selected()"/>');
         }
 
         equal(model.element().options.length, 2);
@@ -77,7 +81,8 @@ define(['joga'], function (joga) {
 
         function Model() {
             this.options = joga.arrayProperty([null, "2"]);
-            this.element = joga.elementProperty('<select data-foreach="this.options()"/>');
+            this.selected = joga.stringProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-selected="this.selected()"/>');
         }
 
         equal(model.element().options.length, 2);

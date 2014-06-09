@@ -7,22 +7,20 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     HTMLSelectElementBinding.prototype = new ElementBinding();
 
     var foreach = function () {
-        if (this.foreach.dataExpression) {
+        if (this.foreach.dataExpression && this.selected.dataExpression) {
 
             var selected = computedProperty(function () {
-                if (this.selected.dataExpression) {
-                    return this.selected.dataExpression.apply(this.model);
-                }
-                return this.foreach.options[0];
+                return this.selected.dataExpression.apply(this.model);
             }.bind(this));
 
             var computed = computedProperty(function () {
                 var models = this.foreach.dataExpression.apply(this.model),
                     option,
+                    options,
                     i,
                     selectedModel;
 
-                this.foreach.options = [];
+                options = [];
 
                 selectedModel = selected.apply(this.model);
 
@@ -35,10 +33,10 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                         option.selected = true;
                     }
 
-                    this.foreach.options.push(option);
+                    options.push(option);
                 }
 
-                return this.foreach.options;
+                return options;
             }.bind(this));
 
             this.foreach.update = function () {
