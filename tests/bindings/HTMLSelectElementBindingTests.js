@@ -83,6 +83,24 @@ define(['joga'], function (joga) {
         equal(model.element().value, "value2");
     });
 
+    test("data-selected binding sets initial default selected option", function() {
+        var model = new Model();
+
+        function Option(text, value) {
+            this.text = joga.stringProperty(text);
+            this.value = joga.stringProperty(value);
+        }
+
+        function Model() {
+            this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
+            this.selected = joga.objectProperty();
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()" data-value="this.value()" data-selected="this.selected()"/>');
+        }
+
+        equal(model.element().selectedIndex, 0);
+        equal(model.element().value, "value1");
+    });
+
     test("data-selected binding updates selected option", function() {
         var model = new Model();
 
