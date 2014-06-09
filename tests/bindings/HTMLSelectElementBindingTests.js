@@ -161,48 +161,7 @@ define(['joga'], function (joga) {
         model.element().onchange();
 
         equal(model.selected(), model.options()[1]);
-    });
-
-    test("data-value sets different value to selected property", function() {
-        var model = new Model();
-
-        function Option(text, value) {
-            this.text = joga.stringProperty(text);
-            this.value = joga.stringProperty(value);
-        }
-
-        function Model() {
-            this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
-            this.selected = joga.stringProperty();
-            this.element = joga.elementProperty('<select data-foreach="this.options()" data-value="this.value()" data-selected="this.selected()"/>');
-        }
-
-        model.element().options[1].selected = true;
-
-        model.element().onchange();
-
-        equal(model.selected(), model.options()[1].value());
-    });
-
-    test("data-value defaults to this", function() {
-        var model = new Model();
-
-        function Option(text, value) {
-            this.text = joga.stringProperty(text);
-            this.value = joga.stringProperty(value);
-        }
-
-        function Model() {
-            this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
-            this.selected = joga.stringProperty();
-            this.element = joga.elementProperty('<select data-foreach="this.options()" data-selected="this.selected()"/>');
-        }
-
-        model.element().options[1].selected = true;
-
-        model.element().onchange();
-
-        equal(model.selected(), model.options()[1]);
+        equal(model.element().selectedIndex, 1);
     });
 
 });
