@@ -3,7 +3,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     function HTMLSelectElementBinding(element, model) {
         ElementBinding.call(this, element, model);
     }
-    
+
     HTMLSelectElementBinding.prototype = new ElementBinding();
 
     var foreach = function () {
@@ -28,6 +28,11 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     option.text = this.text.dataExpression.apply(models[i]);
                     option.value = this.value.dataExpression.apply(models[i]);
                     option.selected = selected.apply(this.model) === models[i];
+
+                    if (selected.apply(this.model) === models[i]) {
+                        selected.applyWrapped([models[i]]);
+                    }
+
                     this.foreach.options.push(option);
                 }
 
