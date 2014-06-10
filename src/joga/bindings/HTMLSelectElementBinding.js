@@ -14,22 +14,22 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
             }.bind(this));
 
             var computed = computedProperty(function () {
-                var models = this.foreach.dataExpression.apply(this.model),
-                    option,
+                var option,
                     options,
                     i,
                     selectedModel;
 
+                this.foreach.models = this.foreach.dataExpression.apply(this.model);
                 options = [];
 
                 selectedModel = selected.apply(this.model);
 
-                for (i = 0; i < models.length; i++) {
+                for (i = 0; i < this.foreach.models.length; i++) {
                     option = document.createElement('option');
-                    option.text = this.text.dataExpression ? this.text.dataExpression.apply(models[i]) : String(models[i]);
+                    option.text = this.text.dataExpression ? this.text.dataExpression.apply(this.foreach.models[i]) : String(this.foreach.models[i]);
 
-                    if (selectedModel === models[i] || (selectedModel === null && i === 0)) {
-                        selected.applyWrapped([models[i]]);
+                    if (selectedModel === this.foreach.models[i]) {
+                        selected.applyWrapped([this.foreach.models[i]]);
                         option.selected = true;
                     }
 
@@ -47,10 +47,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     this.element.appendChild(nodes[i]);
                 }
                 this.element.onchange = function () {
-                    if (this.selected.dataExpression) {
-                        var models = this.foreach.dataExpression.apply(this.model);
-                        selected.applyWrapped([models[this.element.selectedIndex]]);
-                    }
+                    selected.applyWrapped([this.foreach.models[this.element.selectedIndex]]);
                 }.bind(this);
             }.bind(this);
 
