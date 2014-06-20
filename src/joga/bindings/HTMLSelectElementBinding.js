@@ -9,31 +9,39 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     var foreach = function () {
         if (this.foreach.dataExpression && this.selected.dataExpression) {
 
-            var selected = computedProperty(function () {
+            this.foreach.selected = computedProperty(function () {
                 return this.selected.dataExpression.apply(this.model);
             }.bind(this));
 
-            var computed = computedProperty(function () {
+            this.foreach.options = computedProperty(function () {
                 var option,
                     options,
                     i,
-                    selectedModel;
+                    selected = false,
+                    selectedModel = this.foreach.selected.apply(this.model);
 
                 this.foreach.models = this.foreach.dataExpression.apply(this.model);
                 options = [];
-
-                selectedModel = selected.apply(this.model);
 
                 for (i = 0; i < this.foreach.models.length; i++) {
                     option = document.createElement('option');
                     option.text = this.text.dataExpression ? this.text.dataExpression.apply(this.foreach.models[i]) : String(this.foreach.models[i]);
 
                     if (selectedModel === this.foreach.models[i]) {
-                        selected.applyWrapped([this.foreach.models[i]]);
+                        this.foreach.selected.applyWrapped([this.foreach.models[i]]);
                         option.selected = true;
+                        selected = true;
                     }
 
                     options.push(option);
+                }
+
+                if (!selected && this.foreach.models.length > 0) {
+                    this.foreach.selected.applyWrapped([this.foreach.models[0]]);
+                }
+
+                if (this.foreach.models.length == 0) {
+                    this.foreach.selected.applyWrapped([null]);
                 }
 
                 return options;
@@ -41,19 +49,21 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
             this.foreach.update = function () {
                 var i,
-                    nodes = computed();
+                    options = this.foreach.options();
+
                 ElementBinding.removeChildNodes(this.element);
-                for (i = 0; i < nodes.length; i++) {
-                    this.element.appendChild(nodes[i]);
+                for (i = 0; i < options.length; i++) {
+                    this.element.appendChild(options[i]);
                 }
+
                 this.element.onchange = function () {
-                    selected.applyWrapped([this.foreach.models[this.element.selectedIndex]]);
+                    this.foreach.selected.applyWrapped([this.foreach.models[this.element.selectedIndex]]);
                 }.bind(this);
             }.bind(this);
 
             this.foreach.update();
 
-            computed.subscribe(this.foreach.update);
+            this.foreach.options.subscribe(this.foreach.update);
         }
     };
 

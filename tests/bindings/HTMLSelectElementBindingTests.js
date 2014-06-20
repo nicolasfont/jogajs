@@ -122,6 +122,25 @@ define(['joga'], function (joga) {
         }
 
         equal(model.element().selectedIndex, 0);
+        equal(model.selected(), model.options()[0]);
+    });
+
+    test("data-selected binding sets selected to null when no options", function() {
+        var model = new Model();
+
+        function Option(text, value) {
+            this.text = joga.stringProperty(text);
+            this.value = joga.stringProperty(value);
+        }
+
+        function Model() {
+            this.options = joga.arrayProperty([]);
+            this.selected = joga.objectProperty(123);
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-selected="this.selected()"/>');
+        }
+
+        model.element();
+        equal(model.selected(), null);
     });
 
     test("data-selected binding updates selected option", function() {
