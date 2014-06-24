@@ -21,7 +21,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 return this.text.dataExpression ? this.text.dataExpression.apply(model) : String(model);
             }.bind(this);
 
-            this.foreach.options = computedProperty(function () {
+            this.foreach.options = function () {
                 var option,
                     options = [],
                     i;
@@ -31,9 +31,13 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     options.push(option);
                 }
                 return options;
-            }.bind(this));
+            }.bind(this);
 
-            this.foreach.update = function () {
+            this.foreach.onElementChange = function () {
+                this.foreach.selected.applyWrapped([this.foreach.models()[this.element.selectedIndex]]);
+            }.bind(this);
+
+            this.foreach.onModelsChange = function () {
                 var i,
                     options = this.foreach.options(),
                     selectedModel = this.foreach.selected(),
@@ -52,17 +56,27 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 if (!somethingSelected) {
                     this.foreach.selected.applyWrapped([this.foreach.models().length > 0 ? this.foreach.models()[0] : null]);
                 }
-
             }.bind(this);
 
-            this.foreach.update();
+            this.foreach.onSelectedChange = function () {
+                var i,
+                    options = this.element.childNodes,
+                    selectedModel = this.foreach.selected(),
+                    somethingSelected = false;
 
-            this.element.onchange = function () {
-                this.foreach.selected.applyWrapped([this.foreach.models()[this.element.selectedIndex]]);
+                for (i = 0; i < options.length; i++) {
+                    options[i].selected = selectedModel === this.foreach.models()[i];
+                    if (options[i].selected) {
+                        somethingSelected = true;
+                    }
+                }
             }.bind(this);
 
-            this.foreach.options.subscribe(this.foreach.update);
-            this.foreach.selected.subscribe(this.foreach.update);
+            this.foreach.onModelsChange();
+
+            this.element.onchange = this.foreach.onElementChange;
+            this.foreach.models.subscribe(this.foreach.onModelsChange);
+            this.foreach.selected.subscribe(this.foreach.onSelectedChange);
         }
     };
 
