@@ -7,10 +7,10 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     HTMLSelectElementBinding.prototype = new ElementBinding();
 
     var foreach = function () {
-        if (this.foreach.dataExpression && this.selected.dataExpression) {
+        if (this.foreach.dataExpression) {
 
             this.foreach.selected = computedProperty(function () {
-                return this.selected.dataExpression.apply(this.model);
+                return this.selected.dataExpression ? this.selected.dataExpression.apply(this.model) : null;
             }.bind(this));
 
             this.foreach.models = computedProperty(function () {
@@ -21,7 +21,13 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 return this.text.dataExpression ? this.text.dataExpression.apply(model) : String(model);
             }.bind(this);
 
-            this.foreach.options = computedProperty(function () {
+            this.foreach.select = function (model) {
+                if (this.selected.dataExpression) {
+                    this.foreach.selected.applyWrapped([model]);
+                }
+            }.bind(this);
+
+            this.foreach.options = function () {
                 var option,
                     options = [],
                     i;
@@ -31,9 +37,13 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     options.push(option);
                 }
                 return options;
-            }.bind(this));
+            }.bind(this);
 
-            this.foreach.update = function () {
+            this.foreach.onElementChange = function () {
+                this.foreach.select(this.foreach.models()[this.element.selectedIndex]);
+            }.bind(this);
+
+            this.foreach.onModelsChange = function () {
                 var i,
                     options = this.foreach.options(),
                     selectedModel = this.foreach.selected(),
@@ -50,19 +60,39 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 }
 
                 if (!somethingSelected) {
-                    this.foreach.selected.applyWrapped([this.foreach.models().length > 0 ? this.foreach.models()[0] : null]);
+                    this.foreach.select(this.foreach.models().length > 0 ? this.foreach.models()[0] : null);
+                }
+            }.bind(this);
+
+            this.foreach.onSelectedChange = function () {
+                var i,
+                    options = this.element.childNodes,
+                    selectedModel = this.foreach.selected(),
+                    somethingSelected = false,
+                    defaultModel;
+
+                for (i = 0; i < options.length; i++) {
+                    if (selectedModel === this.foreach.models()[i]) {
+                        options[i].selected = true;
+                        somethingSelected = true;
+                    } else {
+                        options[i].selected = false;
+                    }
                 }
 
+                if (!somethingSelected) {
+                    defaultModel = this.foreach.models().length > 0 ? this.foreach.models()[0] : null;
+                    if (this.foreach.selected() != defaultModel) {
+                        this.foreach.select(defaultModel);
+                    }
+                }
             }.bind(this);
 
-            this.foreach.update();
+            this.foreach.onModelsChange();
 
-            this.element.onchange = function () {
-                this.foreach.selected.applyWrapped([this.foreach.models()[this.element.selectedIndex]]);
-            }.bind(this);
-
-            this.foreach.options.subscribe(this.foreach.update);
-            this.foreach.selected.subscribe(this.foreach.update);
+            this.element.onchange = this.foreach.onElementChange;
+            this.foreach.models.subscribe(this.foreach.onModelsChange);
+            this.foreach.selected.subscribe(this.foreach.onSelectedChange);
         }
     };
 
@@ -83,7 +113,11 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
     HTMLSelectElementBinding.prototype.selected = function (dataExpression) {
         this.selected.dataExpression = dataExpression;
-        foreach.apply(this);
+
+        if (this.foreach.onSelectedChange) {
+            this.foreach.onSelectedChange();
+        }
+        //foreach.apply(this);
     };
 
     return HTMLSelectElementBinding;

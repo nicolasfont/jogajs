@@ -26,7 +26,7 @@ define(['joga'], function (joga) {
         equal(model.element().options[2].text, "text3");
     });
 
-    test("data-foreach binding updates options", function() {
+    test("data-foreach binding creates options without selected binding", function() {
         var model = new Model();
 
         function Option(text, value) {
@@ -36,11 +36,12 @@ define(['joga'], function (joga) {
 
         function Model() {
             this.options = joga.arrayProperty([new Option("text1", "value1"), new Option("text2", "value2")]);
-            this.selected = joga.stringProperty();
-            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()" data-selected="this.selected()"/>');
+            this.element = joga.elementProperty('<select data-foreach="this.options()" data-text="this.text()"/>');
         }
 
         equal(model.element().options.length, 2);
+        equal(model.element().options[0].text, "text1");
+        equal(model.element().options[1].text, "text2");
 
         model.options.push(new Option("text3", "value3"));
 
