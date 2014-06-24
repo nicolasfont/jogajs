@@ -13,57 +13,56 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 return this.selected.dataExpression.apply(this.model);
             }.bind(this));
 
+            this.foreach.models = computedProperty(function () {
+                return this.foreach.dataExpression.apply(this.model);
+            }.bind(this));
+
+            this.foreach.textFor = function (model) {
+                return this.text.dataExpression ? this.text.dataExpression.apply(model) : String(model);
+            }.bind(this);
+
             this.foreach.options = computedProperty(function () {
                 var option,
-                    options,
-                    i,
-                    selected = false,
-                    selectedModel = this.foreach.selected.apply(this.model);
-
-                this.foreach.models = this.foreach.dataExpression.apply(this.model);
-                options = [];
-
-                for (i = 0; i < this.foreach.models.length; i++) {
+                    options = [],
+                    i;
+                for (i = 0; i < this.foreach.models().length; i++) {
                     option = document.createElement('option');
-                    option.text = this.text.dataExpression ? this.text.dataExpression.apply(this.foreach.models[i]) : String(this.foreach.models[i]);
-
-                    if (selectedModel === this.foreach.models[i]) {
-                        this.foreach.selected.applyWrapped([this.foreach.models[i]]);
-                        option.selected = true;
-                        selected = true;
-                    }
-
+                    option.text = this.foreach.textFor(this.foreach.models()[i]);
                     options.push(option);
                 }
-
-                if (!selected && this.foreach.models.length > 0) {
-                    this.foreach.selected.applyWrapped([this.foreach.models[0]]);
-                }
-
-                if (this.foreach.models.length == 0) {
-                    this.foreach.selected.applyWrapped([null]);
-                }
-
                 return options;
             }.bind(this));
 
             this.foreach.update = function () {
                 var i,
-                    options = this.foreach.options();
+                    options = this.foreach.options(),
+                    selectedModel = this.foreach.selected(),
+                    somethingSelected = false;
 
                 ElementBinding.removeChildNodes(this.element);
                 for (i = 0; i < options.length; i++) {
                     this.element.appendChild(options[i]);
+
+                    if (selectedModel === this.foreach.models()[i]) {
+                        options[i].selected = true;
+                        somethingSelected = true;
+                    }
                 }
 
-                this.element.onchange = function () {
-                    this.foreach.selected.applyWrapped([this.foreach.models[this.element.selectedIndex]]);
-                }.bind(this);
+                if (!somethingSelected) {
+                    this.foreach.selected.applyWrapped([this.foreach.models().length > 0 ? this.foreach.models()[0] : null]);
+                }
+
             }.bind(this);
 
             this.foreach.update();
 
+            this.element.onchange = function () {
+                this.foreach.selected.applyWrapped([this.foreach.models()[this.element.selectedIndex]]);
+            }.bind(this);
+
             this.foreach.options.subscribe(this.foreach.update);
+            this.foreach.selected.subscribe(this.foreach.update);
         }
     };
 
