@@ -7,10 +7,13 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
     HTMLSelectElementBinding.prototype = new ElementBinding();
 
     var foreach = function () {
-        if (this.foreach.dataExpression && this.selected.dataExpression) {
+        if (this.foreach.dataExpression) {
 
             this.foreach.selected = computedProperty(function () {
-                return this.selected.dataExpression.apply(this.model);
+                if (this.selected.dataExpression) {
+                    return this.selected.dataExpression.apply(this.model);
+                }
+                return null;
             }.bind(this));
 
             this.foreach.models = computedProperty(function () {
@@ -19,6 +22,12 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
             this.foreach.textFor = function (model) {
                 return this.text.dataExpression ? this.text.dataExpression.apply(model) : String(model);
+            }.bind(this);
+
+            this.foreach.select = function (model) {
+                if (this.selected.dataExpression) {
+                    this.foreach.selected.applyWrapped([model]);
+                }
             }.bind(this);
 
             this.foreach.options = function () {
@@ -34,7 +43,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
             }.bind(this);
 
             this.foreach.onElementChange = function () {
-                this.foreach.selected.applyWrapped([this.foreach.models()[this.element.selectedIndex]]);
+                this.foreach.select(this.foreach.models()[this.element.selectedIndex]);
             }.bind(this);
 
             this.foreach.onModelsChange = function () {
@@ -54,7 +63,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 }
 
                 if (!somethingSelected) {
-                    this.foreach.selected.applyWrapped([this.foreach.models().length > 0 ? this.foreach.models()[0] : null]);
+                    this.foreach.select(this.foreach.models().length > 0 ? this.foreach.models()[0] : null);
                 }
             }.bind(this);
 
@@ -65,10 +74,16 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     somethingSelected = false;
 
                 for (i = 0; i < options.length; i++) {
-                    options[i].selected = selectedModel === this.foreach.models()[i];
-                    if (options[i].selected) {
+                    if (selectedModel === this.foreach.models()[i]) {
+                        options[i].selected = true;
                         somethingSelected = true;
+                    } else {
+                        options[i].selected = false;
                     }
+                }
+
+                if (!somethingSelected) {
+                    this.foreach.select(this.foreach.models().length > 0 ? this.foreach.models()[0] : null);
                 }
             }.bind(this);
 
@@ -97,7 +112,11 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
     HTMLSelectElementBinding.prototype.selected = function (dataExpression) {
         this.selected.dataExpression = dataExpression;
-        foreach.apply(this);
+
+        if (this.foreach.onSelectedChange) {
+            this.foreach.onSelectedChange();
+        }
+        //foreach.apply(this);
     };
 
     return HTMLSelectElementBinding;

@@ -1,5 +1,5 @@
 define(['joga/dependencyTracker'], function (dependencyTracker) {
-    
+
     function objectPropertyFactory(initialValue) {
 
         function objectProperty(value) {
@@ -32,8 +32,10 @@ define(['joga/dependencyTracker'], function (dependencyTracker) {
             dependencyTracker.notify(this);
             return this.value;
         }
-        this.value = newValue;
-        this.notify();
+        if (this.value != newValue) {
+            this.value = newValue;
+            this.notify();
+        }
         return this.self;
     }
 
