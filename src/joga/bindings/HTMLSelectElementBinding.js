@@ -27,7 +27,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 }
             }.bind(this);
 
-            this.foreach.options = function () {
+            this.foreach.options = computedProperty(function () {
                 var option,
                     options = [],
                     i;
@@ -37,7 +37,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     options.push(option);
                 }
                 return options;
-            }.bind(this);
+            }.bind(this));
 
             this.foreach.onElementChange = function () {
                 this.foreach.select(this.foreach.models()[this.element.selectedIndex]);
@@ -92,6 +92,7 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
             this.element.onchange = this.foreach.onElementChange;
             this.foreach.models.subscribe(this.foreach.onModelsChange);
+            this.foreach.options.subscribe(this.foreach.onModelsChange);
             this.foreach.selected.subscribe(this.foreach.onSelectedChange);
         }
     };
@@ -113,11 +114,9 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
     HTMLSelectElementBinding.prototype.selected = function (dataExpression) {
         this.selected.dataExpression = dataExpression;
-
         if (this.foreach.onSelectedChange) {
             this.foreach.onSelectedChange();
         }
-        //foreach.apply(this);
     };
 
     return HTMLSelectElementBinding;
