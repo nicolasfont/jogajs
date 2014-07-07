@@ -132,11 +132,6 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
         foreach.apply(this);
     };
 
-    HTMLSelectElementBinding.prototype.value = function (dataExpression) {
-        this.value.dataExpression = dataExpression;
-        foreach.apply(this);
-    };
-
     HTMLSelectElementBinding.prototype.selected = function (dataExpression) {
         this.selected.dataExpression = dataExpression;
         if (this.foreach.onSelectedChange) {
