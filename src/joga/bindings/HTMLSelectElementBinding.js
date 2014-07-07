@@ -40,7 +40,19 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
             }.bind(this));
 
             this.foreach.onElementChange = function () {
-                this.foreach.select(this.foreach.models()[this.element.selectedIndex]);
+                var i,
+                    selectedModels = [];
+                
+                if (this.element.multiple) {
+                    for (i = 0; i < this.element.childNodes.length; i++) {
+                        if (this.element.childNodes[i].selected) {
+                            selectedModels.push(this.foreach.models()[i]);
+                        }
+                    }
+                    this.foreach.select(selectedModels);
+                } else {
+                    this.foreach.select(this.foreach.models()[this.element.selectedIndex]);
+                }
             }.bind(this);
 
             this.foreach.onModelsChange = function () {
@@ -53,14 +65,19 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 for (i = 0; i < options.length; i++) {
                     this.element.appendChild(options[i]);
 
-                    if (selectedModel === this.foreach.models()[i]) {
+                    if ((this.element.multiple && selectedModel && selectedModel.indexOf(this.foreach.models()[i]) !== -1)
+                         || selectedModel === this.foreach.models()[i]) {
                         options[i].selected = true;
                         somethingSelected = true;
                     }
                 }
 
                 if (!somethingSelected) {
-                    this.foreach.select(this.foreach.models().length > 0 ? this.foreach.models()[0] : null);
+                    if (this.element.multiple) {
+                        this.foreach.select([]);
+                    } else {
+                        this.foreach.select(this.foreach.models().length > 0 ? this.foreach.models()[0] : null);
+                    }
                 }
             }.bind(this);
 
@@ -72,7 +89,8 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                     defaultModel;
 
                 for (i = 0; i < options.length; i++) {
-                    if (selectedModel === this.foreach.models()[i]) {
+                    if ((this.element.multiple && selectedModel && selectedModel.indexOf(this.foreach.models()[i]) !== -1)
+                         || selectedModel === this.foreach.models()[i]) {
                         options[i].selected = true;
                         somethingSelected = true;
                     } else {
@@ -81,9 +99,16 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
                 }
 
                 if (!somethingSelected) {
-                    defaultModel = this.foreach.models().length > 0 ? this.foreach.models()[0] : null;
-                    if (this.foreach.selected() != defaultModel) {
-                        this.foreach.select(defaultModel);
+                    if (this.element.multiple) {
+                        defaultModel = [];
+                        if (selectedModel === null || selectedModel.length !== 0) {
+                            this.foreach.select(defaultModel);
+                        }
+                    } else {
+                        defaultModel = this.foreach.models().length > 0 ? this.foreach.models()[0] : null;
+                        if (selectedModel !== defaultModel) {
+                            this.foreach.select(defaultModel);
+                        }
                     }
                 }
             }.bind(this);
