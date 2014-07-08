@@ -49,4 +49,45 @@ define(['joga'], function (joga) {
         equal(element().wholeText, 'test');
     });
 
+    test("notifies subscribers when changed", function () {
+        var element = joga.elementProperty("<div/>"),
+            notified = 0;
+
+        element.subscribe(function () {
+            notified++;
+        });
+
+        ok(element() instanceof HTMLElement);
+
+        element("some text");
+
+        equal(notified, 1);
+        ok(element() instanceof Text);
+    });
+
+    test("notifies surrounding computed property when multiple changed", function () {
+        var element1 = joga.elementProperty("<div/>"),
+            element2 = joga.elementProperty("<div/>"),
+            computed = joga.computedProperty(function () {
+                element1();
+                element2();
+            }),
+            notified = 0;
+
+        computed.subscribe(function () {
+            notified++;
+            computed();
+        });
+
+        computed();
+
+        element1("some text");
+
+        equal(notified, 1);
+
+        element2("some text");
+
+        equal(notified, 2);
+    });
+
 });

@@ -21,6 +21,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/elementBinder'], 
         if (newValue) {
             this.initialValue = newValue;
             this.value = null;
+            this.notify();
             return this.self;
         }
 
@@ -28,11 +29,13 @@ define(['joga/objectProperty', 'joga/dependencyTracker', 'joga/elementBinder'], 
             dependencyTracker.push(function () {});
 
             this.value = createElement(this.initialValue);
-            
+
             elementBinder.bind(this.value, this.self);
 
             dependencyTracker.pop();
         }
+
+        dependencyTracker.notify(this);
 
         return this.value;
     }
