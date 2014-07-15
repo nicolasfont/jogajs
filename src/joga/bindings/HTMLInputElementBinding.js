@@ -36,6 +36,41 @@ define(['joga/bindings/ElementBinding', 'joga/computedProperty'], function (Elem
 
         computed.subscribe(this.value.update);
     };
+    
+    function selected() {
+        if (this.hasOwnProperty("selectedvalue") && this.hasOwnProperty("selected")) {
+            
+            var computedValue = computedProperty(this.selectedvalue.dataExpression),
+                computedSelected = computedProperty(this.selected.dataExpression);
+            
+            this.selected.update = function () {
+                this.element.checked = computedValue.apply(this.model) === computedSelected.apply(this.model);
+            }.bind(this);
+            
+            this.selected.update();
+            
+            this.element.onchange = function () {
+                if (this.element.checked) {
+                    computedSelected.applyWrapped([computedValue.apply(this.model)]);
+                } else {
+                    computedSelected.applyWrapped([null]);
+                }
+            }.bind(this); 
+            
+            computedValue.subscribe(this.selected.update);
+            computedSelected.subscribe(this.selected.update);
+        }
+    }
+    
+    HTMLInputElementBinding.prototype.selectedvalue = function (dataExpression) {
+        this.selectedvalue.dataExpression = dataExpression;
+        selected.apply(this);
+    };
+    
+    HTMLInputElementBinding.prototype.selected = function (dataExpression) {
+        this.selected.dataExpression = dataExpression;
+        selected.apply(this);
+    };
 
     return HTMLInputElementBinding;
 });

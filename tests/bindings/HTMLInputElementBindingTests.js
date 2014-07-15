@@ -60,5 +60,43 @@ define(['joga'], function (joga) {
 
         equal(model.test(), false);
     });
+    
+    test("input radio bindings update property when element changes", function () {
+        var model = new Model();
+
+        function Model() {
+            this.selected = joga.objectProperty();
+            this.selectedValue = joga.objectProperty({});
+            this.element = joga.elementProperty('<input type="radio" data-selectedvalue="this.selectedValue()" data-selected="this.selected()"/>');
+        }
+        
+        model.element().checked = true;
+        model.element().onchange();
+        
+        equal(model.selected(), model.selectedValue());
+        
+        model.element().checked = false;
+        model.element().onchange();
+        
+        equal(model.selected(), null);
+    });
+    
+    test("input radio bindings update element when property changes", function () {
+        var model = new Model();
+
+        function Model() {
+            this.selected = joga.objectProperty();
+            this.selectedValue = joga.objectProperty({});
+            this.element = joga.elementProperty('<input type="radio" data-selectedvalue="this.selectedValue()" data-selected="this.selected()"/>');
+        }
+        
+        model.selected(model.selectedValue());
+        
+        ok(model.element().checked);
+        
+        model.selected(null);
+        
+        ok(!model.element().checked);
+    });
 
 });
