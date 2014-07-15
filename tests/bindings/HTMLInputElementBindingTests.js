@@ -11,6 +11,10 @@ define(['joga'], function (joga) {
         }
 
         equal(model.element().value, "test");
+        
+        model.name('test2');
+        
+        equal(model.element().value, "test2");
     });
 
     test("data-value binding updates property when input text value changes", function() {

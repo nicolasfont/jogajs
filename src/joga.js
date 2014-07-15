@@ -3,9 +3,12 @@ define([
     'joga/booleanProperty',
     'joga/computedProperty',
     'joga/dependencyTracker',
+    'joga/elementBinder',
     'joga/bindings/ElementBinding',
     'joga/bindings/HTMLImageElementBinding',
     'joga/bindings/HTMLInputElementBinding',
+    'joga/bindings/HTMLSelectElementBinding',
+    'joga/bindings/HTMLTextAreaElementBinding',
     'joga/elementProperty',
     'joga/objectProperty',
     'joga/stringProperty'
@@ -15,9 +18,12 @@ function (
     booleanProperty,
     computedProperty,
     dependencyTracker,
+    elementBinder,
     ElementBinding,
     HTMLImageElementBinding,
     HTMLInputElementBinding,
+    HTMLSelectElementBinding,
+    HTMLTextAreaElementBinding,
     elementProperty,
     objectProperty,
     stringProperty
@@ -27,9 +33,12 @@ function (
     
     var joga = {
         dependencyTracker: dependencyTracker,
+        elementBinder: elementBinder,
         ElementBinding: ElementBinding,
         HTMLImageElementBinding: HTMLImageElementBinding,
         HTMLInputElementBinding: HTMLInputElementBinding,
+        HTMLSelectElementBinding: HTMLSelectElementBinding,
+        HTMLTextAreaElementBinding: HTMLTextAreaElementBinding,
         arrayProperty: arrayProperty,
         booleanProperty: booleanProperty,
         computedProperty: computedProperty,
