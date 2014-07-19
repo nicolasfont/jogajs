@@ -1,11 +1,13 @@
 define([
     'joga/bindings/ElementBinding',
+    'joga/bindings/HTMLFormElementBinding',
     'joga/bindings/HTMLInputElementBinding',
     'joga/bindings/HTMLImageElementBinding',
     'joga/bindings/HTMLSelectElementBinding',
     'joga/bindings/HTMLTextAreaElementBinding'
 ], function (
     ElementBinding,
+    HTMLFormElementBinding,
     HTMLInputElementBinding,
     HTMLImageElementBinding,
     HTMLSelectElementBinding,
@@ -14,6 +16,7 @@ define([
     
     function ElementBinder() {
         this.mapping = {
+            FORM: HTMLFormElementBinding,
             INPUT: HTMLInputElementBinding,
             IMG: HTMLImageElementBinding,
             SELECT: HTMLSelectElementBinding,
