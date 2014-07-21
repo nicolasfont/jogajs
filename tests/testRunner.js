@@ -7,6 +7,7 @@ define([
     'stringPropertyTests',
     'elementPropertyTests',
     'bindings/ElementBindingTests',
+    'bindings/HTMLAnchorElementBindingTests',
     'bindings/HTMLInputElementBindingTests',
     'bindings/HTMLImageElementBindingTests',
     'bindings/HTMLSelectElementBindingTests',
