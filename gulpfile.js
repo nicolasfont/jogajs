@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     jshint = require('gulp-jshint'),
 
-    version = '0.2.0pre',
+    version = '0.2.0',
     year = new Date().getFullYear(),
     banner = [
         '// JogaJS v<%= version %>',
@@ -26,7 +26,7 @@ gulp.task('build', function () {
     .pipe(uglify())
     .pipe(header(banner, {version: version, year: year}))
     .pipe(gulp.dest('./'));
-    
+
     rjs({
         baseUrl: 'src/',
         name: 'joga',
