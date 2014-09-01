@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "almond": "~0.2.9",
-    "gulp": "~3.6.2",
+    "gulp": "~3.8.6",
     "gulp-requirejs": "~0.1.3",
     "gulp-uglify": "~0.3.0",
     "gulp-header": "~1.0.2",

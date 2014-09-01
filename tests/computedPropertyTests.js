@@ -303,4 +303,21 @@ define(['joga'], function (joga) {
         equal(prop.observers[0], computed.notify);
     });
 
+    test("unbinds dependencies", function () {
+        var prop = joga.objectProperty(1),
+            computed = joga.computedProperty(function () {
+                return prop();
+            });
+
+        computed();
+
+        equal(prop.observers.length, 1);
+
+        computed.unbind();
+
+        equal(prop.observers.length, 0);
+        equal(computed.value, null);
+        equal(computed.wrapped, null);
+    });
+
 });

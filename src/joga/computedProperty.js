@@ -11,6 +11,7 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function (objectProper
         computedProperty.evaluate = evaluate;
         computedProperty.initialize = initialize;
         computedProperty.applyWrapped = applyWrapped;
+        computedProperty.unbind = unbind;
         
         computedProperty.initialize(initialValue);
 
@@ -54,6 +55,8 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function (objectProper
         objectProperty().initialize.call(this, null);
         this.computer = initialValue;
         this.dependencies = [];
+        this.value = null;
+        this.wrapped = null;
 
         this.notify = function () {
             var observers = this.observers.slice(0),
@@ -77,6 +80,19 @@ define(['joga/objectProperty', 'joga/dependencyTracker'], function (objectProper
     function applyWrapped(args) {
         this.wrapped.apply(this.self, args);
         return this.self;
+    }
+
+    function unbind() {
+        var i;
+
+        for (i = 0; i < this.dependencies.length; i++) {
+            this.dependencies[i].unsubscribe(this.notify);
+        }
+
+        this.value = null;
+        this.wrapped = null;
+
+        return this;
     }
 
     return computedPropertyFactory;
